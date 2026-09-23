@@ -21,7 +21,7 @@ defineProps<{ form: ProjectForm; step: number }>()
     </div>
 
     <div class="row">
-      <AdminField label="Total de unidades" for-id="pj-units">
+      <AdminField label="Total de unidades" for-id="pj-units" :help="adminCopy.help.totalUnits">
         <AdminNumber id="pj-units" v-model="form.totalUnits" :step="1" />
       </AdminField>
       <AdminField label="Precio desde" for-id="pj-from" :help="adminCopy.help.priceFrom">
