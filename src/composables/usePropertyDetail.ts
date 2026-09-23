@@ -5,6 +5,7 @@ import { useSeo } from './useSeo'
 import { propertyService } from '@/services/property.service'
 import { useCatalogStore } from '@/stores/catalog'
 import { detailSpecs } from '@/utils/specs'
+import { propertySchema } from '@/utils/schema'
 import { sentenceCase } from '@/utils/format'
 import { copy } from '@/config/copy.public'
 import { copyProperties } from '@/config/copy.properties'
@@ -61,7 +62,13 @@ export function usePropertyDetail(slug: () => string) {
     const p = property.value
     if (!p) return { title: notFound.value ? copy.property.notFoundTitle : copyProperties.back }
     const typeText = `${catalog.typeLabel(p.type)} ${copyProperties.inSale} ${copyProperties.in} ${catalog.sectorLabel(p.sector)}`
-    return { title: title.value, description: p.summary || typeText, image: p.images[0]?.url }
+    const url = `${window.location.origin}${window.location.pathname}`
+    return {
+      title: title.value,
+      description: p.summary || typeText,
+      image: p.images[0]?.url,
+      jsonLd: propertySchema(p, title.value, catalog.sectorLabel(p.sector), url),
+    }
   })
 
   return {
