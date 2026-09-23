@@ -30,6 +30,19 @@ export const copy = {
     closeMenu: 'Cerrar menú',
     contact: 'Contacto',
     faq: 'Preguntas frecuentes',
+    menuEyebrow: 'Menú',
+    menuWhatsapp: 'Escríbenos por WhatsApp',
+    menuFollow: 'Síguenos',
+    // Línea corta bajo cada enlace del menú móvil, por ruta.
+    hints: {
+      '/': 'Portada',
+      '/propiedades': 'Casas, departamentos y terrenos',
+      '/proyectos': 'En planos, en construcción y por estrenar',
+      '/mapa': 'Explora por sector',
+      '/blog': 'Guías para comprar e invertir',
+      '/conocenos': 'Nuestro equipo',
+      '/contacto': 'Hablemos',
+    } as Record<string, string>,
   },
 
   specs: {
