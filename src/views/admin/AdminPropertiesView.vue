@@ -21,8 +21,10 @@ const actions = useAdminListingActions<AdminPropertyRow>('property', { replace, 
 
 const statuses = Object.entries(adminCopy.status.property)
 
+// Las visitas muestran qué es lo más buscado; ordenar por ellas responde «¿cuáles son las más buscadas?».
 function meta(p: AdminPropertyRow) {
-  return [catalog.label('propertyTypes', p.type), catalog.label('sectors', p.sector)].filter(Boolean).join(' · ')
+  const visits = p.views === 1 ? '1 visita' : `${p.views ?? 0} visitas`
+  return [catalog.label('propertyTypes', p.type), catalog.label('sectors', p.sector), visits].filter(Boolean).join(' · ')
 }
 
 onMounted(() => {
@@ -47,6 +49,10 @@ onMounted(() => {
       <select v-model="query.type" aria-label="Filtrar por tipo">
         <option value="">Todos los tipos</option>
         <option v-for="t in catalog.propertyTypes" :key="t.key" :value="t.key">{{ t.label }}</option>
+      </select>
+      <select v-model="query.sort" aria-label="Ordenar">
+        <option value="">Más recientes</option>
+        <option value="views">Más visitadas</option>
       </select>
     </AdminFilterBar>
 
