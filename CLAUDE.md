@@ -27,7 +27,8 @@ Si vite sirve código viejo tras un cambio grande: `rm -rf node_modules/.vite &&
 - **Layout con flexbox.** Para "grillas" usar el mixin `flex-cards($basis, $gap)`.
 - **Nada de librerías UI ni Tailwind.** SCSS propio con los tokens de `src/styles/`.
 - **Iconos con Font Awesome por CDN** (`<i class="fa-solid fa-…">`). Sin emojis en la UI.
-- **El copy vive en `src/config/site.ts`**, no dentro de los componentes.
+- **El copy vive en `src/config/`**, no dentro de los componentes: `site.ts` (marca y general),
+  `copy.public.ts`, `copy.home.ts`, `copy.properties.ts`, `copy.projects.ts` (sitio) y `copy.admin.ts` (portal).
 - Todo `VITE_*` queda expuesto en el navegador: nunca un secreto con ese prefijo.
 
 ## Estilos: la trampa de `additionalData`
