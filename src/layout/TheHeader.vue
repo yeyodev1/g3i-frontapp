@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { site } from '@/config/site'
 import { copy } from '@/config/copy.public'
 import { useBodyScroll } from '@/composables/useBodyScroll'
+import TheMobileMenu from './TheMobileMenu.vue'
 
 const route = useRoute()
 const mobileOpen = ref(false)
@@ -64,33 +65,7 @@ onUnmounted(() => {
       </button>
     </div>
 
-    <!-- Teleport al body: el backdrop-filter del header volvería "fixed" relativo al header
-         y el menú quedaría recortado a 64px en vez de cubrir toda la pantalla. -->
-    <Teleport to="body">
-      <Transition name="fade">
-        <div v-if="mobileOpen" class="mobile" role="dialog" aria-modal="true" aria-label="Menú">
-          <div class="mobile__top">
-            <RouterLink to="/" class="header__logo" :aria-label="site.name">
-              <img :src="site.logo" :alt="site.name" width="112" height="40" />
-            </RouterLink>
-            <button class="header__burger" type="button" :aria-label="copy.nav.closeMenu" @click="mobileOpen = false">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-          <nav id="mobile-menu" class="mobile__nav" aria-label="Menú móvil">
-            <RouterLink v-for="link in site.nav" :key="link.to" :to="link.to" class="mobile__link">
-              {{ link.label }}
-              <i class="fa-solid fa-arrow-right"></i>
-            </RouterLink>
-            <RouterLink to="/contacto" class="mobile__link">
-              {{ copy.nav.contact }}
-              <i class="fa-solid fa-arrow-right"></i>
-            </RouterLink>
-            <RouterLink :to="site.sellLink.to" class="mobile__sell">{{ site.sellLink.label }}</RouterLink>
-          </nav>
-        </div>
-      </Transition>
-    </Teleport>
+    <TheMobileMenu :open="mobileOpen" @close="mobileOpen = false" />
   </header>
 </template>
 
@@ -193,56 +168,4 @@ $header-h: 64px;
   }
 }
 
-.mobile {
-  position: fixed;
-  inset: 0;
-  height: 100dvh;
-  z-index: 1000;
-  background: $paper;
-  @include flex(column, stretch, flex-start);
-
-  @include from('lg') {
-    display: none;
-  }
-
-  &__top {
-    @include container(1280px);
-    @include flex(row, center, space-between, 1rem);
-    height: $header-h;
-    flex-shrink: 0;
-    border-bottom: 1px solid $line;
-  }
-
-  &__nav {
-    @include flex(column, stretch, flex-start);
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  &__link {
-    @include flex(row, center, space-between);
-    @include display($text-xl, 600);
-    padding-block: 1rem;
-    border-bottom: 1px solid $line;
-    color: $ink;
-
-    i {
-      font-size: 0.8rem;
-      color: $ink-muted;
-    }
-
-    &.router-link-exact-active i {
-      color: $brand-blue;
-    }
-  }
-
-  &__sell {
-    margin-top: 1.5rem;
-    font-size: $text-sm;
-    color: $ink-muted;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-}
 </style>
