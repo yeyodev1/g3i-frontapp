@@ -19,9 +19,10 @@ interface MapOptions {
   onMove?: () => void
 }
 
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
-const ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+// CARTO Positron ahora exige API key (devuelve un tile "API KEY REQUIRED").
+// Se usa OSM estándar y se desatura por CSS (leaflet-pins.scss) para el look sobrio.
+const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 
 export function pinPath(pin: MapPin): string {
   return pin.kind === 'project' ? `/proyectos/${pin.slug}` : `/propiedades/${pin.slug}`
@@ -68,7 +69,7 @@ export function useLeafletMap(el: Ref<HTMLElement | null>, options: MapOptions =
       zoomControl: interactive,
       attributionControl: true,
     })
-    L.tileLayer(TILE_URL, { attribution: ATTRIBUTION, subdomains: 'abcd', maxZoom: 19 }).addTo(instance)
+    L.tileLayer(TILE_URL, { attribution: ATTRIBUTION, maxZoom: 19 }).addTo(instance)
     layer = L.layerGroup().addTo(instance)
 
     instance.on('popupopen', (e) => {
