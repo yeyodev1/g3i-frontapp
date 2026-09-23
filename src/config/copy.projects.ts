@@ -12,4 +12,18 @@ export const copyProjects = {
   galleryOpen: 'Ampliar imagen',
   sectionsLabel: 'Secciones del proyecto',
   noImages: 'Pronto publicaremos los renders de este proyecto.',
+  // Cuando no hay proyectos de un tipo, se ofrecen las propiedades individuales de ese tipo.
+  typePlural: {
+    casa: 'casas',
+    departamento: 'departamentos',
+    terreno: 'terrenos',
+    suite: 'suites',
+    local: 'locales comerciales',
+    oficina: 'oficinas',
+  } as Record<string, string>,
+  noProjectsOfType: (plural: string) => `Por ahora no tenemos proyectos de ${plural}.`,
+  fallbackTitle: (n: number, plural: string) =>
+    n === 1 ? `Tenemos 1 propiedad en venta de este tipo` : `Tenemos ${n} ${plural} en venta`,
+  fallbackText: 'Están publicados como propiedades individuales, listos para visitar.',
+  fallbackAll: (plural: string) => `Ver todos los ${plural}`,
 }
