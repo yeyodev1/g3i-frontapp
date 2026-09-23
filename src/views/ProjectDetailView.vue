@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import ProjectIntro from '@/components/project/ProjectIntro.vue'
 import ProjectSectionNav from '@/components/project/ProjectSectionNav.vue'
+import ProjectBlockHead from '@/components/project/ProjectBlockHead.vue'
 import ProjectMosaic from '@/components/project/ProjectMosaic.vue'
 import ProjectOverview from '@/components/project/ProjectOverview.vue'
+import ProjectDescription from '@/components/project/ProjectDescription.vue'
+import ProjectAmenities from '@/components/project/ProjectAmenities.vue'
 import UnitsInventory from '@/components/project/UnitsInventory.vue'
-import ProjectContactAside from '@/components/project/ProjectContactAside.vue'
+import ProjectLocation from '@/components/project/ProjectLocation.vue'
+import ProjectContact from '@/components/project/ProjectContact.vue'
 import ProjectCard from '@/components/project/ProjectCard.vue'
-import AmenityList from '@/components/common/AmenityList.vue'
-import LocationMap from '@/components/common/LocationMap.vue'
-import VideoEmbed from '@/components/common/VideoEmbed.vue'
 import SkeletonCards from '@/components/common/SkeletonCards.vue'
 import StateMessage from '@/components/common/StateMessage.vue'
-import SectionHeading from '@/components/common/SectionHeading.vue'
 import { useProjectDetail } from '@/composables/useProjectDetail'
-import { useCatalogStore } from '@/stores/catalog'
 import { toParagraphs } from '@/utils/markdown'
-import { site } from '@/config/site'
 import { copy } from '@/config/copy.public'
 import { copyProjects } from '@/config/copy.projects'
 
 const { slug, detail, related, project, units, title, whatsappHref } = useProjectDetail()
-const catalog = useCatalogStore()
+const nav = ref<InstanceType<typeof ProjectSectionNav> | null>(null)
 
 const paragraphs = computed(() => toParagraphs(project.value?.description ?? ''))
 const hasLocation = computed(() => project.value?.location.lat != null && project.value?.location.lng != null)
@@ -29,15 +27,12 @@ const hasAmenities = computed(() => Boolean(project.value?.amenities.length || p
 
 // La navegación solo ofrece las secciones que realmente se pintan.
 const sections = computed(() =>
-  copy.project.sections.filter((s) => {
+  copyProjects.sections.filter((s) => {
     if (s.id === 'descripcion') return paragraphs.value.length > 0
     if (s.id === 'amenidades') return hasAmenities.value
     if (s.id === 'ubicacion') return hasLocation.value
     return true
   }),
-)
-const placeLabel = computed(() =>
-  project.value ? `${catalog.sectorLabel(project.value.sector)} · ${project.value.city || copy.common.city}` : '',
 )
 </script>
 
@@ -62,66 +57,60 @@ const placeLabel = computed(() =>
     </div>
 
     <template v-else-if="project">
-      <ProjectIntro :project="project" :title="title" />
-      <ProjectSectionNav :sections="sections" />
+      <ProjectIntro :project="project" :title="title" @request="nav?.scrollTo('contacto')" />
+      <ProjectSectionNav
+        ref="nav"
+        :sections="sections"
+        :name="project.locality"
+        :whatsapp-href="whatsappHref"
+        :share-title="title"
+      />
 
-      <div class="pdetail__layout">
-        <div class="pdetail__main">
-          <section id="galeria" class="pdetail__section">
-            <ProjectMosaic :images="project.images" :title="title" />
-          </section>
+      <section id="galeria" class="pdetail__section">
+        <ProjectBlockHead :eyebrow="copyProjects.galleryEyebrow" :title="copyProjects.galleryTitle" class="pdetail__head" />
+        <ProjectMosaic :images="project.images" :title="title" />
+      </section>
 
-          <section id="vision-general" class="pdetail__section">
-            <h2 class="pdetail__h2">{{ copy.project.overviewTitle }}</h2>
-            <ProjectOverview :project="project" />
-          </section>
+      <section id="vision-general" class="pdetail__section">
+        <ProjectOverview :project="project" />
+      </section>
 
-          <section v-if="paragraphs.length" id="descripcion" class="pdetail__section">
-            <h2 class="pdetail__h2">{{ site.detail.descriptionTitle }}</h2>
-            <div class="pdetail__text">
-              <p v-for="(p, i) in paragraphs" :key="i">{{ p }}</p>
-            </div>
-            <a v-if="project.brochure?.url" :href="project.brochure.url" target="_blank" rel="noopener" class="btn btn--ghost pdetail__brochure">
-              <i class="fa-solid fa-download"></i> {{ site.detail.brochureCta }}
-            </a>
-            <div v-if="project.videos.length" class="pdetail__videos">
-              <VideoEmbed v-for="v in project.videos" :key="v.url" :url="v.url" :title="title" />
-            </div>
-          </section>
+      <section v-if="paragraphs.length" id="descripcion" class="pdetail__section">
+        <ProjectDescription :project="project" :title="title" :paragraphs="paragraphs" />
+      </section>
 
-          <section v-if="hasAmenities" id="amenidades" class="pdetail__section">
-            <h2 class="pdetail__h2">{{ site.detail.amenitiesTitle }}</h2>
-            <AmenityList :keys="project.amenities" />
-            <div v-if="project.highlights.length" class="pdetail__highlights">
-              <h3>{{ copy.project.highlightsTitle }}</h3>
-              <ul>
-                <li v-for="h in project.highlights" :key="h"><i class="fa-solid fa-check"></i> {{ h }}</li>
-              </ul>
-            </div>
-          </section>
+      <section v-if="hasAmenities" id="amenidades" class="pdetail__band">
+        <ProjectAmenities :project="project" />
+      </section>
 
-          <section id="unidades" class="pdetail__section">
-            <h2 class="pdetail__h2">{{ site.detail.unitsTitle }}</h2>
-            <p class="pdetail__sub">
-              {{ units.length ? copyProjects.inventoryText : '' }}
-            </p>
-            <UnitsInventory v-if="units.length" :units="units" :slug="slug" />
-            <StateMessage v-else icon="fa-solid fa-key" :text="copy.project.unitsEmpty" />
-          </section>
-
-          <section v-if="hasLocation" id="ubicacion" class="pdetail__section">
-            <h2 class="pdetail__h2">{{ site.detail.locationTitle }}</h2>
-            <LocationMap :location="project.location" :label="placeLabel" />
-          </section>
+      <section id="unidades" class="pdetail__section">
+        <div class="pdetail__units-head">
+          <ProjectBlockHead :eyebrow="copyProjects.unitsEyebrow" :title="copyProjects.unitsTitle" />
+          <p v-if="units.length" class="pdetail__note">
+            {{ copyProjects.inventoryText }}<br />{{ copyProjects.unitsNote }}
+          </p>
         </div>
+        <UnitsInventory v-if="units.length" :units="units" :slug="slug" />
+        <StateMessage v-else icon="fa-solid fa-key" :text="copy.project.unitsEmpty" />
+      </section>
 
-        <ProjectContactAside :project="project" :title="title" :whatsapp-href="whatsappHref" class="pdetail__aside" />
-      </div>
+      <section v-if="hasLocation" id="ubicacion" class="pdetail__section">
+        <ProjectLocation :project="project" />
+      </section>
 
-      <section v-if="related.data.value?.length" class="pdetail__related">
-        <SectionHeading :title="copyProjects.similarTitle" :link-label="copy.common.seeAllProjects" link-to="/proyectos" />
+      <section id="contacto" class="pdetail__section">
+        <ProjectContact :project="project" :title="title" :whatsapp-href="whatsappHref" />
+      </section>
+
+      <section v-if="related.data.value?.length" class="pdetail__section pdetail__related">
+        <div class="pdetail__related-head">
+          <p class="pdetail__eyebrow">{{ copyProjects.similarEyebrow }}</p>
+          <RouterLink to="/proyectos" class="link-caps">
+            {{ copy.common.seeAllProjects }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </RouterLink>
+        </div>
         <div class="pdetail__cards">
-          <ProjectCard v-for="p in related.data.value" :key="p._id" :project="p" />
+          <ProjectCard v-for="p in related.data.value.slice(0, 3)" :key="p._id" :project="p" overlay />
         </div>
       </section>
     </template>
@@ -130,119 +119,99 @@ const placeLabel = computed(() =>
 
 <style scoped lang="scss">
 .pdetail {
-  padding-bottom: $space-xl;
+  padding-bottom: $space-section;
 
   &__state {
     @include container;
     padding-block: $space-xl;
   }
 
-  &__layout {
-    @include container;
-    @include flex(column, stretch, flex-start, $space-lg);
-    padding-top: $space-md;
-
-    @include from('lg') {
-      flex-direction: row;
-      align-items: flex-start;
-    }
-  }
-
-  &__main {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  &__aside {
-    @include from('lg') {
-      flex: 0 0 360px;
-    }
-  }
-
   &__section {
-    padding-block: 1.5rem 2rem;
-    scroll-margin-top: 130px;
+    @include container;
+    padding-top: 4.5rem;
+    // Descuenta parte del padding para que el salto desde la barra no deje un hueco enorme.
+    scroll-margin-top: calc(var(--header-h, 73px) + 60px - 2.5rem);
 
-    & + & {
-      border-top: 1px solid $line;
+    @include from('lg') {
+      padding-top: 7.5rem;
+      scroll-margin-top: calc(var(--header-h, 93px) + 60px - 4.5rem);
     }
   }
 
-  &__h2 {
-    @include display($text-xl, 600);
-    margin-bottom: 1.1rem;
+  // Galería: justo bajo la portada, con menos aire.
+  &__section:first-of-type {
+    padding-top: 3.5rem;
+
+    @include from('lg') {
+      padding-top: 5.5rem;
+    }
   }
 
-  &__sub {
-    margin: -0.6rem 0 1rem;
-    font-size: $text-sm;
+  &__band {
+    margin-top: 4.5rem;
+    scroll-margin-top: calc(var(--header-h, 73px) + 60px);
+
+    @include from('lg') {
+      scroll-margin-top: calc(var(--header-h, 93px) + 60px);
+    }
+
+    @include from('lg') {
+      margin-top: 7.5rem;
+    }
+  }
+
+  &__head {
+    margin-bottom: 2rem;
+
+    @include from('lg') {
+      margin-bottom: 3rem;
+    }
+  }
+
+  &__units-head {
+    @include flex(column, flex-start, space-between, 1rem 2rem);
+    margin-bottom: 2rem;
+
+    @include from('md') {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+
+    @include from('lg') {
+      margin-bottom: 3rem;
+    }
+  }
+
+  &__note {
+    font-size: 0.8125rem;
+    font-weight: 300;
+    line-height: 1.6;
     color: $ink-muted;
 
-    &:empty {
-      display: none;
+    @include from('md') {
+      text-align: right;
     }
   }
 
-  &__text {
-    color: $ink-soft;
-    max-width: 68ch;
-
-    p + p {
-      margin-top: 1em;
-    }
+  &__related-head {
+    @include flex(row, center, space-between, 1rem);
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
   }
 
-  &__brochure {
-    margin-top: 1.4rem;
-
-    i {
-      color: $brand-orange;
-    }
-  }
-
-  &__videos {
-    @include flex(column, stretch, flex-start, 1rem);
-    margin-top: 1.5rem;
-  }
-
-  &__highlights {
-    margin-top: 1.5rem;
-
-    h3 {
-      font-size: $text-base;
-      margin-bottom: 0.7rem;
-    }
-
-    ul {
-      list-style: none;
-      @include flex(row, center, flex-start, 0.5rem);
-      flex-wrap: wrap;
-    }
-
-    li {
-      font-size: $text-sm;
-      padding: 0.4rem 0.85rem;
-      border: 1px solid $line;
-      border-radius: $radius-pill;
-
-      i {
-        color: $brand-blue;
-        font-size: 0.8em;
-        margin-right: 0.25rem;
-      }
-    }
-  }
-
-  &__related {
-    @include container;
-    padding-top: $space-xl;
+  &__eyebrow {
+    @include eyebrow;
   }
 
   &__cards {
-    @include flex-cards(280px, 1.5rem);
+    @include flex-cards(280px, 1.25rem);
 
     > * {
-      max-width: 420px;
+      max-width: 560px;
+
+      @include from('lg') {
+        max-width: calc((100% - 2.5rem) / 3);
+      }
     }
   }
 }
