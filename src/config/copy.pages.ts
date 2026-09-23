@@ -111,9 +111,12 @@ export const copyPages = {
     eyebrow: 'Blog',
     title: 'Guías para comprar',
     titleEm: 'e invertir en el valle',
+    text: 'Consejos, trámites y novedades para comprar, vender e invertir en Cumbayá, Tumbaco y el valle de Quito.',
     faqEyebrow: '¿Tiene dudas?',
-    faqTitle: 'Revise las preguntas frecuentes',
-    faqLink: 'Ver preguntas',
+    faqTitle: 'Preguntas y respuestas',
+    faqText: 'Lo que más nos preguntan al comprar o vender una propiedad en el valle, respondido por nuestro equipo.',
+    faqLink: 'Ver preguntas frecuentes',
+    postsTitle: 'Últimos artículos',
   },
 
   post: {
@@ -125,7 +128,11 @@ export const copyPages = {
 
   faq: {
     eyebrow: 'Ayuda',
+    title: 'Preguntas',
+    titleEm: 'frecuentes',
     moreEyebrow: '¿No encontró su respuesta?',
     moreTitle: 'Escríbanos y le respondemos',
+    whatsapp: 'Escribir por WhatsApp',
+    contact: 'Contáctanos',
   },
 } as const
