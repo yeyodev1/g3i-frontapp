@@ -54,7 +54,8 @@ class APIBase {
   private setupInterceptors() {
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        config.timeout = config.timeout || 15000
+        // timeout: 0 es explícito (subidas largas): sin límite.
+        config.timeout = config.timeout ?? 15000
         return config
       },
       (error) => Promise.reject(error),
