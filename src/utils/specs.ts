@@ -1,5 +1,6 @@
 import type { Property, PropertyCard, Unit } from '@/types'
 import { copy } from '@/config/copy.public'
+import { copyProperties } from '@/config/copy.properties'
 import { formatM2, formatNumber } from './format'
 
 /** Un ícono con su valor. Regla de la clienta: si el valor es 0/null no se muestra. */
@@ -19,18 +20,26 @@ type CardLike = Pick<
   'type' | 'bedrooms' | 'bathrooms' | 'parking' | 'builtM2' | 'totalM2' | 'frontMeters'
 >
 
-/** Specs compactas de tarjeta. Terrenos: m² de terreno y metros de frente. */
+/**
+ * Specs compactas de tarjeta: dormitorios, baños y m², como la tarjeta del
+ * sistema de diseño. Terrenos: m² de terreno y metros de frente.
+ */
 export function cardSpecs(p: CardLike): Spec[] {
   const out: Spec[] = []
   if (p.type === 'terreno') {
     if (has(p.totalM2)) out.push({ key: 'land', icon: 'fa-solid fa-vector-square', label: s.land, value: formatM2(p.totalM2) })
     if (has(p.frontMeters))
-      out.push({ key: 'front', icon: 'fa-solid fa-arrows-left-right', label: s.front, value: `${formatNumber(p.frontMeters)} m` })
+      out.push({
+        key: 'front',
+        icon: 'fa-solid fa-arrows-left-right',
+        label: s.front,
+        value: `${formatNumber(p.frontMeters)} m`,
+        short: copyProperties.frontShort,
+      })
     return out
   }
   if (has(p.bedrooms)) out.push({ key: 'bed', icon: 'fa-solid fa-bed', label: s.bedrooms, value: String(p.bedrooms), short: s.bedroomsShort })
   if (has(p.bathrooms)) out.push({ key: 'bath', icon: 'fa-solid fa-bath', label: s.bathrooms, value: formatNumber(p.bathrooms), short: s.bathroomsShort })
-  if (has(p.parking)) out.push({ key: 'car', icon: 'fa-solid fa-car', label: s.parking, value: String(p.parking), short: s.parkingShort })
   const area = has(p.builtM2) ? p.builtM2 : p.totalM2
   if (has(area)) out.push({ key: 'area', icon: 'fa-solid fa-ruler-combined', label: s.built, value: formatM2(area) })
   return out
