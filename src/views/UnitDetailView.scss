@@ -1,0 +1,227 @@
+// Estilos de UnitDetailView.vue (separados para respetar el límite de 300 líneas por SFC).
+.unit {
+  &__wrap {
+    @include container;
+    padding-block: 2rem $space-section;
+
+    @include from('lg') {
+      padding-top: 3rem;
+    }
+  }
+
+  &__back {
+    @include flex(row, center, flex-start, 0.5rem);
+    display: inline-flex;
+    @include caps(0.75rem, 0.2em);
+    color: $navy-900;
+    margin-bottom: 2rem;
+    @include transition(color);
+
+    i {
+      font-size: 0.7rem;
+      color: $ember-500;
+      transition: transform 0.3s $ease;
+    }
+
+    &:hover {
+      color: $ember-600;
+
+      i {
+        transform: translateX(-3px);
+      }
+    }
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+
+      &:hover {
+        color: $ember-700;
+      }
+    }
+  }
+
+  &__title-row {
+    @include flex(row, center, flex-start, 0.6rem 1.2rem);
+    flex-wrap: wrap;
+    margin-top: 0.9rem;
+  }
+
+  &__title {
+    @include display(clamp(2.4rem, 1.6rem + 3vw, 4.25rem), 300);
+    line-height: 1;
+    color: $ink;
+  }
+
+  &__place {
+    margin-top: 0.9rem;
+    font-weight: 300;
+    color: $ink-soft;
+  }
+
+  &__layout {
+    @include flex(column, stretch, flex-start, 3rem);
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid $line;
+
+    @include from('lg') {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 4rem;
+      margin-top: 3rem;
+      padding-top: 3rem;
+    }
+  }
+
+  &__main {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__aside {
+    @include flex(column, stretch, flex-start, 1.25rem);
+
+    @include from('lg') {
+      flex: 0 0 380px;
+      position: sticky;
+      top: calc(var(--header-h, 93px) + 1.5rem);
+    }
+  }
+
+  &__block + &__block {
+    margin-top: 3rem;
+
+    @include from('lg') {
+      margin-top: 4rem;
+    }
+  }
+
+  &__h2 {
+    @include display(clamp(1.6rem, 1.3rem + 1vw, 2.2rem), 300);
+    color: $ink;
+    margin-bottom: 1.4rem;
+  }
+
+  &__plan {
+    position: relative;
+    width: 100%;
+    padding: 1.25rem;
+    border: 1px solid $line;
+    background: $surface;
+    cursor: zoom-in;
+
+    img {
+      width: 100%;
+      max-height: 600px;
+      object-fit: contain;
+    }
+  }
+
+  &__zoom {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    @include flex(row, center, center);
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: $radius-sm;
+    background: $navy-900;
+    color: $surface;
+    font-size: 0.85rem;
+  }
+
+  &__photos {
+    @include flex-cards(160px, 8px);
+  }
+
+  &__photo {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: $gray-200;
+    cursor: zoom-in;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s $ease;
+    }
+
+    &:hover img {
+      transform: scale(1.04);
+    }
+
+    &:only-child {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  &__text {
+    font-size: 1.0625rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: $ink-body;
+    max-width: 68ch;
+
+    p + p {
+      margin-top: 1.1em;
+    }
+  }
+
+  &__price-box {
+    @include card;
+    @include flex(column, stretch, flex-start, 0.5rem);
+    padding: 1.75rem 1.5rem;
+
+    @include from('md') {
+      padding: 2.25rem;
+    }
+  }
+
+  &__price-label {
+    @include caps(0.6875rem, 0.22em);
+    color: $ink-muted;
+  }
+
+  &__price {
+    font-family: $font-display;
+    font-size: clamp(2.2rem, 1.8rem + 1.4vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.05;
+    color: $navy-900;
+  }
+
+  &__ref {
+    font-size: $text-xs;
+    color: $ink-muted;
+  }
+
+  &__reserved {
+    margin-top: 0.5rem;
+    font-size: $text-sm;
+    font-weight: 300;
+    color: $ink-body;
+    padding: 0.75rem 0.9rem;
+    border-left: 2px solid $ember-500;
+    background: $ember-100;
+  }
+
+  &__actions {
+    @include flex(row, center, flex-start, 0.75rem);
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid $line;
+
+    > :first-child {
+      flex: 1 1 100%;
+    }
+  }
+}
