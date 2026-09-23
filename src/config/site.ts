@@ -97,7 +97,7 @@ export const site = {
     interests: [
       { key: 'sell', label: 'Vender mi propiedad' },
       { key: 'interested', label: 'Estoy interesado en comprar' },
-      { key: 'work-with-us', label: 'Trabajar con ustedes' },
+      { key: 'work-with-us', label: 'Trabajar con nosotros' },
     ],
     sellPropertyTypes: [
       { key: 'terreno', label: 'Terreno' },
