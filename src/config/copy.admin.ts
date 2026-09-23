@@ -146,6 +146,15 @@ export const adminCopy = {
     list: 'Todavía no hay nada aquí. Agrega el primero.',
   },
 
+  projectUnits: {
+    title: 'Unidades disponibles',
+    text: 'El inventario del proyecto: cada unidad con su precio, plano y estado. Las vendidas desaparecen del sitio y el «precio desde» se calcula solo.',
+    saveFirst: 'Guarda el proyecto primero y aquí mismo podrás cargar sus unidades.',
+    empty: 'Este proyecto todavía no tiene unidades cargadas.',
+    add: 'Agregar unidad',
+    manage: 'Administrar unidades (vender, reservar, editar)',
+  },
+
   help: {
     locality: 'Barrio, urbanización o proyecto. Sale junto al sector en las tarjetas: «Cumbayá · Kentia».',
     badge: 'Opcional. Texto corto que se muestra sobre la foto principal.',
@@ -167,6 +176,7 @@ export const adminCopy = {
     featured: 'Aparece en la sección de destacadas de la página de inicio.',
     developer: 'Opcional. Nombre de la constructora o promotora.',
     deliveryDate: 'Escríbelo como quieras que se lea, por ejemplo "Febrero 2027".',
+    totalUnits: 'Solo el número total del proyecto. Cada unidad (precio, plano, vendida o no) se carga más abajo, en «Unidades disponibles».',
     priceFrom: 'Si el proyecto tiene unidades disponibles, este valor se calcula solo con la más barata.',
     highlights: 'Beneficios cortos que se muestran como lista, por ejemplo "Ubicación estratégica".',
     brochure: 'Un PDF de hasta 20 MB que el público puede descargar.',
