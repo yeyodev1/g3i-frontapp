@@ -14,6 +14,7 @@ export function emptyProject(): ProjectForm {
     sector: '',
     city: 'Quito',
     address: '',
+    locality: '',
     location: { lat: null, lng: null, exact: false, radiusMeters: 400 },
     priceFrom: null,
     deliveryDate: '',
