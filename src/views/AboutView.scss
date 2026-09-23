@@ -1,0 +1,179 @@
+// Conócenos: foto + texto como «La perla geográfica» del ejemplo, asesores y banda navy.
+.about {
+  &__intro {
+    @include container;
+    @include flex(column, stretch, flex-start, 2.5rem);
+    padding-block: clamp(2.5rem, 7vw, 7rem);
+
+    @include from('lg') {
+      flex-direction: row;
+      align-items: center;
+      gap: 80px;
+    }
+  }
+
+  // En columna (móvil) una base 0 aplasta la foto: el reparto solo en escritorio.
+  &__figure,
+  &__copy {
+    min-width: 0;
+
+    @include from('lg') {
+      flex: 1 1 0;
+    }
+  }
+
+  &__figure {
+    aspect-ratio: 4 / 5;
+    max-height: 70vh;
+    background: $sand;
+    overflow: hidden;
+
+    @include from('lg') {
+      max-height: none;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+  }
+
+  &__title {
+    @include display(clamp(2.3rem, 1.6rem + 2.6vw, 3rem));
+    margin-top: 0.9rem;
+    color: $ink;
+    @include title-rule;
+  }
+
+  &__text {
+    margin-top: 1.6rem;
+    font-size: 1.0625rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: $ink-body;
+
+    & + & {
+      margin-top: 1rem;
+    }
+  }
+
+  &__welcome {
+    margin-top: 1.4rem;
+    font: italic 400 1.5rem/1.2 $font-display;
+    color: $blue-600;
+  }
+
+  &__values {
+    list-style: none;
+    @include flex(row, flex-start, flex-start, 1.5rem);
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid $line;
+
+    li {
+      flex: 1 1 0;
+      @include flex(column, flex-start, flex-start, 0.6rem);
+    }
+
+    i {
+      font-size: 1.4rem;
+      color: $navy-900;
+    }
+
+    span {
+      font: 400 1.5rem/1 $font-display;
+      color: $ink;
+    }
+  }
+
+  &__sk span {
+    display: block;
+    height: 1rem;
+    background: $sand;
+    margin-top: 1rem;
+
+    &:last-child {
+      width: 60%;
+    }
+  }
+
+  &__team {
+    @include container;
+    padding-bottom: clamp(4rem, 9vw, 7.5rem);
+  }
+
+  &__team-head {
+    @include flex(column, flex-start, space-between, 1.2rem);
+    margin-bottom: 3rem;
+
+    @include from('md') {
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 2rem;
+    }
+  }
+
+  &__h2 {
+    @include display($display-md);
+    margin-top: 0.9rem;
+    color: $ink;
+  }
+
+  &__team-text {
+    max-width: 420px;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: $ink-body;
+  }
+
+  // Tarjetas de ancho fijo: con un solo asesor no se estira a toda la fila.
+  &__grid {
+    @include flex(row, stretch, flex-start, 2rem 1.5rem);
+    flex-wrap: wrap;
+
+    > * {
+      flex: 0 1 calc(50% - 0.75rem);
+      min-width: 0;
+
+      @include from('md') {
+        flex-basis: 212px;
+      }
+    }
+  }
+
+  &__cta {
+    background: $inverse;
+    color: $on-inverse;
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  &__cta-inner {
+    @include container;
+    @include flex(column, flex-start, space-between, 2rem);
+
+    @include from('md') {
+      flex-direction: row;
+      align-items: center;
+      gap: 3rem;
+    }
+  }
+
+  &__cta-eyebrow {
+    @include eyebrow;
+    color: $ember-300;
+  }
+
+  &__cta-title {
+    color: $on-inverse;
+    @include display(clamp(2rem, 1.4rem + 2.2vw, 3rem));
+    line-height: 1.1;
+    margin-top: 0.9rem;
+    max-width: 620px;
+  }
+}
