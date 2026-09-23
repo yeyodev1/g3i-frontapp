@@ -1,24 +1,30 @@
 // Paleta de G3i Inmobiliaria. Semántica primero: los componentes hablan de tinta,
 // papel y acento, no de "rosa" o "gris 700".
+// La clienta pidió algo sobrio (negro, blanco, gris): el azul y el naranja del
+// logo solo aparecen como detalles, nunca como fondos grandes.
 @use 'sass:color';
 
-// Acento de marca
-$accent: #1c1c1e;
+// Colores del logo G3i — usar con moderación
+$brand-blue: #1a6ab5;
+$brand-orange: #e8532a;
+
+// Acento de marca: grafito
+$accent: #161616;
 $accent-deep: color.adjust($accent, $lightness: -12%);
 $accent-soft: color.mix($accent, #ffffff, 14%);
 
 // Superficies
-$paper: #fdfcfa; // fondo base
+$paper: #ffffff; // fondo base
 $surface: #ffffff; // superficies elevadas
-$sand: #f1ece6; // bloques suaves
-$line: #e7e1d9; // bordes
+$sand: #f4f4f3; // bloques suaves (gris muy claro)
+$line: #e5e5e3; // bordes
 
 // Texto
-$ink: #191423; // texto principal
-$ink-soft: #4a4552; // texto secundario
-$ink-muted: #8a8590; // terciario / labels
+$ink: #141414; // texto principal
+$ink-soft: #4a4a4a; // texto secundario
+$ink-muted: #8a8a8a; // terciario / labels
 
-$overlay: rgba(#100c14, 0.55);
+$overlay: rgba(#0b0b0b, 0.55);
 
 // Estados
 $success: #3bb77e;
