@@ -38,7 +38,7 @@ export const copy = {
       '/': 'Portada',
       '/propiedades': 'Casas, departamentos y terrenos',
       '/proyectos': 'En planos, en construcción y por estrenar',
-      '/mapa': 'Explora por sector',
+      '/mapa-del-valle': 'Las zonas del valle, propiedad por propiedad',
       '/blog': 'Guías para comprar e invertir',
       '/conocenos': 'Nuestro equipo',
       '/contacto': 'Hablemos',
