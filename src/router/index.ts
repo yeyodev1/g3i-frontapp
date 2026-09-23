@@ -7,7 +7,8 @@ const publicRoutes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'Home',
     component: () => import('@/views/HomeView.vue'),
-    meta: { title: site.name },
+    // El header va transparente sobre la foto de portada solo en Inicio.
+    meta: { title: site.name, headerOverlay: true },
   },
   {
     path: '/propiedades',
@@ -40,11 +41,12 @@ const publicRoutes: Array<RouteRecordRaw> = [
     meta: { title: 'Unidad disponible' },
   },
   {
-    path: '/mapa',
+    path: '/mapa-del-valle',
     name: 'Map',
     component: () => import('@/views/MapView.vue'),
-    meta: { title: 'Buscar en el mapa' },
+    meta: { title: 'Mapa del valle' },
   },
+  { path: '/mapa', redirect: (to) => ({ path: '/mapa-del-valle', query: to.query }) },
   {
     path: '/vender-mi-propiedad',
     name: 'Sell',
