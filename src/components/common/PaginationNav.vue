@@ -15,7 +15,13 @@ const numbers = computed(() => {
 
 <template>
   <nav v-if="pages > 1" class="pager" aria-label="Paginación">
-    <button type="button" class="pager__btn" :disabled="page <= 1" :aria-label="copy.common.prev" @click="emit('go', page - 1)">
+    <button
+      type="button"
+      class="pager__btn"
+      :disabled="page <= 1"
+      :aria-label="copy.common.prev"
+      @click="emit('go', page - 1)"
+    >
       <i class="fa-solid fa-chevron-left"></i>
     </button>
     <button
@@ -29,7 +35,13 @@ const numbers = computed(() => {
     >
       {{ n }}
     </button>
-    <button type="button" class="pager__btn" :disabled="page >= pages" :aria-label="copy.common.next" @click="emit('go', page + 1)">
+    <button
+      type="button"
+      class="pager__btn"
+      :disabled="page >= pages"
+      :aria-label="copy.common.next"
+      @click="emit('go', page + 1)"
+    >
       <i class="fa-solid fa-chevron-right"></i>
     </button>
   </nav>
@@ -41,25 +53,26 @@ const numbers = computed(() => {
   margin-top: $space-lg;
 
   &__btn {
-    min-width: 2.5rem;
-    height: 2.5rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
     padding-inline: 0.6rem;
-    border-radius: $radius-pill;
+    border-radius: $radius-sm;
     border: 1px solid $line;
     font-size: $text-sm;
-    font-weight: 600;
+    font-weight: 400;
+    letter-spacing: 0.08em;
     color: $ink-soft;
     @include transition;
 
     &:hover:not(:disabled) {
-      border-color: $ink;
-      color: $ink;
+      border-color: $navy-900;
+      color: $navy-900;
     }
 
     &--active {
-      background: $ink;
-      border-color: $ink;
-      color: $surface;
+      background: $navy-900;
+      border-color: $navy-900;
+      color: $on-inverse;
     }
 
     &:disabled {
