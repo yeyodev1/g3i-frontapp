@@ -17,7 +17,7 @@ import { toParagraphs } from '@/utils/markdown'
 import { copy } from '@/config/copy.public'
 import { copyProjects } from '@/config/copy.projects'
 
-const { slug, detail, project, unit, projectTitle, listingTitle, refCode, images, whatsappHref } = useProjectUnit()
+const { slug, detail, project, unit, projectTitle, listingTitle, refCode, images, photos, whatsappHref } = useProjectUnit()
 const catalog = useCatalogStore()
 const gallery = useGallery(computed(() => images.value.length))
 
@@ -34,7 +34,7 @@ const refs = computed(() =>
   <div class="unit">
     <div class="unit__wrap">
       <RouterLink :to="`/proyectos/${slug}`" class="unit__back">
-        <i class="fa-solid fa-arrow-left"></i> {{ copy.unit.back }}
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ copyProjects.unitBack }}
       </RouterLink>
 
       <SkeletonCards v-if="detail.loading.value && !unit" :count="2" basis="320px" />
@@ -52,13 +52,15 @@ const refs = computed(() =>
 
       <template v-else-if="unit && project">
         <header class="unit__head">
-          <p class="unit__eyebrow">{{ copyProjects.unitOf }} {{ projectTitle }}</p>
+          <p class="unit__eyebrow">
+            {{ copyProjects.unitOf }} <RouterLink :to="`/proyectos/${slug}`">{{ projectTitle }}</RouterLink>
+          </p>
           <div class="unit__title-row">
             <h1 class="unit__title">{{ unit.name }}</h1>
             <UnitStatusBadge :status="unit.status" />
           </div>
           <p class="unit__place">
-            {{ catalog.typeLabel(unit.type) }} · {{ catalog.sectorLabel(project.sector) }} · {{ copy.common.city }}
+            {{ catalog.typeLabel(unit.type) }} · {{ catalog.sectorLabel(project.sector) }}<template v-if="project.locality"> · {{ project.locality }}</template> · {{ copy.common.city }}
           </p>
         </header>
 
@@ -68,25 +70,29 @@ const refs = computed(() =>
               <h2 class="unit__h2">{{ copy.unit.floorPlan }}</h2>
               <button type="button" class="unit__plan" :aria-label="copyProjects.galleryOpen" @click="gallery.show(0)">
                 <img :src="unit.floorPlan.url" :alt="`${copy.unit.floorPlan} ${unit.name}`" />
-                <span class="unit__zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
+                <span class="unit__zoom"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i></span>
               </button>
             </section>
 
-            <section v-if="unit.images.length" class="unit__block">
-              <h2 class="unit__h2">{{ copy.unit.photos }}</h2>
+            <section v-if="photos.length" class="unit__block">
+              <h2 class="unit__h2">{{ unit.images.length ? copy.unit.photos : copyProjects.projectRenders }}</h2>
               <div class="unit__photos">
-                <button v-for="(img, i) in unit.images" :key="img.url" type="button" class="unit__photo" @click="gallery.show(i + photoOffset)">
+                <button v-for="(img, i) in photos" :key="img.url" type="button" class="unit__photo" :aria-label="`${copyProjects.galleryOpen} ${i + 1}`" @click="gallery.show(i + photoOffset)">
                   <img :src="img.url" :alt="img.alt || unit.name" loading="lazy" />
                 </button>
               </div>
             </section>
 
             <section v-if="specs.length" class="unit__block">
+              <h2 class="unit__h2">{{ copyProjects.unitSpecsTitle }}</h2>
               <SpecList :specs="specs" size="lg" />
             </section>
 
-            <section v-if="paragraphs.length" class="unit__block unit__text">
-              <p v-for="(p, i) in paragraphs" :key="i">{{ p }}</p>
+            <section v-if="paragraphs.length" class="unit__block">
+              <h2 class="unit__h2">{{ copyProjects.unitDescriptionTitle }}</h2>
+              <div class="unit__text">
+                <p v-for="(p, i) in paragraphs" :key="i">{{ p }}</p>
+              </div>
             </section>
           </div>
 
@@ -94,6 +100,7 @@ const refs = computed(() =>
             <div class="unit__price-box">
               <span class="unit__price-label">{{ copyProjects.unitPrice }}</span>
               <strong class="unit__price">{{ formatPrice(unit.price) }}</strong>
+              <p v-if="refCode" class="unit__ref">{{ copyProjects.code }} {{ refCode }}</p>
               <p v-if="unit.status === 'reserved'" class="unit__reserved">{{ copy.unit.reservedNote }}</p>
               <div class="unit__actions">
                 <WhatsAppButton :href="whatsappHref" block />
@@ -110,169 +117,4 @@ const refs = computed(() =>
   </div>
 </template>
 
-<style scoped lang="scss">
-.unit {
-  &__wrap {
-    @include container;
-    padding-block: 1.5rem $space-xl;
-  }
-
-  &__back {
-    @include flex(row, center, flex-start, 0.5rem);
-    display: inline-flex;
-    font-size: $text-sm;
-    font-weight: 600;
-    color: $ink-soft;
-    margin-bottom: 1.5rem;
-
-    i {
-      color: $brand-blue;
-      font-size: 0.8em;
-    }
-
-    &:hover {
-      color: $ink;
-    }
-  }
-
-  &__eyebrow {
-    @include eyebrow;
-    margin-bottom: 0.5rem;
-  }
-
-  &__title-row {
-    @include flex(row, center, flex-start, 0.8rem);
-    flex-wrap: wrap;
-  }
-
-  &__title {
-    @include display($display-md, 600);
-  }
-
-  &__place {
-    margin-top: 0.5rem;
-    color: $ink-soft;
-    font-size: $text-sm;
-  }
-
-  &__layout {
-    @include flex(column, stretch, flex-start, $space-lg);
-    margin-top: $space-lg;
-
-    @include from('lg') {
-      flex-direction: row;
-      align-items: flex-start;
-    }
-  }
-
-  &__main {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  &__aside {
-    @include flex(column, stretch, flex-start, 1rem);
-
-    @include from('lg') {
-      flex: 0 0 360px;
-      position: sticky;
-      top: calc(64px + 1rem);
-    }
-  }
-
-  &__block + &__block {
-    margin-top: 2rem;
-  }
-
-  &__h2 {
-    @include display($text-lg, 600);
-    margin-bottom: 0.9rem;
-  }
-
-  &__plan {
-    position: relative;
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid $line;
-    border-radius: $radius-md;
-    background: $surface;
-
-    img {
-      width: 100%;
-      max-height: 560px;
-      object-fit: contain;
-    }
-  }
-
-  &__zoom {
-    position: absolute;
-    right: 0.8rem;
-    bottom: 0.8rem;
-    @include flex(row, center, center);
-    width: 2.4rem;
-    height: 2.4rem;
-    border-radius: 50%;
-    background: $ink;
-    color: $surface;
-    font-size: 0.85rem;
-  }
-
-  &__photos {
-    @include flex-cards(140px, 0.5rem);
-  }
-
-  &__photo {
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    border-radius: $radius-sm;
-    background: $sand;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  &__text {
-    color: $ink-soft;
-    max-width: 68ch;
-
-    p + p {
-      margin-top: 1em;
-    }
-  }
-
-  &__price-box {
-    @include card;
-    @include flex(column, stretch, flex-start, 0.4rem);
-    padding: 1.25rem;
-  }
-
-  &__price-label {
-    font-size: $text-xs;
-    color: $ink-muted;
-  }
-
-  &__price {
-    @include display($display-sm, 700);
-  }
-
-  &__reserved {
-    font-size: $text-sm;
-    color: $ink-soft;
-    padding: 0.6rem 0.8rem;
-    border-left: 2px solid $brand-orange;
-    background: $sand;
-  }
-
-  &__actions {
-    @include flex(row, center, flex-start, 0.5rem);
-    margin-top: 0.6rem;
-
-    > :first-child {
-      flex: 1;
-    }
-  }
-}
-</style>
+<style scoped lang="scss" src="./UnitDetailView.scss"></style>
