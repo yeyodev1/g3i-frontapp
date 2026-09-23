@@ -11,7 +11,11 @@ import { copy } from '@/config/copy.public'
 const catalog = useCatalogStore()
 
 const about = computed(() => catalog.site?.settings.about)
-const title = computed(() => about.value?.title || site.about.title)
+// Si el título guardado repite el eyebrow ("Conócenos"), se usa el del sitio.
+const title = computed(() => {
+  const t = about.value?.title
+  return t && t !== site.about.eyebrow ? t : site.about.title
+})
 const paragraphs = computed(() => toParagraphs(about.value?.text || copy.about.fallbackText))
 const advisors = computed(() => (catalog.site?.advisors ?? []).filter((a) => a.isActive !== false))
 const loading = computed(() => !catalog.site && !catalog.siteError)
