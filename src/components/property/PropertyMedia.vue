@@ -40,9 +40,14 @@ const plans = useGallery(computed(() => props.floorPlans.length))
     display: none;
   }
 
+  // Mismo encabezado que las demás secciones de la ficha (estilo pestaña).
   &__title {
-    @include display($text-xl, 600);
-    margin-bottom: 1rem;
+    @include caps(0.75rem, 0.22em);
+    color: $ink;
+    padding-bottom: 0.875rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid $line;
+    background: linear-gradient($ember-500, $ember-500) left bottom / 3rem 1px no-repeat;
   }
 
   &__videos {
@@ -58,6 +63,12 @@ const plans = useGallery(computed(() => props.floorPlans.length))
     aspect-ratio: 4 / 3;
     border: 1px solid $line;
     border-radius: $radius-sm;
+    @include transition(box-shadow);
+
+    &:hover {
+      box-shadow: $shadow-md;
+    }
+
     overflow: hidden;
     background: $surface;
     cursor: zoom-in;
@@ -77,7 +88,7 @@ const plans = useGallery(computed(() => props.floorPlans.length))
       width: 2rem;
       height: 2rem;
       border-radius: 50%;
-      background: rgba($ink, 0.7);
+      background: rgba($navy-900, 0.8);
       color: $surface;
       font-size: 0.8rem;
     }
