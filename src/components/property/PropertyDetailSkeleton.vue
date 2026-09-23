@@ -29,7 +29,7 @@
   &__media {
     @extend %shimmer;
     aspect-ratio: 4 / 3;
-    border-radius: $radius-md;
+    border-radius: $radius-sm;
 
     @include from('md') {
       aspect-ratio: 16 / 9;
@@ -82,7 +82,7 @@
   &__aside {
     @extend %shimmer;
     height: 22rem;
-    border-radius: 14px;
+    border-radius: $radius-sm;
 
     @include from('lg') {
       flex: 0 0 360px;
