@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import FieldSelect from '@/components/forms/FieldSelect.vue'
-import { useCatalogStore } from '@/stores/catalog'
+import { computed } from 'vue'
+import HomeSearch from './HomeSearch.vue'
 import { site } from '@/config/site'
-import { copyHome } from '@/config/copy.home'
 import type { PopularSearch } from '@/types'
 
 const props = defineProps<{
@@ -14,162 +11,158 @@ const props = defineProps<{
   popular: PopularSearch[]
 }>()
 
-const router = useRouter()
-const catalog = useCatalogStore()
-const type = ref('')
-const sector = ref('')
-
-// Solo sectores con inmuebles publicados: nunca llevar a una búsqueda vacía.
-const sectors = computed(() => catalog.activeSectors.map((s) => ({ key: s.key, label: s.label })))
-const types = computed(() => catalog.propertyTypes.map((t) => ({ key: t.key, label: t.label })))
-
-function search() {
-  const query: Record<string, string> = {}
-  if (type.value) query.type = type.value
-  if (sector.value) query.sector = sector.value
-  router.push({ path: '/propiedades', query })
-}
+// «Sueña, siente, vive tu espacio.» → la segunda idea (tras la última coma) va en cursiva.
+const lines = computed(() => {
+  const text = (props.title || site.home.heroTitle).trim()
+  const cut = text.lastIndexOf(',')
+  if (cut <= 0 || cut === text.length - 1) return { first: text, second: '' }
+  return { first: text.slice(0, cut + 1), second: text.slice(cut + 1).trim() }
+})
 </script>
 
 <template>
-  <section class="hero">
-    <div class="hero__media" aria-hidden="true">
-      <img v-if="props.image" :src="props.image" alt="" fetchpriority="high" />
-    </div>
-    <div class="hero__inner">
-      <div class="hero__copy">
-        <h1 class="hero__title">{{ title || site.home.heroTitle }}</h1>
+  <div class="home-hero">
+    <section class="hero">
+      <div class="hero__media" aria-hidden="true">
+        <img v-if="image" :src="image" alt="" fetchpriority="high" />
+      </div>
+      <div class="hero__inner">
+        <p class="hero__eyebrow">{{ site.home.heroEyebrow }}</p>
+        <h1 class="hero__title">
+          {{ lines.first }}
+          <template v-if="lines.second">
+            <br />
+            <em>{{ lines.second }}</em>
+          </template>
+        </h1>
         <p class="hero__subtitle">{{ subtitle || site.home.heroSubtitle }}</p>
       </div>
+    </section>
 
-      <form class="search" role="search" @submit.prevent="search">
-        <FieldSelect v-model="type" class="search__field" :label="site.home.searchTypeLabel" :options="types" :placeholder="copyHome.anyType" />
-        <FieldSelect v-model="sector" class="search__field" :label="site.home.searchSectorLabel" :options="sectors" :placeholder="copyHome.anySector" />
-        <button type="submit" class="btn btn--primary search__btn">
-          <i class="fa-solid fa-magnifying-glass"></i> {{ site.home.searchButton }}
-        </button>
-      </form>
-
-      <div v-if="popular.length" class="popular">
-        <span class="popular__label">{{ site.home.popularTitle }}</span>
-        <RouterLink
-          v-for="item in popular"
-          :key="item.label"
-          :to="{ path: '/propiedades', query: item.query }"
-          class="popular__chip"
-        >
-          {{ item.label }}
-        </RouterLink>
-      </div>
+    <div class="home-hero__search">
+      <HomeSearch :popular="popular" />
     </div>
-  </section>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: min(88vh, 760px);
-  @include flex(column, stretch, flex-end);
-  background: $ink;
-  color: $surface;
+  overflow: hidden;
+  background: $navy-950;
+  color: $on-inverse;
+  min-height: 600px;
+  @include flex(column, stretch, center);
+
+  @include from('lg') {
+    min-height: 760px;
+  }
 
   &__media {
     position: absolute;
     inset: 0;
     z-index: -1;
-    overflow: hidden;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      animation: hero-in 1.6s $ease both;
     }
 
+    // En móvil el texto ocupa todo el ancho: el velo baja de arriba a abajo.
     &::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(#0b0b0b, 0.35) 0%, rgba(#0b0b0b, 0.25) 35%, rgba(#0b0b0b, 0.78) 100%);
+      background: linear-gradient(
+        180deg,
+        rgba($navy-950, 0.78) 0%,
+        rgba($navy-950, 0.6) 55%,
+        rgba($navy-950, 0.82) 100%
+      );
+
+      @include from('md') {
+        background: linear-gradient(
+          90deg,
+          rgba($navy-950, 0.92) 0%,
+          rgba($navy-950, 0.6) 55%,
+          rgba($navy-950, 0.25) 100%
+        );
+      }
     }
   }
 
   &__inner {
-    @include container(1160px);
-    padding-block: 7rem 2.5rem;
+    @include container;
+    // Deja sitio al header flotante arriba y al buscador que monta abajo.
+    padding-block: 7.5rem 6.5rem;
+
+    @include from('lg') {
+      padding-block: 13.75rem 9rem;
+    }
   }
 
-  &__copy {
-    max-width: 40rem;
-    margin-bottom: 1.8rem;
+  &__eyebrow {
+    @include eyebrow;
+    color: $ember-300;
   }
 
   &__title {
-    @include display($display-lg, 600);
-    color: $surface;
+    @include display(clamp(3rem, 1.9rem + 4.6vw, 5.5rem));
+    line-height: 1;
+    color: $on-inverse;
+    margin-top: 1.5rem;
+    max-width: 760px;
+
+    em {
+      font-style: italic;
+    }
   }
 
   &__subtitle {
-    margin-top: 1rem;
-    font-size: $text-lg;
-    color: rgba(#fff, 0.85);
-    max-width: 48ch;
+    margin-top: 1.75rem;
+    max-width: 540px;
+    font-size: clamp(1.06rem, 1rem + 0.3vw, 1.19rem);
+    font-weight: 300;
+    line-height: 1.6;
+    color: $on-inverse-muted;
   }
 }
 
-.search {
-  @include flex(column, stretch, flex-start, 0.8rem);
-  background: $surface;
-  color: $ink;
-  border-radius: $radius-md;
-  padding: 1rem;
-  box-shadow: $shadow-lg;
-  max-width: 860px;
+.home-hero__search {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1104px;
+  margin: -4rem auto 0;
+  padding-inline: 1.25rem;
 
   @include from('md') {
-    flex-direction: row;
-    align-items: flex-end;
-    padding: 1.1rem 1.1rem 1.1rem 1.4rem;
+    padding-inline: 2rem;
   }
 
-  &__field {
-    flex: 1 1 0;
-  }
-
-  &__btn {
-    padding-block: 0.8rem;
-
-    @include from('md') {
-      min-width: 9rem;
-    }
+  @include from('lg') {
+    margin-top: -5rem;
   }
 }
 
-.popular {
-  @include flex(row, center, flex-start, 0.5rem);
-  flex-wrap: wrap;
-  margin-top: 1.3rem;
-
-  &__label {
-    font-size: $text-sm;
-    color: rgba(#fff, 0.75);
-    margin-right: 0.3rem;
+// Entrada lenta de la foto; con movimiento reducido queda quieta.
+@keyframes hero-in {
+  from {
+    transform: scale(1.06);
+    opacity: 0.4;
   }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
-  &__chip {
-    font-size: $text-sm;
-    padding: 0.4rem 0.9rem;
-    border-radius: $radius-pill;
-    border: 1px solid rgba(#fff, 0.35);
-    color: $surface;
-    background: rgba(#fff, 0.06);
-    backdrop-filter: blur(4px);
-    @include transition;
-
-    &:hover {
-      background: $surface;
-      color: $ink;
-    }
+@include reduced-motion {
+  .hero__media img {
+    animation: none;
   }
 }
 </style>
