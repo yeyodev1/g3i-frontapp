@@ -6,6 +6,7 @@ import { useSeo } from './useSeo'
 import { useListingWhatsApp } from './useWhatsAppContext'
 import { useCatalogStore } from '@/stores/catalog'
 import { sentenceCase } from '@/utils/format'
+import { projectSchema } from '@/utils/schema'
 import { site } from '@/config/site'
 import type { ProjectCard } from '@/types'
 
@@ -42,6 +43,14 @@ export function useProjectDetail() {
     title: title.value || site.listing.projectsTitle,
     description: project.value?.summary,
     image: project.value?.images[0]?.url,
+    jsonLd: project.value
+      ? projectSchema(
+          project.value,
+          title.value,
+          catalog.sectorLabel(project.value.sector),
+          `${window.location.origin}${window.location.pathname}`,
+        )
+      : null,
   }))
 
   return { slug, detail, related, project, units, title, whatsappHref }
