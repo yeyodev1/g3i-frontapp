@@ -1,40 +1,49 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Project } from '@/types'
 import StageBadge from './StageBadge.vue'
-import ShareButton from '@/components/common/ShareButton.vue'
 import { useCatalogStore } from '@/stores/catalog'
 import { formatPrice } from '@/utils/format'
-import { site } from '@/config/site'
 import { copy } from '@/config/copy.public'
+import { copyProjects } from '@/config/copy.projects'
 
-defineProps<{ project: Project; title: string }>()
+// Portada de la ficha: el primer render a sangre con el titular y los datos clave encima.
+const props = defineProps<{ project: Project; title: string }>()
+const emit = defineEmits<{ request: [] }>()
 const catalog = useCatalogStore()
+const f = copyProjects.fact
+
+const cover = computed(() => props.project.images[0])
+const facts = computed(() => {
+  const p = props.project
+  const out = [{ label: f.sector, value: [catalog.sectorLabel(p.sector), p.locality].filter(Boolean).join(' · ') }]
+  out.push({ label: f.from, value: p.priceFrom ? formatPrice(p.priceFrom) : copy.common.priceOnRequest })
+  if (p.propertyTypes.length) out.push({ label: f.sells, value: p.propertyTypes.map((k) => catalog.typeLabel(k)).join(', ') })
+  if (p.deliveryDate) out.push({ label: f.delivery, value: p.deliveryDate })
+  return out
+})
 </script>
 
 <template>
-  <header class="intro">
-    <nav class="intro__crumbs" aria-label="Migas de pan">
-      <RouterLink to="/proyectos">{{ site.listing.projectsTitle }}</RouterLink>
-      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-      <span>{{ catalog.sectorLabel(project.sector) }}</span>
-    </nav>
-    <div class="intro__row">
-      <div class="intro__copy">
-        <StageBadge :stage="project.stage" class="intro__badge" />
-        <h1 class="intro__title">{{ title }}</h1>
-        <p class="intro__place">
-          <i class="fa-solid fa-location-dot"></i> {{ catalog.sectorLabel(project.sector) }} · {{ project.city || copy.common.city }}
-          <span v-if="project.code" class="intro__code">· {{ copy.property.code }} {{ project.code }}</span>
-        </p>
-      </div>
-      <div class="intro__side">
-        <p class="intro__price">
-          <template v-if="project.priceFrom">
-            <small>{{ copy.common.from }}</small> {{ formatPrice(project.priceFrom) }}
-          </template>
-          <template v-else>{{ copy.common.priceOnRequest }}</template>
-        </p>
-        <ShareButton :title="title" :text="project.summary" />
+  <header class="intro" :class="{ 'intro--plain': !cover }">
+    <img v-if="cover" :src="cover.url" :alt="cover.alt || title" class="intro__img" fetchpriority="high" />
+    <div class="intro__scrim" aria-hidden="true"></div>
+
+    <div class="intro__content">
+      <RouterLink to="/proyectos" class="intro__back">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ copyProjects.back }}
+      </RouterLink>
+      <StageBadge :stage="project.stage" tone="line" class="intro__stage" />
+      <h1 class="intro__title">{{ title }}</h1>
+
+      <div class="intro__facts">
+        <dl v-for="item in facts" :key="item.label" class="intro__fact">
+          <dt>{{ item.label }}</dt>
+          <dd>{{ item.value }}</dd>
+        </dl>
+        <button type="button" class="btn btn--primary intro__cta" @click="emit('request')">
+          {{ copyProjects.requestInfo }}
+        </button>
       </div>
     </div>
   </header>
@@ -42,77 +51,119 @@ const catalog = useCatalogStore()
 
 <style scoped lang="scss">
 .intro {
-  @include container;
-  padding-block: 1.5rem 1.25rem;
+  position: relative;
+  @include flex(column, stretch, flex-end);
+  min-height: 620px;
+  overflow: hidden;
+  background: $inverse-deep;
+  color: $on-inverse;
 
-  &__crumbs {
+  @include from('lg') {
+    min-height: min(820px, calc(100svh - 93px));
+  }
+
+  &__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__scrim {
+    position: absolute;
+    inset: 0;
+    // Doble degradado: abajo para los datos y a la izquierda para el titular, sea cual sea la foto.
+    background:
+      linear-gradient(180deg, rgba($navy-950, 0.45) 0%, rgba($navy-950, 0.1) 28%, rgba($navy-950, 0.92) 100%),
+      linear-gradient(90deg, rgba($navy-950, 0.55) 0%, rgba($navy-950, 0) 70%);
+  }
+
+  &--plain &__scrim {
+    background: linear-gradient(160deg, $navy-900, $navy-950);
+  }
+
+  &__content {
+    position: relative;
+    @include container;
+    padding-block: 5rem 2.5rem;
+
+    @include from('lg') {
+      padding-bottom: 3.5rem;
+    }
+  }
+
+  &__back {
     @include flex(row, center, flex-start, 0.5rem);
-    font-size: $text-xs;
-    color: $ink-muted;
-    margin-bottom: 1rem;
+    display: inline-flex;
+    @include caps(0.75rem, 0.2em);
+    color: rgba($on-inverse, 0.82);
+    @include transition(color);
 
     i {
-      font-size: 0.6rem;
+      font-size: 0.7rem;
     }
 
-    a:hover {
-      color: $ink;
-    }
-  }
-
-  &__row {
-    @include flex(column, flex-start, space-between, 1rem);
-
-    @include from('md') {
-      flex-direction: row;
-      align-items: flex-end;
+    &:hover {
+      color: $on-inverse;
     }
   }
 
-  &__badge {
-    border: 1px solid $line;
-    margin-bottom: 0.7rem;
+  &__stage {
+    display: flex;
+    margin-top: 1.6rem;
   }
 
   &__title {
-    @include display($display-md, 600);
-    max-width: 22ch;
+    @include display(clamp(2.3rem, 1.4rem + 3.6vw, 4.75rem), 300);
+    line-height: 1;
+    letter-spacing: -0.015em;
+    max-width: 20ch;
+    margin-top: 0.9rem;
+    color: $on-inverse;
+    text-shadow: 0 1px 24px rgba($navy-950, 0.35);
   }
 
-  &__place {
-    margin-top: 0.6rem;
-    font-size: $text-sm;
-    color: $ink-soft;
-
-    i {
-      color: $brand-orange;
-      font-size: 0.85em;
-    }
-  }
-
-  &__code {
-    color: $ink-muted;
-  }
-
-  &__side {
-    @include flex(row, center, flex-start, 1rem);
+  &__facts {
+    @include flex(row, flex-end, flex-start, 1.25rem 2rem);
     flex-wrap: wrap;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba($on-inverse, 0.28);
 
-    @include from('md') {
-      flex-direction: column;
-      align-items: flex-end;
+    @include from('lg') {
+      flex-wrap: nowrap;
+      margin-top: 2.75rem;
+      padding-top: 1.75rem;
     }
   }
 
-  &__price {
-    @include display($display-sm, 700);
+  &__fact {
+    flex: 1 1 40%;
+    min-width: 0;
 
-    small {
-      font-family: $font-principal;
-      font-size: $text-sm;
-      font-weight: 500;
-      color: $ink-muted;
-      letter-spacing: 0;
+    @include from('lg') {
+      flex: 1 1 0;
+    }
+
+    dt {
+      @include caps(0.6875rem, 0.22em);
+      color: rgba($on-inverse, 0.72);
+    }
+
+    dd {
+      font-family: $font-display;
+      font-size: clamp(1.1rem, 1rem + 0.4vw, 1.4rem);
+      line-height: 1.25;
+      margin-top: 0.4rem;
+    }
+  }
+
+  &__cta {
+    flex: 1 1 100%;
+
+    @include from('lg') {
+      flex: 0 0 auto;
     }
   }
 }
