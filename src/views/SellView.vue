@@ -43,7 +43,7 @@ onMounted(() => catalog.ensureSite())
 
 <style scoped lang="scss">
 .sell {
-  background: linear-gradient(180deg, $sand 0%, $sand 55%, $paper 55%);
+  background: $sand;
 
   @include from('lg') {
     background: linear-gradient(90deg, $sand 0%, $sand 50%, $paper 50%);
