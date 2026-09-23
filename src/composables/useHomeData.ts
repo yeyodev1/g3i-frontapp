@@ -22,7 +22,9 @@ export function useHomeData() {
     loadingProperties.value = true
     propertiesError.value = false
     try {
-      let res = await propertyService.list({ featured: true, limit: 6 })
+      // «Las más buscadas»: primero las que la inmobiliaria destaca, en su orden,
+      // y luego las más visitadas (el backend resuelve el orden).
+      let res = await propertyService.list({ sort: 'popular', limit: 6 })
       if (!res.items.length) res = await propertyService.list({ limit: 6, sort: 'recent' })
       properties.value = res.items
     } catch {
@@ -54,6 +56,10 @@ export function useHomeData() {
   }
 
   const settings = computed(() => catalog.site?.settings ?? null)
+  // Foto de portada del panel; si aún no hay, la primera propiedad sirve de respaldo.
+  const heroImage = computed(
+    () => settings.value?.hero.image?.url || properties.value[0]?.cover || '',
+  )
 
   onMounted(() => {
     catalog.ensureSite()
@@ -66,6 +72,7 @@ export function useHomeData() {
   return {
     catalog,
     settings,
+    heroImage,
     properties,
     projects,
     posts,
