@@ -17,7 +17,8 @@ const price = new Intl.NumberFormat('es-EC', {
 
 export function formatPrice(value: number | null | undefined): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return ''
-  return price.format(value)
+  // Estilo de la marca: «$ 670.000», con espacio tras el símbolo.
+  return price.format(value).replace(/^\$\s?/, '$ ')
 }
 
 /** Versión corta para los pines del mapa: "$255K", "$1,2M". */
