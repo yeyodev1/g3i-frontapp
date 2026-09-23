@@ -39,29 +39,45 @@ withDefaults(defineProps<{ specs: Spec[]; size?: 'sm' | 'lg' }>(), { size: 'sm' 
     }
   }
 
+  // Fila de «highlights» de la ficha: ícono fino, cifra en serif y etiqueta pequeña.
   &--lg {
-    @include flex-cards(130px, 0.75rem);
+    @include flex(row, flex-start, flex-start, 1.75rem 2.25rem);
+    flex-wrap: wrap;
+    padding-block: 1.5rem;
+    border-top: 1px solid $line;
+    border-bottom: 1px solid $line;
+
+    @include from('md') {
+      gap: 1.75rem 3rem;
+      padding-block: 1.75rem;
+    }
 
     .specs__item {
-      @include flex(column, flex-start, flex-start, 0.15rem);
-      padding: 1rem;
-      border: 1px solid $line;
-      border-radius: $radius-sm;
+      @include flex(column, flex-start, flex-start, 0.2rem);
+      min-width: 4.5rem;
     }
 
     i {
-      color: $brand-blue;
+      color: $blue-600;
       font-size: 1.1rem;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
     }
 
     .specs__value {
-      @include display($text-lg, 600);
-      letter-spacing: -0.01em;
+      font-family: $font-display;
+      font-size: 1.75rem;
+      font-weight: 400;
+      line-height: 1.1;
+      color: $ink;
+
+      @include from('md') {
+        font-size: 1.875rem;
+      }
     }
 
     .specs__label {
       font-size: $text-xs;
+      font-weight: 300;
       color: $ink-muted;
     }
   }
