@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import HomeHero from '@/components/home/HomeHero.vue'
-import HomeStats from '@/components/home/HomeStats.vue'
-import HomeMapTeaser from '@/components/home/HomeMapTeaser.vue'
+import HomeAbout from '@/components/home/HomeAbout.vue'
+import HomeServices from '@/components/home/HomeServices.vue'
 import PartnersStrip from '@/components/home/PartnersStrip.vue'
 import TestimonialsCarousel from '@/components/home/TestimonialsCarousel.vue'
 import BlogTeaser from '@/components/home/BlogTeaser.vue'
@@ -21,6 +20,7 @@ import { copyHome } from '@/config/copy.home'
 const {
   catalog,
   settings,
+  heroImage,
   properties,
   projects,
   posts,
@@ -29,8 +29,6 @@ const {
   propertiesError,
   loadProperties,
 } = useHomeData()
-
-const heroImage = computed(() => settings.value?.hero.image?.url || properties.value[0]?.cover || '')
 
 useSeo(() => ({
   title: site.name,
@@ -48,17 +46,15 @@ useSeo(() => ({
       :popular="settings?.popularSearches ?? []"
     />
 
-    <HomeStats />
-
-    <section class="block">
+    <section class="block block--first" data-reveal>
       <div class="block__inner">
         <SectionHeading
-          :eyebrow="site.home.featuredEyebrow"
-          :title="site.home.featuredTitle"
-          :link-label="copy.home.seeProperties"
+          :eyebrow="copyHome.featured.eyebrow"
+          :title="copyHome.featured.title"
+          :link-label="copyHome.featured.link"
           link-to="/propiedades"
         />
-        <SkeletonCards v-if="loadingProperties" :count="3" />
+        <SkeletonCards v-if="loadingProperties" :count="3" basis="300px" />
         <StateMessage
           v-else-if="propertiesError"
           icon="fa-solid fa-triangle-exclamation"
@@ -69,26 +65,48 @@ useSeo(() => ({
         <div v-else-if="properties.length" class="cards">
           <PropertyCard v-for="p in properties" :key="p._id" :property="p" />
         </div>
-        <StateMessage v-else :text="site.listing.empty" link-to="/contacto" :link-label="copy.nav.contact" />
+        <StateMessage
+          v-else
+          :text="site.listing.empty"
+          link-to="/contacto"
+          :link-label="copy.nav.contact"
+        />
       </div>
     </section>
 
-    <section v-if="loadingProjects || projects.length" class="block block--line">
+    <section v-if="loadingProjects || projects.length" class="block block--sand" data-reveal>
       <div class="block__inner">
         <SectionHeading
-          :eyebrow="site.home.projectsEyebrow"
-          :title="site.home.projectsTitle"
-          :link-label="copy.home.seeProjects"
+          :eyebrow="copyHome.projects.eyebrow"
+          :title="copyHome.projects.title"
+          :link-label="copyHome.projects.link"
           link-to="/proyectos"
         />
+        <!-- Etapas: a la clienta le gusta que se vean de entrada. -->
+        <ul class="stages" :aria-label="copyHome.projects.stagesLabel">
+          <li v-for="stage in catalog.projectStages" :key="stage.key">
+            <RouterLink
+              :to="{ path: '/proyectos', query: { stage: stage.key } }"
+              class="stages__chip"
+            >
+              {{ stage.label }}
+            </RouterLink>
+          </li>
+        </ul>
         <SkeletonCards v-if="loadingProjects" :count="3" basis="300px" />
-        <div v-else class="cards cards--projects">
+        <div v-else class="cards">
           <ProjectCard v-for="p in projects" :key="p._id" :project="p" />
         </div>
       </div>
     </section>
 
-    <HomeMapTeaser />
+    <HomeAbout
+      :title="settings?.about.title"
+      :text="settings?.about.text"
+      :image="settings?.about.image"
+    />
+
+    <HomeServices />
 
     <TestimonialsCarousel :testimonials="catalog.site?.testimonials ?? []" />
 
@@ -104,8 +122,15 @@ useSeo(() => ({
 .block {
   padding-block: $space-section;
 
-  &--line {
-    border-top: 1px solid $line;
+  // El buscador monta sobre esta sección: un poco menos de aire arriba.
+  &--first {
+    padding-top: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  &--sand {
+    background: $gray-50;
+    border-block: 1px solid $gray-200;
+    margin-bottom: $space-section;
   }
 
   &__inner {
@@ -114,21 +139,72 @@ useSeo(() => ({
 }
 
 .cards {
-  @include flex-cards(280px, 1.5rem);
+  @include flex-cards(300px, 1.5rem);
 
   // Con pocas tarjetas no se estiran a todo el ancho.
   > * {
-    max-width: 420px;
+    max-width: calc((100% - 3rem) / 3);
   }
 
-  @include until('sm') {
+  @include until('lg') {
     > * {
       max-width: none;
     }
   }
+}
 
-  &--projects > * {
-    flex-basis: 300px;
+// Etapas de proyecto como filtros rápidos.
+.stages {
+  list-style: none;
+  @include flex(row, center, flex-start, 0.6rem);
+  flex-wrap: wrap;
+  margin: -1.25rem 0 2.25rem;
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    @include caps(0.6875rem, 0.2em);
+    padding: 0.7rem 1rem;
+    border: 1px solid $gray-300;
+    border-radius: $radius-sm;
+    background: $paper;
+    color: $navy-900;
+    @include transition;
+
+    &::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: $ember-500;
+    }
+
+    &:hover {
+      border-color: $navy-900;
+    }
+  }
+}
+
+// Revelado suave al hacer scroll, solo con CSS: sin JS el contenido se ve igual,
+// y con movimiento reducido o navegadores sin soporte no se anima.
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .home :deep([data-reveal]) {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 </style>
