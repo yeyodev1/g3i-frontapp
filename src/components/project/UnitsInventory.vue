@@ -45,7 +45,7 @@ const num = (n: number | null) => (n && n > 0 ? formatNumber(n) : '–')
           <td><UnitStatusBadge :status="u.status" /></td>
           <td class="go">
             <RouterLink :to="to(u)" :aria-label="`${copy.project.seeUnit} ${u.name}`">
-              <i class="fa-solid fa-arrow-right"></i>
+              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </RouterLink>
           </td>
         </tr>
@@ -57,21 +57,21 @@ const num = (n: number | null) => (n && n > 0 ? formatNumber(n) : '–')
       <li v-for="u in units" :key="u._id">
         <RouterLink :to="to(u)" class="ucard">
           <div class="ucard__top">
-            <strong class="ucard__name">{{ u.name }}</strong>
+            <p class="ucard__type">
+              {{ catalog.typeLabel(u.type) }}<template v-if="u.floor"> · {{ copy.specs.floor }} {{ u.floor }}</template>
+            </p>
             <UnitStatusBadge :status="u.status" />
           </div>
-          <p class="ucard__type">
-            {{ catalog.typeLabel(u.type) }}<template v-if="u.floor"> · {{ copy.specs.floor }} {{ u.floor }}</template>
-          </p>
+          <strong class="ucard__name">{{ u.name }}</strong>
           <ul class="ucard__specs">
-            <li v-if="u.bedrooms"><i class="fa-solid fa-bed"></i> {{ u.bedrooms }}</li>
-            <li v-if="u.bathrooms"><i class="fa-solid fa-bath"></i> {{ formatNumber(u.bathrooms) }}</li>
-            <li v-if="u.parking"><i class="fa-solid fa-car"></i> {{ u.parking }}</li>
-            <li v-if="u.builtM2"><i class="fa-solid fa-ruler-combined"></i> {{ formatM2(u.builtM2) }}</li>
+            <li v-if="u.bedrooms"><i class="fa-solid fa-bed" aria-hidden="true"></i> {{ u.bedrooms }} {{ copy.specs.bedroomsShort }}</li>
+            <li v-if="u.bathrooms"><i class="fa-solid fa-bath" aria-hidden="true"></i> {{ formatNumber(u.bathrooms) }} {{ copy.specs.bathroomsShort }}</li>
+            <li v-if="u.parking"><i class="fa-solid fa-car" aria-hidden="true"></i> {{ u.parking }} {{ copy.specs.parkingShort }}</li>
+            <li v-if="u.builtM2"><i class="fa-solid fa-ruler-combined" aria-hidden="true"></i> {{ formatM2(u.builtM2) }}</li>
           </ul>
           <div class="ucard__foot">
             <span class="ucard__price">{{ formatPrice(u.price) }}</span>
-            <span class="ucard__cta">{{ copy.project.seeUnit }} <i class="fa-solid fa-arrow-right"></i></span>
+            <span class="ucard__cta">{{ copy.project.seeUnit }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
           </div>
         </RouterLink>
       </li>
@@ -85,7 +85,8 @@ const num = (n: number | null) => (n && n > 0 ? formatNumber(n) : '–')
     display: none;
     width: 100%;
     border-collapse: collapse;
-    font-size: $text-sm;
+    font-size: 0.95rem;
+    font-weight: 300;
 
     @include from('md') {
       display: table;
@@ -93,26 +94,31 @@ const num = (n: number | null) => (n && n > 0 ? formatNumber(n) : '–')
 
     th,
     td {
-      padding: 0.85rem 0.7rem;
+      padding: 1.1rem 0.8rem;
       text-align: left;
       border-bottom: 1px solid $line;
       vertical-align: middle;
     }
 
     thead th {
-      font-size: $text-xs;
-      font-weight: 600;
+      padding-block: 0 0.9rem;
+      @include caps(0.6875rem, 0.2em);
       color: $ink-muted;
-      border-bottom-color: $ink;
+      border-bottom-color: $navy-900;
+    }
+
+    th:first-child {
+      padding-left: 0;
     }
 
     tbody th {
-      font-weight: 600;
+      font-weight: 400;
 
       small {
         display: block;
-        font-weight: 400;
+        margin-top: 0.2rem;
         font-size: $text-xs;
+        font-weight: 300;
         color: $ink-muted;
       }
     }
@@ -121,10 +127,10 @@ const num = (n: number | null) => (n && n > 0 ? formatNumber(n) : '–')
       @include transition(background);
 
       &:hover {
-        background: $sand;
+        background: $gray-50;
       }
 
-      &.is-reserved td,
+      &.is-reserved td:not(:nth-last-child(-n + 2)),
       &.is-reserved th {
         color: $ink-muted;
       }
@@ -136,33 +142,52 @@ const num = (n: number | null) => (n && n > 0 ? formatNumber(n) : '–')
     }
 
     .price {
-      font-weight: 700;
-      color: $ink;
+      font-family: $font-display;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: $navy-900;
+      white-space: nowrap;
     }
 
-    .go a {
-      @include flex(row, center, center);
-      width: 2.2rem;
-      height: 2.2rem;
-      border-radius: 50%;
-      border: 1px solid $line;
-      color: $ink;
-      font-size: 0.75rem;
+    .go {
+      padding-right: 0;
+      text-align: right;
 
-      &:hover {
-        border-color: $ink;
+      a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border: 1px solid $line;
+        border-radius: $radius-sm;
+        color: $navy-900;
+        font-size: 0.75rem;
+        @include transition;
+
+        &:hover {
+          background: $navy-900;
+          border-color: $navy-900;
+          color: $surface;
+        }
       }
     }
   }
 
-  &__name:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  &__name {
+    font-family: $font-display;
+    font-size: 1.4rem;
+    line-height: 1.15;
+    color: $ink;
+
+    &:hover {
+      color: $blue-700;
+    }
   }
 
   &__cards {
     list-style: none;
-    @include flex(column, stretch, flex-start, 0.7rem);
+    @include flex(column, stretch, flex-start, 0.8rem);
 
     @include from('md') {
       display: none;
@@ -172,54 +197,63 @@ const num = (n: number | null) => (n && n > 0 ? formatNumber(n) : '–')
 
 .ucard {
   @include card;
-  @include flex(column, stretch, flex-start, 0.45rem);
-  padding: 1rem;
+  @include flex(column, stretch, flex-start, 0.5rem);
+  padding: 1.5rem 1.4rem 1.3rem;
 
   &__top {
     @include flex(row, center, space-between, 0.5rem);
   }
 
-  &__name {
-    @include display($text-lg, 600);
+  &__type {
+    @include caps(0.6875rem, 0.22em);
+    color: $blue-700;
   }
 
-  &__type {
-    font-size: $text-sm;
-    color: $ink-muted;
+  &__name {
+    font-family: $font-display;
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.1;
+    color: $ink;
+    margin-top: 0.3rem;
   }
 
   &__specs {
     list-style: none;
-    @include flex(row, center, flex-start, 0.3rem 1rem);
+    @include flex(row, center, flex-start, 0.4rem 1.2rem);
     flex-wrap: wrap;
     font-size: $text-sm;
+    font-weight: 300;
     color: $ink-soft;
 
     i {
       color: $ink-muted;
       font-size: 0.85em;
-      margin-right: 0.2rem;
+      margin-right: 0.3rem;
     }
   }
 
   &__foot {
     @include flex(row, center, space-between, 0.5rem);
-    margin-top: 0.3rem;
-    padding-top: 0.7rem;
+    margin-top: 0.9rem;
+    padding-top: 1rem;
     border-top: 1px solid $line;
   }
 
   &__price {
-    @include display($text-lg, 700);
+    font-family: $font-display;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: $navy-900;
   }
 
   &__cta {
-    font-size: $text-sm;
-    font-weight: 600;
+    @include flex(row, center, flex-start, 0.45rem);
+    @include caps(0.6875rem, 0.18em);
+    color: $blue-700;
 
     i {
-      font-size: 0.75em;
-      color: $brand-blue;
+      font-size: 0.7rem;
     }
   }
 }
