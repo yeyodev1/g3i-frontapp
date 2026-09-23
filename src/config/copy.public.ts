@@ -240,5 +240,15 @@ export const copy = {
     seeProperties: 'Ver propiedades',
   },
 
+  sell: {
+    steps: [
+      { icon: 'fa-regular fa-comments', label: 'Conversamos sobre tu propiedad' },
+      { icon: 'fa-solid fa-magnifying-glass-dollar', label: 'Te ayudamos a definir un precio realista' },
+      { icon: 'fa-solid fa-camera', label: 'La publicamos con fotos y ficha completa' },
+      { icon: 'fa-solid fa-handshake', label: 'Te acompañamos hasta el cierre' },
+    ],
+    whatsappMessage: 'Hola, quiero vender mi propiedad',
+  },
+
   whatsappFloat: 'Escríbenos por WhatsApp',
 } as const
