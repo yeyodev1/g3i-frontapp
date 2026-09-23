@@ -17,24 +17,23 @@ const catalog = useCatalogStore()
 <style scoped lang="scss">
 .amenities {
   list-style: none;
-  @include flex-cards(220px, 0.6rem 1.2rem);
+  @include flex-cards(220px, 0.25rem 2rem);
 
   &__item {
-    @include flex(row, center, flex-start, 0.75rem);
-    font-size: $text-sm;
-    color: $ink;
-    padding-block: 0.4rem;
+    @include flex(row, center, flex-start, 0.85rem);
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: $ink-body;
+    padding-block: 0.7rem;
+    border-bottom: 1px solid $gray-200;
   }
 
   &__icon {
     @include flex(row, center, center);
     flex-shrink: 0;
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 50%;
-    background: $sand;
-    color: $brand-blue;
-    font-size: 0.9rem;
+    width: 1.5rem;
+    color: $blue-600;
+    font-size: 0.95rem;
   }
 }
 </style>
