@@ -17,7 +17,7 @@ const emit = defineEmits<{ retry: [] }>()
 
 <template>
   <div class="state" role="status">
-    <span class="state__icon"><i :class="icon"></i></span>
+    <span class="state__icon"><i :class="icon" aria-hidden="true"></i></span>
     <h2 v-if="title" class="state__title">{{ title }}</h2>
     <p v-if="text" class="state__text">{{ text }}</p>
     <div class="state__actions">
@@ -34,27 +34,25 @@ const emit = defineEmits<{ retry: [] }>()
 .state {
   @include flex(column, center, center, 0.7rem);
   text-align: center;
-  padding: $space-xl 1rem;
-  border: 1px dashed $line;
-  border-radius: $radius-md;
-  background: $sand;
+  padding: $space-xl 1.25rem;
+  border: 1px solid $line;
+  border-radius: $radius-sm;
+  background: $gray-50;
 
   &__icon {
     @include flex(row, center, center);
     width: 3rem;
     height: 3rem;
-    border-radius: 50%;
-    background: $surface;
-    border: 1px solid $line;
-    color: $brand-blue;
-    font-size: 1.1rem;
+    color: $ember-500;
+    font-size: 1.5rem;
   }
 
   &__title {
-    @include display($text-xl, 600);
+    @include display(1.75rem);
   }
 
   &__text {
+    font-weight: 300;
     color: $ink-soft;
     max-width: 46ch;
   }
