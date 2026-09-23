@@ -51,6 +51,8 @@ export interface AdminProjectRow extends ProjectCard {
 
 export interface AdminListQuery {
   q?: string
+  /** 'views' ordena por visitas (lo más buscado). */
+  sort?: string
   status?: string
   type?: string
   kind?: string
