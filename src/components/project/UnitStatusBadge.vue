@@ -15,11 +15,11 @@ defineProps<{ status: UnitStatus }>()
 .ustatus {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: $text-xs;
-  font-weight: 600;
-  padding: 0.25rem 0.65rem;
-  border-radius: $radius-pill;
+  gap: 0.45rem;
+  height: 24px;
+  padding: 0 0.6rem;
+  border-radius: $radius-sm;
+  @include caps(0.625rem, 0.2em);
   white-space: nowrap;
 
   &::before {
@@ -31,13 +31,13 @@ defineProps<{ status: UnitStatus }>()
   }
 
   &--available {
-    color: darken($success, 12%);
+    color: $success;
     background: $success-bg;
   }
 
   &--reserved {
-    color: darken($brand-orange, 8%);
-    background: rgba($brand-orange, 0.1);
+    color: $ember-700;
+    background: $ember-100;
   }
 }
 </style>
