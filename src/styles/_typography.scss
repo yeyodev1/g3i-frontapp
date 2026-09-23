@@ -1,47 +1,68 @@
 @use 'colorVariables.module.scss' as *;
 @use 'fonts.module.scss' as *;
 
-// Escala tipográfica fluida — sin media queries para el tamaño de texto.
-$text-xs: clamp(0.72rem, 0.7rem + 0.1vw, 0.78rem);
-$text-sm: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
-$text-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.06rem);
-$text-lg: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
-$text-xl: clamp(1.3rem, 1.1rem + 0.9vw, 1.7rem);
-$display-sm: clamp(1.7rem, 1.3rem + 1.8vw, 2.4rem);
-$display-md: clamp(2.1rem, 1.5rem + 2.9vw, 3.4rem);
-$display-lg: clamp(2.6rem, 1.6rem + 4.6vw, 5rem);
+// Escala tipográfica fluida (mobile first) calibrada al sistema de diseño de G3i.
+$text-xs: clamp(0.72rem, 0.7rem + 0.1vw, 0.75rem); // 12px
+$text-sm: clamp(0.84rem, 0.82rem + 0.1vw, 0.875rem); // 14px
+$text-base: 1rem; // 16px
+$text-lg: clamp(1.06rem, 1rem + 0.3vw, 1.19rem); // 19px
+$text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem); // 24px
+$display-sm: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem); // 40px
+$display-md: clamp(2.2rem, 1.6rem + 2.4vw, 3.25rem); // 52px
+$display-lg: clamp(2.8rem, 1.8rem + 4.2vw, 5.5rem); // 88px
 
 // Espaciado
 $space-xs: 0.5rem;
-$space-sm: 0.85rem;
+$space-sm: 0.75rem;
 $space-md: 1.5rem;
 $space-lg: 2.5rem;
-$space-xl: clamp(3rem, 6vw, 5rem);
-$space-section: clamp(4.5rem, 9vw, 8rem);
+$space-xl: clamp(3rem, 6vw, 4rem);
+$space-section: clamp(4.5rem, 10vw, 8rem);
 
-// Radios y curvas
-$radius-sm: 10px;
-$radius-md: 18px;
-$radius-lg: 28px;
+// Radios: casi rectos, como el sistema de la marca.
+$radius-sm: 2px;
+$radius-md: 4px;
+$radius-lg: 8px;
 $radius-pill: 999px;
-$ease: cubic-bezier(0.22, 1, 0.36, 1);
+$ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
-// Eyebrow: label chiquito en mayúsculas sobre cada título de sección
+// Eyebrow: label pequeño en mayúsculas, espaciado amplio, color ember.
 @mixin eyebrow {
   font-family: $font-principal;
-  font-size: $text-xs;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: $brand-blue;
+  color: $ember-600;
 }
 
-@mixin display($size: $display-md, $weight: 600) {
+// Títulos: Cormorant Garamond ligera. La cursiva se usa para la segunda idea de un titular.
+@mixin display($size: $display-md, $weight: 300) {
   font-family: $font-display;
   font-size: $size;
   font-weight: $weight;
-  font-optical-sizing: auto;
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
   text-wrap: balance;
+}
+
+// Línea corta en ember bajo los títulos de sección (120px en desktop).
+@mixin title-rule($width: 120px) {
+  &::after {
+    content: '';
+    display: block;
+    width: min(#{$width}, 30%);
+    height: 2px;
+    margin-top: 1.4rem;
+    background: $ember-500;
+  }
+}
+
+// Texto de botón / navegación: mayúsculas con tracking amplio.
+@mixin caps($size: 0.75rem, $tracking: 0.22em) {
+  font-family: $font-principal;
+  font-size: $size;
+  font-weight: 500;
+  letter-spacing: $tracking;
+  text-transform: uppercase;
 }
