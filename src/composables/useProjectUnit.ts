@@ -6,6 +6,7 @@ import { useSeo } from './useSeo'
 import { useListingWhatsApp } from './useWhatsAppContext'
 import { useCatalogStore } from '@/stores/catalog'
 import { sentenceCase } from '@/utils/format'
+import { unitSchema } from '@/utils/schema'
 import { copy } from '@/config/copy.public'
 import type { Image } from '@/types'
 
@@ -60,6 +61,15 @@ export function useProjectUnit() {
     title: listingTitle.value || copy.unit.back,
     description: unit.value?.description || project.value?.summary,
     image: images.value[0]?.url || project.value?.cover,
+    jsonLd:
+      unit.value && project.value
+        ? unitSchema(
+            unit.value,
+            projectTitle.value,
+            catalog.sectorLabel(project.value.sector),
+            `${window.location.origin}${window.location.pathname}`,
+          )
+        : null,
   }))
 
   return { slug, detail, project, unit, projectTitle, listingTitle, refCode, images, photos, whatsappHref }
