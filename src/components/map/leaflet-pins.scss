@@ -1,6 +1,10 @@
 // Estilos de los pines (divIcon) y popups de Leaflet. Se importan desde
 // useLeafletMap.ts una sola vez; el HTML lo genera Leaflet fuera de los SFC.
 
+.leaflet-tile-pane {
+  filter: grayscale(1) contrast(0.92) brightness(1.06);
+}
+
 .map-pin-wrap {
   background: none;
   border: none;
