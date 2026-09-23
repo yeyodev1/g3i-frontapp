@@ -52,7 +52,7 @@ defineProps<{ images: Image[]; gallery: ReturnType<typeof useGallery>; title?: s
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(#0b0b0b, 0.94);
+  background: rgba($navy-950, 0.96);
   @include flex(row, center, center);
   padding: 3.5rem 0.5rem;
 
@@ -67,8 +67,8 @@ defineProps<{ images: Image[]; gallery: ReturnType<typeof useGallery>; title?: s
     right: 0;
     @include flex(row, center, space-between);
     padding: 0.8rem 1rem;
-    color: rgba(#fff, 0.8);
-    font-size: $text-sm;
+    color: $on-inverse-muted;
+    @include caps(0.72rem, 0.22em);
   }
 
   &__close {
@@ -87,7 +87,7 @@ defineProps<{ images: Image[]; gallery: ReturnType<typeof useGallery>; title?: s
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    border-radius: 6px;
+    border-radius: $radius-sm;
     user-select: none;
   }
 
@@ -98,7 +98,8 @@ defineProps<{ images: Image[]; gallery: ReturnType<typeof useGallery>; title?: s
     width: 2.8rem;
     height: 2.8rem;
     border-radius: 50%;
-    background: rgba(#fff, 0.12);
+    border: 1px solid rgba(#fff, 0.35);
+    background: rgba(#fff, 0.06);
     color: #fff;
     @include transition(background);
 
