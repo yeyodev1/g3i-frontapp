@@ -73,7 +73,7 @@ onMounted(() => {
         :featured="p.isFeatured"
       >
         <RouterLink :to="{ name: 'AdminUnits', params: { id: p._id } }">
-          <i class="fa-solid fa-table-list"></i> Inventario
+          <i class="fa-solid fa-table-list"></i> Unidades
         </RouterLink>
         <button v-if="p.status !== 'published'" @click="actions.setStatus(p, 'published')">
           <i class="fa-solid fa-eye"></i> Publicar
