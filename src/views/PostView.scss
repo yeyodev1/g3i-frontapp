@@ -1,0 +1,121 @@
+// Artículo del blog: columna de lectura de 720px, portada ancha y banda navy al final.
+.post {
+  padding-top: clamp(2rem, 6vw, 5rem);
+
+  &__head,
+  &__content,
+  &__state,
+  &__skeleton {
+    @include container(784px);
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    @include caps(0.68rem, 0.2em);
+    color: $ink-muted;
+    margin-bottom: 2rem;
+    @include transition(color);
+
+    &:hover {
+      color: $navy-900;
+    }
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+  }
+
+  &__title {
+    @include display(clamp(2.3rem, 1.5rem + 3.2vw, 3.75rem));
+    line-height: 1.06;
+    margin-top: 0.9rem;
+    color: $ink;
+    @include title-rule;
+  }
+
+  &__excerpt {
+    margin-top: 1.6rem;
+    font: italic 400 clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem) / 1.45 $font-display;
+    color: $ink-body;
+  }
+
+  &__cover {
+    @include container(1136px);
+    margin-block: clamp(2rem, 5vw, 3.5rem);
+
+    img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+  }
+
+  &__content {
+    margin-top: 2.5rem;
+  }
+
+  &__cover + &__content {
+    margin-top: 0;
+  }
+
+  &__foot {
+    @include flex(row, center, space-between, 1rem);
+    flex-wrap: wrap;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid $line;
+  }
+
+  &__cta {
+    margin-top: $space-section;
+    background: $inverse;
+    color: $on-inverse;
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+
+  &__cta-inner {
+    @include container;
+    @include flex(column, flex-start, space-between, 1.8rem);
+
+    @include from('md') {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  &__cta-eyebrow {
+    @include eyebrow;
+    color: $ember-300;
+  }
+
+  &__cta-title {
+    color: $on-inverse;
+    @include display(clamp(2rem, 1.4rem + 2vw, 2.75rem));
+    margin-top: 0.8rem;
+  }
+
+  &__state {
+    padding-bottom: $space-section;
+  }
+
+  &__skeleton {
+    padding-bottom: $space-section;
+  }
+
+  &__sk-title,
+  &__sk-cover {
+    background: $sand;
+  }
+
+  &__sk-title {
+    height: 3rem;
+    width: 80%;
+  }
+
+  &__sk-cover {
+    margin-top: 2rem;
+    aspect-ratio: 16 / 9;
+  }
+}
