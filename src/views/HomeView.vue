@@ -1,99 +1,134 @@
 <script setup lang="ts">
-import { site, whatsappLink } from '@/config/site'
+import { computed } from 'vue'
+import HomeHero from '@/components/home/HomeHero.vue'
+import HomeStats from '@/components/home/HomeStats.vue'
+import HomeMapTeaser from '@/components/home/HomeMapTeaser.vue'
+import PartnersStrip from '@/components/home/PartnersStrip.vue'
+import TestimonialsCarousel from '@/components/home/TestimonialsCarousel.vue'
+import BlogTeaser from '@/components/home/BlogTeaser.vue'
+import HomeSellCta from '@/components/home/HomeSellCta.vue'
+import SectionHeading from '@/components/common/SectionHeading.vue'
+import SkeletonCards from '@/components/common/SkeletonCards.vue'
+import StateMessage from '@/components/common/StateMessage.vue'
+import PropertyCard from '@/components/property/PropertyCard.vue'
+import ProjectCard from '@/components/project/ProjectCard.vue'
+import { useHomeData } from '@/composables/useHomeData'
+import { useSeo } from '@/composables/useSeo'
+import { site } from '@/config/site'
+import { copy } from '@/config/copy.public'
+import { copyHome } from '@/config/copy.home'
 
-const features = [
-  { icon: 'fa-solid fa-bolt', title: 'Rápido', text: 'Vite 7, Vue 3.5 y builds de segundos.' },
-  { icon: 'fa-solid fa-palette', title: 'Con identidad', text: 'Tokens SCSS propios, sin Tailwind ni librerías UI.' },
-  { icon: 'fa-solid fa-plug', title: 'Conectado', text: 'APIBase listo para hablar con el backapp.' },
-]
+const {
+  catalog,
+  settings,
+  properties,
+  projects,
+  posts,
+  loadingProperties,
+  loadingProjects,
+  propertiesError,
+  loadProperties,
+} = useHomeData()
+
+const heroImage = computed(() => settings.value?.hero.image?.url || properties.value[0]?.cover || '')
+
+useSeo(() => ({
+  title: site.name,
+  description: site.description,
+  image: heroImage.value,
+}))
 </script>
 
 <template>
   <div class="home">
-    <section class="hero">
-      <p class="hero__eyebrow">{{ site.name }}</p>
-      <h1 class="hero__title">{{ site.tagline }}</h1>
-      <p class="hero__text">{{ site.description }}</p>
-      <div class="hero__actions">
-        <RouterLink to="/login" class="btn btn--primary">Empezar</RouterLink>
-        <a v-if="site.whatsapp" :href="whatsappLink()" class="btn btn--ghost" target="_blank" rel="noopener">
-          <i class="fa-brands fa-whatsapp"></i> Escríbenos
-        </a>
+    <HomeHero
+      :title="settings?.hero.title"
+      :subtitle="settings?.hero.subtitle"
+      :image="heroImage"
+      :popular="settings?.popularSearches ?? []"
+    />
+
+    <HomeStats />
+
+    <section class="block">
+      <div class="block__inner">
+        <SectionHeading
+          :eyebrow="site.home.featuredEyebrow"
+          :title="site.home.featuredTitle"
+          :link-label="copy.home.seeProperties"
+          link-to="/propiedades"
+        />
+        <SkeletonCards v-if="loadingProperties" :count="3" />
+        <StateMessage
+          v-else-if="propertiesError"
+          icon="fa-solid fa-triangle-exclamation"
+          :text="copyHome.propertiesError"
+          retry
+          @retry="loadProperties"
+        />
+        <div v-else-if="properties.length" class="cards">
+          <PropertyCard v-for="p in properties" :key="p._id" :property="p" />
+        </div>
+        <StateMessage v-else :text="site.listing.empty" link-to="/contacto" :link-label="copy.nav.contact" />
       </div>
     </section>
 
-    <section id="nosotros" class="features">
-      <article v-for="feature in features" :key="feature.title" class="feature">
-        <span class="feature__icon"><i :class="feature.icon"></i></span>
-        <h3 class="feature__title">{{ feature.title }}</h3>
-        <p class="feature__text">{{ feature.text }}</p>
-      </article>
+    <section v-if="loadingProjects || projects.length" class="block block--line">
+      <div class="block__inner">
+        <SectionHeading
+          :eyebrow="site.home.projectsEyebrow"
+          :title="site.home.projectsTitle"
+          :link-label="copy.home.seeProjects"
+          link-to="/proyectos"
+        />
+        <SkeletonCards v-if="loadingProjects" :count="3" basis="300px" />
+        <div v-else class="cards cards--projects">
+          <ProjectCard v-for="p in projects" :key="p._id" :project="p" />
+        </div>
+      </div>
     </section>
+
+    <HomeMapTeaser />
+
+    <TestimonialsCarousel :testimonials="catalog.site?.testimonials ?? []" />
+
+    <PartnersStrip :partners="catalog.site?.partners ?? []" />
+
+    <BlogTeaser :posts="posts" />
+
+    <HomeSellCta />
   </div>
 </template>
 
 <style scoped lang="scss">
-.hero {
-  @include container(880px);
-  @include flex(column, center, center, 1.2rem);
-  text-align: center;
-  padding-block: $space-section $space-xl;
+.block {
+  padding-block: $space-section;
 
-  &__eyebrow {
-    @include eyebrow;
+  &--line {
+    border-top: 1px solid $line;
   }
 
-  &__title {
-    @include display($display-lg);
-  }
-
-  &__text {
-    font-size: $text-lg;
-    color: $ink-soft;
-    max-width: 52ch;
-  }
-
-  &__actions {
-    @include flex(row, center, center, 0.8rem);
-    flex-wrap: wrap;
-    margin-top: 0.6rem;
+  &__inner {
+    @include container;
   }
 }
 
-.features {
-  @include container;
-  @include flex-cards(260px, 1.25rem);
-  padding-block: 0 $space-section;
-}
+.cards {
+  @include flex-cards(280px, 1.5rem);
 
-.feature {
-  @include card;
-  padding: 1.8rem 1.6rem;
-  @include transition;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: $shadow-md;
+  // Con pocas tarjetas no se estiran a todo el ancho.
+  > * {
+    max-width: 420px;
   }
 
-  &__icon {
-    @include flex(row, center, center);
-    width: 2.6rem;
-    height: 2.6rem;
-    border-radius: $radius-sm;
-    background: $accent-soft;
-    color: $accent-deep;
-    margin-bottom: 1rem;
+  @include until('sm') {
+    > * {
+      max-width: none;
+    }
   }
 
-  &__title {
-    @include display($text-xl, 600);
-    margin-bottom: 0.4rem;
-  }
-
-  &__text {
-    font-size: $text-sm;
-    color: $ink-soft;
+  &--projects > * {
+    flex-basis: 300px;
   }
 }
 </style>
