@@ -21,9 +21,11 @@ const counts = computed(() => ({
   sold: u.units.value.filter((x) => x.status === 'sold').length,
 }))
 
-onMounted(() => {
+onMounted(async () => {
   catalog.load()
-  u.load()
+  await u.load()
+  // Desde el formulario del proyecto se llega con ?nueva=1: abre directo el alta de unidad.
+  if (route.query.nueva) u.openNew()
 })
 </script>
 
