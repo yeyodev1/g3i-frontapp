@@ -39,7 +39,8 @@ export function usePropertyListing() {
       minPrice: f.minPrice,
       maxPrice: f.maxPrice,
       bedrooms: f.bedrooms,
-      sort: (f.sort || undefined) as PropertyFilters['sort'],
+      // Predeterminado: «Más buscadas» (destacadas por la inmobiliaria y luego las más visitadas).
+      sort: (f.sort || 'popular') as PropertyFilters['sort'],
       page: page.value,
       limit: PAGE_SIZE,
     }
