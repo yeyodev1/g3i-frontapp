@@ -28,9 +28,9 @@ const youtubeId = computed(() => {
 .video {
   position: relative;
   aspect-ratio: 16 / 9;
-  border-radius: $radius-md;
+  border-radius: $radius-sm;
   overflow: hidden;
-  background: $ink;
+  background: $navy-950;
 
   iframe,
   video {
