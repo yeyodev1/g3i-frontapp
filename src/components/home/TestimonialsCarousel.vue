@@ -1,47 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import SectionHeading from '@/components/common/SectionHeading.vue'
+import { computed, ref } from 'vue'
 import type { Testimonial } from '@/types'
-import { site } from '@/config/site'
 import { copyHome } from '@/config/copy.home'
 
-defineProps<{ testimonials: Testimonial[] }>()
-const track = ref<HTMLElement | null>(null)
+const props = defineProps<{ testimonials: Testimonial[] }>()
+const t = copyHome.testimonials
+const index = ref(0)
 
-// Carrusel nativo: scroll-snap hace el trabajo, los botones solo desplazan.
+const current = computed(() => props.testimonials[index.value] ?? props.testimonials[0])
+const total = computed(() => props.testimonials.length)
+
 function move(dir: 1 | -1) {
-  const el = track.value
-  if (!el) return
-  const card = el.querySelector<HTMLElement>('.quote')
-  const step = card ? card.offsetWidth + 16 : el.clientWidth * 0.8
-  el.scrollBy({ left: dir * step, behavior: 'smooth' })
+  index.value = (index.value + dir + total.value) % total.value
 }
 </script>
 
 <template>
-  <section v-if="testimonials.length" class="testimonials">
+  <section v-if="current" class="testimonials" data-reveal>
     <div class="testimonials__inner">
-      <div class="testimonials__head">
-        <SectionHeading :eyebrow="site.home.testimonialsEyebrow" :title="site.home.testimonialsTitle" />
-        <div v-if="testimonials.length > 1" class="testimonials__nav">
-          <button type="button" :aria-label="copyHome.testimonialPrev" @click="move(-1)"><i class="fa-solid fa-arrow-left"></i></button>
-          <button type="button" :aria-label="copyHome.testimonialNext" @click="move(1)"><i class="fa-solid fa-arrow-right"></i></button>
-        </div>
-      </div>
-      <div ref="track" class="testimonials__track">
-        <figure v-for="t in testimonials" :key="t._id" class="quote">
-          <div v-if="t.photo" class="quote__media"><img :src="t.photo.url" :alt="t.name" loading="lazy" /></div>
-          <div class="quote__body">
-            <p v-if="t.rating" class="quote__stars" :aria-label="`${t.rating} de 5`">
-              <i v-for="n in 5" :key="n" :class="n <= t.rating ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i>
-            </p>
-            <blockquote class="quote__text">{{ t.text }}</blockquote>
+      <p class="testimonials__eyebrow">{{ t.eyebrow }}</p>
+      <!-- aria-live: al cambiar de testimonio el lector de pantalla lo anuncia. -->
+      <div class="testimonials__stage" aria-live="polite">
+        <Transition name="quote" mode="out-in">
+          <figure :key="current._id" class="quote">
+            <blockquote class="quote__text">“{{ current.text }}”</blockquote>
             <figcaption class="quote__who">
-              <strong>{{ t.name }}</strong>
-              <span v-if="t.context">{{ t.context }}</span>
+              {{ current.name
+              }}<span v-if="current.context" class="quote__role"> · {{ current.context }}</span>
             </figcaption>
-          </div>
-        </figure>
+          </figure>
+        </Transition>
+      </div>
+      <div v-if="total > 1" class="testimonials__nav">
+        <button type="button" :aria-label="t.prev" @click="move(-1)">
+          <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <span class="testimonials__count">{{ index + 1 }} / {{ total }}</span>
+        <button type="button" :aria-label="t.next" @click="move(1)">
+          <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
   </section>
@@ -49,114 +46,90 @@ function move(dir: 1 | -1) {
 
 <style scoped lang="scss">
 .testimonials {
-  padding-block: $space-section;
+  border-block: 1px solid $line;
+  padding-block: clamp(4.5rem, 10vw, 7rem);
 
   &__inner {
-    @include container;
+    @include container(900px);
+    text-align: center;
   }
 
-  &__head {
-    @include flex(row, flex-end, space-between, 1rem);
+  &__eyebrow {
+    @include eyebrow;
+  }
 
-    :deep(.heading) {
-      flex: 1;
+  &__stage {
+    min-height: 16rem;
+    @include flex(column, center, center);
+
+    @include from('md') {
+      min-height: 15rem;
     }
   }
 
   &__nav {
-    display: none;
-    gap: 0.5rem;
-    margin-bottom: $space-lg;
-
-    @include from('md') {
-      display: flex;
-    }
+    @include flex(row, center, center, 1rem);
+    margin-top: 2.25rem;
 
     button {
-      width: 2.8rem;
-      height: 2.8rem;
-      border-radius: 50%;
+      width: 2.75rem;
+      height: 2.75rem;
       border: 1px solid $line;
+      border-radius: $radius-sm;
+      color: $navy-900;
+      font-size: 0.75rem;
+      @include flex(row, center, center);
       @include transition;
 
       &:hover {
-        border-color: $ink;
+        border-color: $navy-900;
       }
     }
   }
 
-  &__track {
-    @include flex(row, stretch, flex-start, 1rem);
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    padding-bottom: 0.5rem;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  &__count {
+    width: 3rem;
+    font-size: $text-xs;
+    letter-spacing: 0.1em;
+    color: $ink-muted;
   }
 }
 
 .quote {
-  flex: 0 0 86%;
-  scroll-snap-align: start;
-  @include card;
-  overflow: hidden;
-  @include flex(column, stretch, flex-start);
-
-  @include from('md') {
-    flex-basis: calc(50% - 0.5rem);
-    flex-direction: row;
-  }
-
-  @include from('lg') {
-    flex-basis: calc(40% - 0.5rem);
-  }
-
-  &__media {
-    flex: 0 0 auto;
-    aspect-ratio: 4 / 3;
-    background: $sand;
-
-    @include from('md') {
-      flex-basis: 40%;
-      aspect-ratio: auto;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  &__body {
-    @include flex(column, flex-start, flex-start, 0.8rem);
-    padding: 1.4rem;
-    flex: 1;
-  }
-
-  &__stars {
-    color: $brand-orange;
-    font-size: 0.75rem;
-    @include flex(row, center, flex-start, 0.15rem);
-  }
+  margin-top: 1.75rem;
 
   &__text {
+    font-family: $font-display;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.25rem);
+    line-height: 1.3;
     color: $ink;
-    font-size: $text-base;
-    line-height: 1.6;
+    text-wrap: pretty;
   }
 
   &__who {
-    margin-top: auto;
-    @include flex(column, flex-start, flex-start);
-    font-size: $text-sm;
-
-    span {
-      color: $ink-muted;
-    }
+    margin-top: 1.5rem;
+    @include caps(0.75rem, 0.22em);
+    color: $navy-900;
   }
+
+  &__role {
+    color: $ink-muted;
+  }
+}
+
+.quote-enter-active,
+.quote-leave-active {
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s $ease;
+}
+.quote-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.quote-leave-to {
+  opacity: 0;
 }
 </style>
