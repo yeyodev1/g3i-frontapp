@@ -10,6 +10,8 @@ import ToastList from '@/components/ui/ToastList.vue'
 const route = useRoute()
 // El portal de la inmobiliaria no lleva header ni footer públicos.
 const layout = computed(() => (route.meta.layout as string | undefined) ?? 'public')
+// En Inicio el header flota transparente sobre la foto de portada.
+const headerOverlay = computed(() => Boolean(route.meta.headerOverlay))
 </script>
 
 <template>
@@ -22,7 +24,7 @@ const layout = computed(() => (route.meta.layout as string | undefined) ?? 'publ
   </div>
 
   <div v-else class="app">
-    <TheHeader />
+    <TheHeader :overlay="headerOverlay" />
     <main class="app__main">
       <RouterView v-slot="{ Component }">
         <Transition name="page" mode="out-in">
