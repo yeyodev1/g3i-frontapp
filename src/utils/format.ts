@@ -51,6 +51,12 @@ export function formatDate(value: string | Date): string {
   return date.format(typeof value === 'string' ? new Date(value) : value)
 }
 
+// Nombres propios que la conversión a oración no debe dejar en minúscula.
+const PROPER_NOUNS = [
+  'Cumbayá', 'Tumbaco', 'Quito', 'Nayón', 'Miravalle', 'Puembo', 'Pifo',
+  'San Patricio', 'Lumbisí', 'Ruta Viva', 'Ecuador', 'Valle de los Chillos',
+]
+
 /** Algunos títulos migrados vienen en mayúsculas: se pasan a oración. */
 export function sentenceCase(text: string): string {
   if (!text) return ''
@@ -58,5 +64,10 @@ export function sentenceCase(text: string): string {
   const upper = letters.replace(/[^A-ZÁÉÍÓÚÑÜ]/g, '')
   if (!letters.length || upper.length / letters.length < 0.7) return text
   const lower = text.toLocaleLowerCase('es-EC')
-  return lower.charAt(0).toLocaleUpperCase('es-EC') + lower.slice(1)
+  let out = lower.charAt(0).toLocaleUpperCase('es-EC') + lower.slice(1)
+  for (const name of PROPER_NOUNS) {
+    const plain = name.toLocaleLowerCase('es-EC')
+    out = out.replace(new RegExp(`(^|[^\\p{L}])${plain}(?![\\p{L}])`, 'giu'), (_m, pre: string) => pre + name)
+  }
+  return out
 }
