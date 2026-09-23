@@ -1,0 +1,147 @@
+// Estilos de TheHeader.vue.
+// Tres estados: sólido blanco (páginas internas), transparente sobre la portada
+// y navy-950 sólido cuando se baja en Inicio (el logo blanco se sigue leyendo).
+$header-h: 72px;
+$header-h-lg: 92px;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: rgba($paper, 0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid $line;
+  color: $ink;
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease;
+
+  // En Inicio flota sobre la foto: el hero arranca debajo del header.
+  &--overlay {
+    position: fixed;
+    inset: 0 0 auto;
+    background: $navy-950;
+    border-color: rgba($on-inverse, 0.12);
+    color: $on-inverse;
+  }
+
+  &--transparent {
+    background: transparent;
+    backdrop-filter: none;
+    border-color: rgba($on-inverse, 0.18);
+  }
+
+  &__inner {
+    @include container;
+    @include flex(row, center, space-between, 1.5rem);
+    height: $header-h;
+
+    @include from('lg') {
+      height: $header-h-lg;
+      transition: height 0.35s ease;
+    }
+  }
+
+  &--overlay.header--scrolled &__inner {
+    @include from('lg') {
+      height: 76px;
+    }
+  }
+
+  &__logo {
+    flex-shrink: 0;
+    @include focus-ring(currentColor);
+
+    img {
+      height: 44px;
+      width: auto;
+
+      @include from('lg') {
+        height: 56px;
+      }
+    }
+  }
+
+  &__nav {
+    display: none;
+
+    // Sin botón de vender (pedido de la clienta): la nav se alinea a la derecha.
+    @include from('lg') {
+      @include flex(row, center, flex-end, 1.5rem);
+      flex: 1;
+    }
+
+    @include from('xl') {
+      gap: 2.25rem;
+    }
+  }
+
+  &__link {
+    position: relative;
+    @include caps(0.75rem, 0.16em);
+    white-space: nowrap;
+    padding-block: 0.4rem;
+    color: inherit;
+    opacity: 0.86;
+    @include transition(opacity);
+    @include focus-ring(currentColor);
+
+    @include from('xl') {
+      letter-spacing: 0.22em;
+    }
+
+    // Subrayado ember del ítem activo.
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0.22em;
+      bottom: -2px;
+      height: 1px;
+      background: $ember-500;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s $ease;
+    }
+
+    &:hover,
+    &.is-active {
+      opacity: 1;
+    }
+
+    &:hover::after {
+      transform: scaleX(0.5);
+    }
+
+    &.is-active::after {
+      transform: scaleX(1);
+    }
+  }
+
+  // Hamburguesa de dos líneas finas, en el lenguaje recto de la marca.
+  &__burger {
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.5rem;
+    @include flex(column, center, center, 7px);
+    color: inherit;
+    @include focus-ring(currentColor);
+
+    span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: currentColor;
+    }
+
+    span:last-child {
+      width: 16px;
+      align-self: center;
+      transform: translateX(4px);
+    }
+
+    @include from('lg') {
+      display: none;
+    }
+  }
+}
