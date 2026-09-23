@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Advisor } from '@/types'
+import { copyPages } from '@/config/copy.pages'
 
 const props = defineProps<{ advisor: Advisor }>()
 
@@ -11,11 +12,13 @@ const waHref = computed(() => {
   const intl = digits.startsWith('593') ? digits : `593${digits.replace(/^0/, '')}`
   return `https://wa.me/${intl}`
 })
+// Sin foto: inicial en Cormorant sobre gris suave, como el retrato del ejemplo.
 const initials = computed(() =>
   props.advisor.name
     .split(' ')
+    .filter(Boolean)
     .slice(0, 2)
-    .map((w) => w.charAt(0))
+    .map((w) => w.charAt(0).toUpperCase())
     .join(''),
 )
 </script>
@@ -24,17 +27,17 @@ const initials = computed(() =>
   <article class="advisor">
     <div class="advisor__photo">
       <img v-if="advisor.photo" :src="advisor.photo.url" :alt="advisor.name" loading="lazy" />
-      <span v-else class="advisor__initials">{{ initials }}</span>
+      <span v-else class="advisor__initials" aria-hidden="true">{{ initials }}</span>
     </div>
     <div class="advisor__body">
       <h3 class="advisor__name">{{ advisor.name }}</h3>
       <p v-if="advisor.role" class="advisor__role">{{ advisor.role }}</p>
       <p v-if="advisor.bio" class="advisor__bio">{{ advisor.bio }}</p>
       <div v-if="waHref || advisor.email" class="advisor__links">
-        <a v-if="waHref" :href="waHref" target="_blank" rel="noopener" :aria-label="`WhatsApp de ${advisor.name}`">
+        <a v-if="waHref" :href="waHref" target="_blank" rel="noopener" :aria-label="copyPages.advisor.whatsapp(advisor.name)">
           <i class="fa-brands fa-whatsapp"></i>
         </a>
-        <a v-if="advisor.email" :href="`mailto:${advisor.email}`" :aria-label="`Correo de ${advisor.name}`">
+        <a v-if="advisor.email" :href="`mailto:${advisor.email}`" :aria-label="copyPages.advisor.email(advisor.name)">
           <i class="fa-regular fa-envelope"></i>
         </a>
       </div>
@@ -44,13 +47,12 @@ const initials = computed(() =>
 
 <style scoped lang="scss">
 .advisor {
-  @include flex(column, stretch, flex-start, 1rem);
+  @include flex(column, stretch, flex-start);
 
   &__photo {
-    aspect-ratio: 4 / 5;
-    border-radius: 14px;
+    aspect-ratio: 3 / 4;
     overflow: hidden;
-    background: $sand;
+    background: linear-gradient(180deg, $gray-100 0%, $gray-200 100%);
 
     img {
       width: 100%;
@@ -62,42 +64,50 @@ const initials = computed(() =>
   &__initials {
     @include flex(row, center, center);
     height: 100%;
-    @include display($display-sm, 600);
-    color: $ink-muted;
+    font: 300 clamp(4rem, 3rem + 3vw, 5.5rem) / 1 $font-display;
+    color: $navy-900;
+  }
+
+  &__body {
+    padding-top: 18px;
   }
 
   &__name {
-    @include display($text-lg, 600);
+    font: 400 1.625rem/1.1 $font-display;
+    color: $ink;
   }
 
   &__role {
-    font-size: $text-sm;
-    color: $brand-blue;
-    font-weight: 500;
-    margin-top: 0.15rem;
+    @include caps(0.75rem, 0.14em);
+    font-weight: 400;
+    color: $ink-muted;
+    margin-top: 6px;
   }
 
   &__bio {
-    margin-top: 0.6rem;
-    font-size: $text-sm;
-    color: $ink-soft;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: $ink-body;
   }
 
   &__links {
-    @include flex(row, center, flex-start, 0.5rem);
-    margin-top: 0.9rem;
+    @include flex(row, center, flex-start, 8px);
+    margin-top: 14px;
 
     a {
       @include flex(row, center, center);
-      width: 2.4rem;
-      height: 2.4rem;
-      border-radius: 50%;
+      width: 38px;
+      height: 38px;
       border: 1px solid $line;
       color: $ink;
       @include transition;
 
       &:hover {
-        border-color: $ink;
+        border-color: $navy-900;
+        background: $navy-900;
+        color: $surface;
       }
     }
   }
