@@ -11,12 +11,12 @@ defineProps<{ post: PostCard }>()
     <RouterLink :to="`/blog/${post.slug}`" class="post-card__link">
       <div class="post-card__media">
         <img v-if="post.cover" :src="post.cover.url" :alt="post.cover.alt || post.title" loading="lazy" />
-        <div v-else class="post-card__placeholder"><i class="fa-regular fa-newspaper"></i></div>
+        <div v-else class="post-card__placeholder"><i class="fa-regular fa-newspaper" aria-hidden="true"></i></div>
       </div>
       <div class="post-card__body">
         <h3 class="post-card__title">{{ post.title }}</h3>
         <p v-if="post.excerpt" class="post-card__excerpt">{{ post.excerpt }}</p>
-        <span class="post-card__more">{{ copy.blog.readMore }} <i class="fa-solid fa-arrow-right"></i></span>
+        <span class="post-card__more">{{ copy.blog.readMore }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
       </div>
     </RouterLink>
   </article>
@@ -25,21 +25,22 @@ defineProps<{ post: PostCard }>()
 <style scoped lang="scss">
 .post-card {
   &__link {
-    @include flex(column, stretch, flex-start, 1rem);
+    @include flex(column, stretch, flex-start);
     height: 100%;
+    @include focus-ring;
 
     &:hover img {
-      transform: scale(1.03);
+      transform: scale(1.04);
     }
 
     &:hover .post-card__more {
-      border-color: $ink;
+      color: $ember-600;
+      border-color: $ember-600;
     }
   }
 
   &__media {
-    aspect-ratio: 16 / 10;
-    border-radius: 14px;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
     background: $sand;
 
@@ -47,7 +48,7 @@ defineProps<{ post: PostCard }>()
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.6s $ease;
+      transition: transform 0.8s $ease;
     }
   }
 
@@ -59,18 +60,22 @@ defineProps<{ post: PostCard }>()
   }
 
   &__body {
-    @include flex(column, flex-start, flex-start, 0.5rem);
+    @include flex(column, flex-start, flex-start, 0.7rem);
     flex: 1;
+    padding-top: 1.25rem;
   }
 
   &__title {
-    @include display($text-lg, 600);
-    line-height: 1.25;
+    font: 400 1.625rem/1.15 $font-display;
+    color: $ink;
+    text-wrap: pretty;
   }
 
   &__excerpt {
-    font-size: $text-sm;
-    color: $ink-soft;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: $ink-body;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -79,16 +84,17 @@ defineProps<{ post: PostCard }>()
 
   &__more {
     margin-top: auto;
-    padding-top: 0.3rem;
-    font-size: $text-sm;
-    font-weight: 600;
-    border-bottom: 1px solid $line;
-    @include transition(border-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    @include caps(0.7rem, 0.22em);
+    color: $navy-900;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid $navy-900;
+    @include transition;
 
     i {
-      font-size: 0.75em;
-      color: $brand-blue;
-      margin-left: 0.2rem;
+      font-size: 0.8em;
     }
   }
 }
