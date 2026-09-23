@@ -16,6 +16,7 @@ import AdminStatusBadge from '@/components/admin/AdminStatusBadge.vue'
 import ProjectBasicsSection from '@/components/admin/project/ProjectBasicsSection.vue'
 import ProjectDetailsSection from '@/components/admin/project/ProjectDetailsSection.vue'
 import ProjectMediaSection from '@/components/admin/project/ProjectMediaSection.vue'
+import ProjectUnitsSection from '@/components/admin/project/ProjectUnitsSection.vue'
 
 const route = useRoute()
 const catalog = useAdminCatalogStore()
@@ -28,6 +29,7 @@ const sections = [
   { id: 'ubicacion', label: 'Ubicación' },
   { id: 'fotos', label: 'Renders' },
   { id: 'detalles', label: 'Detalles' },
+  { id: 'unidades', label: 'Unidades' },
   { id: 'amenidades', label: 'Amenidades' },
   { id: 'publicacion', label: 'Publicación' },
 ]
@@ -56,7 +58,7 @@ useAdminUnsaved(dirty)
     <AdminPageHeader :title="title" :back="{ name: 'AdminProjects' }" back-label="Proyectos">
       <AdminStatusBadge v-if="!isNew" :status="savedStatus" group="project" />
       <RouterLink v-if="form._id" :to="{ name: 'AdminUnits', params: { id: form._id } }" class="btn btn--dark">
-        <i class="fa-solid fa-table-list"></i> Inventario
+        <i class="fa-solid fa-table-list"></i> Unidades disponibles
       </RouterLink>
     </AdminPageHeader>
 
@@ -70,12 +72,13 @@ useAdminUnsaved(dirty)
       <AdminLocationSection :form="form" :errors="errors" :step="2" />
       <ProjectMediaSection :form="form" :errors="errors" :step="3" />
       <ProjectDetailsSection :form="form" :step="4" />
+      <ProjectUnitsSection :project-id="form._id" :step="5" />
 
-      <AdminSection id="amenidades" :step="5" title="Amenidades del proyecto" :text="adminCopy.help.amenities">
+      <AdminSection id="amenidades" :step="6" title="Amenidades del proyecto" :text="adminCopy.help.amenities">
         <AdminAmenityPicker v-model="form.amenities" scope="project" />
       </AdminSection>
 
-      <AdminPublishSection :form="form" kind="project" :step="6" :saved-status="savedStatus" />
+      <AdminPublishSection :form="form" kind="project" :step="7" :saved-status="savedStatus" />
 
       <AdminSaveBar :dirty="dirty" :saving="saving" :is-new="isNew" @save="save" />
     </form>
