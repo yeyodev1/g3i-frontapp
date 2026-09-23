@@ -31,9 +31,11 @@ export const site = {
     { label: 'Mapa del valle', to: '/mapa-del-valle' },
     { label: 'Blog', to: '/blog' },
     { label: 'Conócenos', to: '/conocenos' },
+    { label: 'Contáctanos', to: '/contacto' },
   ],
-  // Botón con contorno en el header, como en el diseño que envió la clienta el 23/9.
-  sellLink: { label: 'Quiero vender mi propiedad', to: '/vender-mi-propiedad' },
+  // Vender NO lleva protagonismo (audio de Elisa 23/9, 15:48): es una opción dentro de Contáctanos.
+  // Se usa solo en la banda final de Inicio y en el footer.
+  sellLink: { label: 'Quiero vender mi propiedad', to: '/contacto?interes=vender' },
 
   home: {
     heroEyebrow: 'Negocios inmobiliarios · Cumbayá',
