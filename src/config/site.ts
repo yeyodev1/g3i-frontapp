@@ -11,6 +11,10 @@ export const site = {
     'Casas, departamentos, terrenos y proyectos en venta en Cumbayá, Tumbaco y el valle de Quito. Asesoría inmobiliaria personalizada.',
   url: 'https://g3i.ec',
   logo: '/logo-g3i.png',
+  // Versión en blanco para el header sobre la portada, el menú y el footer.
+  logoWhite: '/logo-g3i-white.png',
+  slogan: '¡Sueña, siente, vive tu espacio!',
+  legalName: 'Grupo 3 Inversiones',
   city: 'Quito',
   email: 'ventas@g3i.ec',
   phone: '0995806119',
@@ -24,17 +28,18 @@ export const site = {
     { label: 'Inicio', to: '/' },
     { label: 'Propiedades', to: '/propiedades' },
     { label: 'Proyectos', to: '/proyectos' },
-    { label: 'Buscar en el mapa', to: '/mapa' },
+    { label: 'Mapa del valle', to: '/mapa-del-valle' },
     { label: 'Blog', to: '/blog' },
     { label: 'Conócenos', to: '/conocenos' },
   ],
-  // Discreto a propósito: la clienta pidió que no compita con las propiedades.
-  sellLink: { label: 'Vender mi propiedad', to: '/vender-mi-propiedad' },
+  // Botón con contorno en el header, como en el diseño que envió la clienta el 23/9.
+  sellLink: { label: 'Quiero vender mi propiedad', to: '/vender-mi-propiedad' },
 
   home: {
-    heroTitle: 'Encuentra tu próximo hogar en el valle',
+    heroEyebrow: 'Negocios inmobiliarios · Cumbayá',
+    heroTitle: 'Sueña, siente, vive tu espacio.',
     heroSubtitle:
-      'Casas, departamentos, terrenos y proyectos seleccionados en Cumbayá, Tumbaco y sus alrededores.',
+      'Un amplio portafolio de terrenos, casas y departamentos exclusivos en Cumbayá, Tumbaco, Puembo y los valles de Quito.',
     searchTypeLabel: '¿Qué buscas?',
     searchSectorLabel: '¿Dónde?',
     searchButton: 'Buscar',
