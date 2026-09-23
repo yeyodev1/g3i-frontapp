@@ -4,6 +4,7 @@ import PropertyPriceBlock from './PropertyPriceBlock.vue'
 import ShareButton from '@/components/common/ShareButton.vue'
 import WhatsAppButton from '@/components/common/WhatsAppButton.vue'
 import { useCatalogStore } from '@/stores/catalog'
+import { copyProperties } from '@/config/copy.properties'
 
 defineProps<{ property: Property; title: string; place: string; whatsappHref: string }>()
 const catalog = useCatalogStore()
@@ -13,7 +14,7 @@ const catalog = useCatalogStore()
   <header class="summary">
     <div class="summary__top">
       <p class="summary__type">
-        {{ catalog.typeLabel(property.type) }}
+        {{ catalog.typeLabel(property.type) }} {{ copyProperties.inSale }}
         <span v-if="property.condition">· {{ catalog.conditionLabel(property.condition) }}</span>
       </p>
       <ShareButton :title="title" :text="property.summary" compact />
