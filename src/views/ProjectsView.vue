@@ -55,13 +55,15 @@ useSeo({ title: site.listing.projectsTitle, description: copyProjects.seoDescrip
     <PageHero :eyebrow="site.home.projectsEyebrow" :title="site.listing.projectsTitle" :text="site.listing.projectsText" />
 
     <div class="projects__body">
-      <ProjectFilters :filters="filters" :active-count="activeCount" @update="update" @clear="clear" />
+      <ProjectFilters
+        :filters="filters"
+        :active-count="activeCount"
+        :total="list.loading.value || (showFallback && fallbackTotal) ? null : list.data.value?.total"
+        @update="update"
+        @clear="clear"
+      />
 
-      <p v-if="list.data.value && !list.loading.value && !(showFallback && fallbackTotal)" class="projects__count" aria-live="polite">
-        {{ copy.filters.results(list.data.value.total) }}
-      </p>
-
-      <SkeletonCards v-if="list.loading.value" :count="6" basis="300px" class="projects__list" />
+      <SkeletonCards v-if="list.loading.value" :count="6" basis="320px" class="projects__list" />
 
       <StateMessage
         v-else-if="list.error.value"
@@ -97,26 +99,30 @@ useSeo({ title: site.listing.projectsTitle, description: copyProjects.seoDescrip
 .projects {
   &__body {
     @include container;
-    padding-block: $space-lg $space-xl;
-  }
+    padding-block: $space-md $space-section;
 
-  &__count {
-    margin: 1.5rem 0 1rem;
-    font-size: $text-sm;
-    color: $ink-muted;
-  }
-
-  &__list {
-    @include flex-cards(300px, 1.5rem);
-    margin-top: 1.5rem;
-
-    > * {
-      max-width: 560px;
+    @include from('md') {
+      padding-top: $space-lg;
     }
   }
 
-  &__count + &__list {
-    margin-top: 0;
+  &__list {
+    @include flex-cards(320px, 1.5rem);
+    margin-top: 2rem;
+
+    @include from('lg') {
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    // Con pocas tarjetas no se estiran a todo el ancho.
+    > * {
+      max-width: 560px;
+
+      @include from('xl') {
+        max-width: calc((100% - 4rem) / 3);
+      }
+    }
   }
 }
 </style>
