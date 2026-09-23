@@ -29,6 +29,14 @@ export const adminCopy = {
     loading: 'Ingresando…',
     notAdmin: 'Esta cuenta no tiene acceso al portal.',
     back: 'Volver al sitio',
+    showcaseEyebrow: 'G3i · Negocios inmobiliarios',
+    showcaseTitle: 'Tu vitrina en el valle, siempre al día.',
+    showcaseText: 'Publica, actualiza y marca como vendidas tus propiedades en minutos.',
+    statProperties: 'propiedades publicadas',
+    statProjects: 'proyectos',
+    emailLabel: 'Correo',
+    passwordLabel: 'Contraseña',
+    secure: 'Acceso privado del equipo G3i',
   },
 
   account: {
