@@ -155,7 +155,7 @@ export interface PropertyFilters {
   featured?: boolean
   page?: number
   limit?: number
-  sort?: 'recent' | 'price-asc' | 'price-desc'
+  sort?: 'recent' | 'price-asc' | 'price-desc' | 'popular'
 }
 
 // ─── Proyectos ──────────────────────────────────────────────────────────
