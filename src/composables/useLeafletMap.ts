@@ -4,6 +4,7 @@ import type { MapPin } from '@/types'
 import { formatPrice, formatPriceShort } from '@/utils/format'
 import { escapeHtml } from '@/utils/markdown'
 import { copy } from '@/config/copy.public'
+import { zoneAt, zoneLayer, zoneStyle } from './useValleyMapZones'
 // Los pines y popups son HTML de Leaflet, fuera del scope de cualquier SFC.
 import '@/components/map/leaflet-pins.scss'
 
@@ -19,10 +20,22 @@ interface MapOptions {
   onMove?: () => void
 }
 
-// CARTO Positron ahora exige API key (devuelve un tile "API KEY REQUIRED").
-// Se usa OSM estándar y se desatura por CSS (leaflet-pins.scss) para el look sobrio.
-const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+// Mapa a color (pedido de la clienta: «más amigable a la vista», como el de Trivo).
+// Esri World Street Map no pide API key; el satélite es Esri World Imagery.
+export const BASE_LAYERS = {
+  map: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri',
+  },
+  sat: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics',
+  },
+} as const
+export type BaseLayerKey = keyof typeof BASE_LAYERS
+
+const TILE_URL = BASE_LAYERS.map.url
+const ATTRIBUTION = BASE_LAYERS.map.attribution
 
 export function pinPath(pin: MapPin): string {
   return pin.kind === 'project' ? `/proyectos/${pin.slug}` : `/propiedades/${pin.slug}`
@@ -69,7 +82,7 @@ export function useLeafletMap(el: Ref<HTMLElement | null>, options: MapOptions =
       zoomControl: interactive,
       attributionControl: true,
     })
-    L.tileLayer(TILE_URL, { attribution: ATTRIBUTION, maxZoom: 19 }).addTo(instance)
+    L.tileLayer(TILE_URL, { attribution: ATTRIBUTION, maxZoom: 18 }).addTo(instance)
     layer = L.layerGroup().addTo(instance)
 
     instance.on('popupopen', (e) => {
@@ -107,9 +120,9 @@ export function useLeafletMap(el: Ref<HTMLElement | null>, options: MapOptions =
       if (!pin.exact) {
         L.circle(pos, {
           radius: pin.radiusMeters || 400,
-          color: '#1a6ab5',
+          color: '#0b2a47',
           weight: 1,
-          fillColor: '#1a6ab5',
+          fillColor: '#0b2a47',
           fillOpacity: 0.08,
         }).addTo(layer)
       }
@@ -122,25 +135,35 @@ export function useLeafletMap(el: Ref<HTMLElement | null>, options: MapOptions =
     }
   }
 
-  /** Un solo inmueble: pin exacto o círculo si la ubicación es aproximada. */
+  /**
+   * Un solo inmueble: pin exacto o círculo si la ubicación es aproximada, sobre el
+   * contorno suave de la parroquia que lo contiene (mismo color que en el mapa del valle).
+   */
   function setLocation(lat: number, lng: number, exact: boolean, radiusMeters = 400) {
     if (!map.value || !layer) return
     layer.clearLayers()
     const pos: L.LatLngExpression = [lat, lng]
+    const zone = zoneAt(lat, lng)
+    if (zone) {
+      const style = zoneStyle(zone)
+      zoneLayer(zone, { ...style, weight: 1.5, opacity: 0.7, fillOpacity: 0.07, interactive: false }).addTo(layer)
+    }
     if (exact) {
       L.marker(pos, {
         icon: L.divIcon({ className: 'map-pin-wrap', html: '<span class="map-dot"></span>', iconSize: [0, 0] }),
+        keyboard: false,
       }).addTo(layer)
-      map.value.setView(pos, 16)
+      map.value.setView(pos, 14)
     } else {
       const circle = L.circle(pos, {
         radius: radiusMeters || 400,
-        color: '#1a6ab5',
+        color: '#0b2a47',
         weight: 1.5,
-        fillColor: '#1a6ab5',
+        dashArray: '4 4',
+        fillColor: '#0b2a47',
         fillOpacity: 0.12,
       }).addTo(layer)
-      map.value.fitBounds(circle.getBounds(), { padding: [20, 20] })
+      map.value.fitBounds(circle.getBounds(), { padding: [40, 40], maxZoom: 15 })
     }
   }
 
