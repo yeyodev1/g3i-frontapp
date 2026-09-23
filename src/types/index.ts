@@ -87,6 +87,8 @@ export interface Property {
   sector: string
   city: string
   address: string
+  locality: string
+  badge: string
   location: GeoLocation
   price: number
   hoa: { enabled: boolean; amount: number }
@@ -126,6 +128,10 @@ export interface PropertyCard {
   type: PropertyType
   condition: PropertyCondition
   sector: string
+  /** Subzona: barrio, urbanización o proyecto ("Kentia"). */
+  locality: string
+  /** Etiqueta corta sobre la foto ("Destacada"). */
+  badge: string
   price: number
   cover: string
   imagesCount: number
@@ -169,6 +175,7 @@ export interface Project {
   sector: string
   city: string
   address: string
+  locality: string
   location: GeoLocation
   priceFrom: number | null
   deliveryDate: string
@@ -195,6 +202,7 @@ export interface ProjectCard {
   stage: ProjectStage
   propertyTypes: PropertyType[]
   sector: string
+  locality: string
   priceFrom: number | null
   deliveryDate: string
   cover: string
