@@ -1,24 +1,32 @@
 <script setup lang="ts">
 import SectionHeading from '@/components/common/SectionHeading.vue'
-import type { PostCard } from '@/types'
-import { site } from '@/config/site'
-import { copy } from '@/config/copy.public'
+import PostCard from '@/components/common/PostCard.vue'
+import type { PostCard as Post } from '@/types'
+import { copyHome } from '@/config/copy.home'
 
-defineProps<{ posts: PostCard[] }>()
+defineProps<{ posts: Post[] }>()
+const t = copyHome.blog
 </script>
 
 <template>
-  <section v-if="posts.length" class="blog">
+  <section class="blog" :class="{ 'blog--compact': !posts.length }" data-reveal>
     <div class="blog__inner">
-      <SectionHeading :eyebrow="site.home.blogEyebrow" :title="site.home.blogTitle" :link-label="copy.home.seeBlog" link-to="/blog" />
-      <div class="blog__list">
-        <RouterLink v-for="post in posts" :key="post._id" :to="`/blog/${post.slug}`" class="post">
-          <div class="post__media">
-            <img v-if="post.cover" :src="post.cover.url" :alt="post.cover.alt || post.title" loading="lazy" />
-          </div>
-          <h3 class="post__title">{{ post.title }}</h3>
-          <p v-if="post.excerpt" class="post__excerpt">{{ post.excerpt }}</p>
-          <span class="post__more">{{ copy.blog.readMore }} <i class="fa-solid fa-arrow-right"></i></span>
+      <template v-if="posts.length">
+        <SectionHeading
+          :eyebrow="t.eyebrow"
+          :title="t.title"
+          :link-label="t.link"
+          link-to="/blog"
+        />
+        <div class="blog__list">
+          <PostCard v-for="post in posts" :key="post._id" :post="post" />
+        </div>
+      </template>
+      <!-- Acceso visible a preguntas frecuentes, aunque aún no haya artículos. -->
+      <div class="blog__faq">
+        <p class="blog__faq-title">{{ t.faqTitle }}</p>
+        <RouterLink to="/preguntas-frecuentes" class="link-caps">
+          {{ t.faqLink }} <span aria-hidden="true">→</span>
         </RouterLink>
       </div>
     </div>
@@ -28,62 +36,44 @@ defineProps<{ posts: PostCard[] }>()
 <style scoped lang="scss">
 .blog {
   padding-block: $space-section;
-  border-top: 1px solid $line;
 
   &__inner {
     @include container;
   }
 
+  &--compact {
+    padding-block: 0 $space-section;
+  }
+
   &__list {
-    @include flex-cards(280px, 2rem 1.5rem);
+    @include flex-cards(280px, 2.5rem 1.5rem);
   }
-}
 
-.post {
-  @include flex(column, stretch, flex-start, 0.6rem);
+  &__faq {
+    @include flex(column, flex-start, space-between, 1rem 2rem);
+    margin-top: 3.5rem;
+    padding: 1.75rem 1.5rem;
+    border: 1px solid $line;
+    border-left: 2px solid $ember-500;
+    background: $gray-50;
 
-  &__media {
-    aspect-ratio: 16 / 10;
-    border-radius: 14px;
-    overflow: hidden;
-    background: $sand;
-    margin-bottom: 0.4rem;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s $ease;
+    @include from('md') {
+      flex-direction: row;
+      align-items: center;
+      padding-inline: 2.25rem;
     }
   }
 
-  &:hover img {
-    transform: scale(1.03);
+  &--compact &__faq {
+    margin-top: 0;
   }
 
-  &__title {
-    @include display($text-lg, 600);
-    line-height: 1.25;
-  }
-
-  &__excerpt {
-    font-size: $text-sm;
-    color: $ink-soft;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  &__more {
-    font-size: $text-sm;
-    font-weight: 600;
-
-    i {
-      font-size: 0.75em;
-      color: $brand-blue;
-      margin-left: 0.25rem;
-    }
+  &__faq-title {
+    font-family: $font-display;
+    font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
+    font-weight: 300;
+    line-height: 1.2;
+    color: $ink;
   }
 }
 </style>
