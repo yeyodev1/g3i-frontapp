@@ -16,7 +16,11 @@ const links = computed(() => {
     '/propiedades': counts?.properties,
     '/proyectos': counts?.projects,
   }
-  return [...site.nav, { label: copy.nav.contact, to: '/contacto' }].map((link) => ({
+  // Contacto ya viene en site.nav; se agrega solo si algún día sale de ahí.
+  const nav = site.nav.some((l) => l.to === '/contacto')
+    ? [...site.nav]
+    : [...site.nav, { label: copy.nav.contact, to: '/contacto' }]
+  return nav.map((link) => ({
     ...link,
     hint: copy.nav.hints[link.to] ?? '',
     count: countFor[link.to] || 0,
@@ -29,13 +33,24 @@ const links = computed(() => {
        y el menú quedaría recortado en vez de cubrir toda la pantalla. -->
   <Teleport to="body">
     <Transition name="menu">
-      <div v-if="open" class="menu" role="dialog" aria-modal="true" :aria-label="copy.nav.menuEyebrow">
+      <div
+        v-if="open"
+        class="menu"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="copy.nav.menuEyebrow"
+      >
         <div class="menu__top">
           <RouterLink to="/" class="menu__logo" :aria-label="site.name">
-            <img :src="site.logo" :alt="site.name" width="112" height="40" />
+            <img :src="site.logo" :alt="site.name" width="66" height="44" />
           </RouterLink>
-          <button class="menu__close" type="button" :aria-label="copy.nav.closeMenu" @click="emit('close')">
-            <i class="fa-solid fa-xmark"></i>
+          <button
+            class="menu__close"
+            type="button"
+            :aria-label="copy.nav.closeMenu"
+            @click="emit('close')"
+          >
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
           </button>
         </div>
 
@@ -57,7 +72,7 @@ const links = computed(() => {
                 <sup v-if="link.count" class="menu__count">{{ link.count }}</sup>
               </span>
               <span v-if="link.hint" class="menu__hint">{{ link.hint }}</span>
-              <i class="fa-solid fa-arrow-right menu__arrow"></i>
+              <i class="fa-solid fa-arrow-right menu__arrow" aria-hidden="true"></i>
             </RouterLink>
           </nav>
 
@@ -68,15 +83,29 @@ const links = computed(() => {
             <div class="menu__contact">
               <span v-if="contact.email" class="menu__email">{{ contact.email }}</span>
               <div class="menu__social" :aria-label="copy.nav.menuFollow">
-                <a v-if="contact.instagram" :href="contact.instagram" target="_blank" rel="noopener" aria-label="Instagram">
+                <a
+                  v-if="contact.instagram"
+                  :href="contact.instagram"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Instagram"
+                >
                   <i class="fa-brands fa-instagram"></i>
                 </a>
-                <a v-if="contact.facebook" :href="contact.facebook" target="_blank" rel="noopener" aria-label="Facebook">
+                <a
+                  v-if="contact.facebook"
+                  :href="contact.facebook"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Facebook"
+                >
                   <i class="fa-brands fa-facebook-f"></i>
                 </a>
               </div>
             </div>
-            <RouterLink :to="site.sellLink.to" class="menu__sell">{{ site.sellLink.label }}</RouterLink>
+            <RouterLink :to="site.sellLink.to" class="menu__sell">{{
+              site.sellLink.label
+            }}</RouterLink>
           </div>
         </div>
       </div>
