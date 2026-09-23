@@ -53,57 +53,83 @@ watch(
 
 <style scoped lang="scss">
 .fallback {
-  @include flex(column, stretch, flex-start, 1.25rem);
-  margin-top: 1.5rem;
+  @include flex(column, stretch, flex-start, 1.5rem);
+  margin-top: 2rem;
+
+  @include from('lg') {
+    margin-top: 3rem;
+  }
 
   &__note {
-    @include flex(row, center, flex-start, 0.5rem);
+    @include flex(row, center, flex-start, 0.6rem);
     align-self: flex-start;
     font-size: $text-sm;
-    color: $ink-soft;
-    background: $sand;
-    padding: 0.55rem 0.9rem;
-    border-radius: $radius-pill;
+    font-weight: 300;
+    color: $ink-body;
+    background: $blue-100;
+    padding: 0.7rem 1rem;
+    border-left: 2px solid $navy-900;
 
     i {
-      color: $brand-blue;
+      color: $navy-900;
     }
   }
 
   &__head {
-    @include flex(row, flex-end, space-between, 1rem);
+    @include flex(row, flex-end, space-between, 1.25rem 2rem);
     flex-wrap: wrap;
+    padding-top: 0.5rem;
   }
 
   &__title {
-    @include display($display-sm, 700);
+    @include display($display-sm, 300);
+    color: $ink;
+    @include title-rule;
   }
 
   &__text {
     color: $ink-soft;
-    margin-top: 0.3rem;
+    font-weight: 300;
+    margin-top: 1rem;
   }
 
   &__all {
-    @include flex(row, center, flex-start, 0.45rem);
-    font-weight: 600;
-    font-size: $text-sm;
-    color: $ink;
-    border-bottom: 1px solid $brand-orange;
-    padding-bottom: 0.15rem;
+    @include flex(row, center, flex-start, 0.5rem);
+    @include caps(0.72rem, 0.22em);
+    color: $navy-900;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid $navy-900;
+    @include transition;
 
     i {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       transition: transform 0.3s $ease;
     }
 
-    &:hover i {
-      transform: translateX(3px);
+    &:hover {
+      color: $ember-600;
+      border-color: $ember-600;
+
+      i {
+        transform: translateX(3px);
+      }
     }
   }
 
   &__list {
-    @include flex-cards(290px, 1.5rem);
+    @include flex-cards(300px, 1.5rem);
+
+    @include from('lg') {
+      gap: 2rem;
+    }
+
+    > * {
+      max-width: 560px;
+
+      @include from('xl') {
+        max-width: calc((100% - 4rem) / 3);
+      }
+    }
   }
 }
 </style>
