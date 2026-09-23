@@ -1,0 +1,113 @@
+// Mapa del valle. Móvil: filtros plegables y chips de zona arriba, mapa con el alto útil,
+// lista debajo. Escritorio: panel de filtros y zonas a la izquierda, mapa a la derecha.
+.valley {
+  @include container;
+  padding-block: clamp(2rem, 6vw, 5rem) $space-section;
+
+  &__head {
+    margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+  }
+
+  &__title {
+    @include display($display-md);
+    margin-top: 0.8rem;
+    color: $ink;
+    @include title-rule;
+  }
+
+  &__text {
+    margin-top: 1.4rem;
+    max-width: 52ch;
+    font-weight: 300;
+    line-height: 1.7;
+    color: $ink-body;
+  }
+
+  &__body {
+    @include flex(column, stretch, flex-start, 0.9rem);
+
+    @include from('lg') {
+      flex-direction: row;
+      align-items: stretch;
+      gap: 32px;
+    }
+  }
+
+  &__panel {
+    @include flex(column, stretch, flex-start, 0.9rem);
+    min-width: 0;
+
+    @include from('lg') {
+      flex: 0 0 340px;
+      gap: 1.25rem;
+    }
+  }
+
+  &__stage {
+    position: relative;
+    height: calc(100svh - 170px);
+    min-height: 440px;
+    max-height: 760px;
+    border: 1px solid $line;
+    isolation: isolate;
+
+    @include from('lg') {
+      flex: 1;
+      height: auto;
+      min-height: 720px;
+      max-height: none;
+    }
+  }
+
+  &__map {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  // Mapa / Satélite, como el control de Trivo pero en el lenguaje de G3i.
+  &__layers {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 5;
+    @include flex(row, stretch, flex-start);
+    background: $surface;
+    box-shadow: $shadow-md;
+
+    button {
+      min-height: 40px;
+      padding: 0 1rem;
+      @include caps(0.68rem, 0.16em);
+      color: $navy-900;
+      @include transition(background);
+      @include focus-ring;
+
+      &.is-on {
+        background: $navy-900;
+        color: $surface;
+      }
+    }
+  }
+
+  &__list {
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  &__error {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    @include card;
+    box-shadow: $shadow-md;
+    padding: 1.2rem 1.4rem;
+    font-size: $text-sm;
+    @include flex(column, center, center, 0.7rem);
+  }
+}
