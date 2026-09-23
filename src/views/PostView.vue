@@ -7,6 +7,7 @@ import ShareButton from '@/components/common/ShareButton.vue'
 import { postService } from '@/services/post.service'
 import { useAsyncData } from '@/composables/useAsyncData'
 import { useSeo } from '@/composables/useSeo'
+import { postSchema } from '@/utils/schema'
 import { copy } from '@/config/copy.public'
 import { copyPages } from '@/config/copy.pages'
 
@@ -21,6 +22,7 @@ useSeo(() => ({
   title: post.value?.title || copy.blog.title,
   description: post.value?.excerpt,
   image: post.value?.cover?.url,
+  jsonLd: post.value ? postSchema(post.value, `${window.location.origin}${window.location.pathname}`) : null,
 }))
 </script>
 
