@@ -1,7 +1,8 @@
 // Solo variables. Las fuentes se cargan con <link> en index.html: este archivo
 // se inyecta en cada SFC vía vite.config.ts, así que no debe emitir CSS.
 
-$font-display: 'Manrope', system-ui, sans-serif;
-$font-principal: 'Inter', system-ui, sans-serif;
+// Serif editorial ligera para títulos (se usa en 300 y cursiva) y sans geométrica para texto.
+$font-display: 'Cormorant Garamond', 'Cormorant', Garamond, 'Times New Roman', serif;
+$font-principal: 'Jost', 'Futura', 'Century Gothic', system-ui, sans-serif;
 $font-secondary: $font-principal;
 $font-body: $font-principal;
