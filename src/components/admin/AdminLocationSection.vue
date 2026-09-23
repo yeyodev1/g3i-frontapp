@@ -10,7 +10,7 @@ import AdminMapPicker from './AdminMapPicker.vue'
 
 // Se muta el formulario del padre directamente: es el mismo objeto reactivo.
 defineProps<{
-  form: { sector: string; address: string; location: GeoLocation }
+  form: { sector: string; address: string; locality: string; badge?: string; location: GeoLocation }
   errors: FormErrors
   step: number
 }>()
@@ -33,8 +33,16 @@ const radii = [200, 400, 700, 1000]
       </AdminField>
     </div>
 
+    <AdminField label="Subzona" for-id="loc-locality" :help="adminCopy.help.locality">
+      <input id="loc-locality" v-model="form.locality" maxlength="60" placeholder="Ej.: Kentia, Auki Plaza, Proyecto Taya" />
+    </AdminField>
+
     <AdminField label="Dirección referencial" for-id="loc-address" :help="adminCopy.help.address">
       <input id="loc-address" v-model="form.address" maxlength="200" />
+    </AdminField>
+
+    <AdminField v-if="form.badge !== undefined" label="Etiqueta sobre la foto" for-id="loc-badge" :help="adminCopy.help.badge">
+      <input id="loc-badge" v-model="form.badge" maxlength="24" placeholder="Ej.: Destacada, Oportunidad, Comercial" />
     </AdminField>
 
     <AdminField label="Ubicación en el mapa" :help="adminCopy.help.map">
