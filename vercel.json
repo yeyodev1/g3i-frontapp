@@ -3,15 +3,641 @@
   "framework": "vite",
   "buildCommand": "pnpm build",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/((?!assets/).*)", "destination": "/index.html" }],
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://g3i-backapp.vercel.app/api/sitemap.xml"
+    },
+    {
+      "source": "/((?!assets/).*)",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/index.html",
-      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/casas/casa-en-venta-cumbaya-sector-colegio-menor-casa-de-4-dorm-y-4-parqueaderos",
+      "destination": "/propiedades/casa-en-venta-cumbaya-sector-colegio-menor-casa-de-4-dormitorios-y-4-parqueaderos",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-en-venta-cumbaya-sector-colegio-menor-casa-de-4-dorm-y-4-parqueaderos/",
+      "destination": "/propiedades/casa-en-venta-cumbaya-sector-colegio-menor-casa-de-4-dormitorios-y-4-parqueaderos",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-en-venta-dentro-de-urb-en-el-corazon-de-cumbaya-255-874",
+      "destination": "/propiedades/casa-en-venta-dentro-de-urb-en-el-corazon-de-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-en-venta-dentro-de-urb-en-el-corazon-de-cumbaya-255-874/",
+      "destination": "/propiedades/casa-en-venta-dentro-de-urb-en-el-corazon-de-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-en-venta-en-cumbaya-pachosalas-3-dormitorios-199-m²-jardin-privado-62-m²-entrega-nov-2026",
+      "destination": "/propiedades/casa-en-venta-en-cumbaya-pachosalas-3-dormitorios-199-m-jardin-privado-62-m-entrega-nov-20",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-en-venta-en-cumbaya-pachosalas-3-dormitorios-199-m²-jardin-privado-62-m²-entrega-nov-2026/",
+      "destination": "/propiedades/casa-en-venta-en-cumbaya-pachosalas-3-dormitorios-199-m-jardin-privado-62-m-entrega-nov-20",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-en-venta-en-cumbaya-pachosalas-3-dormitorios-199-m%c2%b2-jardin-privado-62-m%c2%b2-entrega-nov-2026",
+      "destination": "/propiedades/casa-en-venta-en-cumbaya-pachosalas-3-dormitorios-199-m-jardin-privado-62-m-entrega-nov-20",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-en-venta-en-cumbaya-pachosalas-3-dormitorios-199-m%c2%b2-jardin-privado-62-m%c2%b2-entrega-nov-2026/",
+      "destination": "/propiedades/casa-en-venta-en-cumbaya-pachosalas-3-dormitorios-199-m-jardin-privado-62-m-entrega-nov-20",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-nueva-en-cumbaya-pachosalas-3-dormitorios-222-m%c2%b2-jardin-privado-en-urbanizacion-segura-entrega-nov-2026",
+      "destination": "/propiedades/casa-nueva-en-cumbaya-pachosalas-3-dormitorios-222-m-jardin-privado-en-urbanizacion-segura",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-nueva-en-cumbaya-pachosalas-3-dormitorios-222-m%c2%b2-jardin-privado-en-urbanizacion-segura-entrega-nov-2026/",
+      "destination": "/propiedades/casa-nueva-en-cumbaya-pachosalas-3-dormitorios-222-m-jardin-privado-en-urbanizacion-segura",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-nueva-en-cumbaya-pachosalas-3-dormitorios-222-m²-jardin-privado-en-urbanizacion-segura-entrega-nov-2026",
+      "destination": "/propiedades/casa-nueva-en-cumbaya-pachosalas-3-dormitorios-222-m-jardin-privado-en-urbanizacion-segura",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-nueva-en-cumbaya-pachosalas-3-dormitorios-222-m²-jardin-privado-en-urbanizacion-segura-entrega-nov-2026/",
+      "destination": "/propiedades/casa-nueva-en-cumbaya-pachosalas-3-dormitorios-222-m-jardin-privado-en-urbanizacion-segura",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-por-estrenar-en-cumbaya-pachosalas-3-dormitorios-200-m%c2%b2-jardin-privado-entrega-nov-2026",
+      "destination": "/propiedades/casa-por-estrenar-en-cumbaya-pachosalas-3-dormitorios-200-m-jardin-privado-entrega-nov-202",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-por-estrenar-en-cumbaya-pachosalas-3-dormitorios-200-m%c2%b2-jardin-privado-entrega-nov-2026/",
+      "destination": "/propiedades/casa-por-estrenar-en-cumbaya-pachosalas-3-dormitorios-200-m-jardin-privado-entrega-nov-202",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-por-estrenar-en-cumbaya-pachosalas-3-dormitorios-200-m²-jardin-privado-entrega-nov-2026",
+      "destination": "/propiedades/casa-por-estrenar-en-cumbaya-pachosalas-3-dormitorios-200-m-jardin-privado-entrega-nov-202",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casa-por-estrenar-en-cumbaya-pachosalas-3-dormitorios-200-m²-jardin-privado-entrega-nov-2026/",
+      "destination": "/propiedades/casa-por-estrenar-en-cumbaya-pachosalas-3-dormitorios-200-m-jardin-privado-entrega-nov-202",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casas-independientes-de-lujo-exclusivas-en-urbanizacion-en-cumbaya",
+      "destination": "/propiedades/casa-independiente-de-lujo-de-4-hab-en-urbanizacion-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/casas/casas-independientes-de-lujo-exclusivas-en-urbanizacion-en-cumbaya/",
+      "destination": "/propiedades/casa-independiente-de-lujo-de-4-hab-en-urbanizacion-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/casas/vendo-casa-de-dos-dormitorios-en-pakakuna-gardens-checa",
+      "destination": "/propiedades",
+      "permanent": true
+    },
+    {
+      "source": "/casas/vendo-casa-de-dos-dormitorios-en-pakakuna-gardens-checa/",
+      "destination": "/propiedades",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/🏡-suite-por-estrenar-con-vista-espectacular-cumbaya-quito",
+      "destination": "/propiedades/suite-por-estrenar-con-vista-espectacular-cumbaya-quito",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/🏡-suite-por-estrenar-con-vista-espectacular-cumbaya-quito/",
+      "destination": "/propiedades/suite-por-estrenar-con-vista-espectacular-cumbaya-quito",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/%f0%9f%8f%a1-suite-por-estrenar-con-vista-espectacular-cumbaya-quito",
+      "destination": "/propiedades/suite-por-estrenar-con-vista-espectacular-cumbaya-quito",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/%f0%9f%8f%a1-suite-por-estrenar-con-vista-espectacular-cumbaya-quito/",
+      "destination": "/propiedades/suite-por-estrenar-con-vista-espectacular-cumbaya-quito",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-de-190-m²-3-dormitorios-super-oportunidad-298-000",
+      "destination": "/propiedades/departamento-de-190-m-3-dormitorios-super-oportunidad",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-de-190-m²-3-dormitorios-super-oportunidad-298-000/",
+      "destination": "/propiedades/departamento-de-190-m-3-dormitorios-super-oportunidad",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-de-190-m%c2%b2-3-dormitorios-super-oportunidad-298-000",
+      "destination": "/propiedades/departamento-de-190-m-3-dormitorios-super-oportunidad",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-de-190-m%c2%b2-3-dormitorios-super-oportunidad-298-000/",
+      "destination": "/propiedades/departamento-de-190-m-3-dormitorios-super-oportunidad",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-de-lujo-en-venta-en-puembo-2-dorm-308-56280",
+      "destination": "/propiedades/departamento-de-lujo-en-venta-en-puembo-2-dormitorios",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-de-lujo-en-venta-en-puembo-2-dorm-308-56280/",
+      "destination": "/propiedades/departamento-de-lujo-en-venta-en-puembo-2-dormitorios",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-de-lujo-en-venta-en-puembo-3-dorm-319-31382",
+      "destination": "/propiedades/departamento-de-lujo-en-venta-en-puembo-3-dormitorios",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-de-lujo-en-venta-en-puembo-3-dorm-319-31382/",
+      "destination": "/propiedades/departamento-de-lujo-en-venta-en-puembo-3-dormitorios",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-en-venta-edificio-livadi-urbanizacion-real-alto",
+      "destination": "/propiedades/departamento-en-venta-edificio-livadi-urbanizacion-real-alto",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-en-venta-edificio-livadi-urbanizacion-real-alto/",
+      "destination": "/propiedades/departamento-en-venta-edificio-livadi-urbanizacion-real-alto",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-en-venta-en-proyecto-3-dormitorios-dentro-de-urbanizacion-cumbaya",
+      "destination": "/propiedades/departamento-en-venta-en-proyecto-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-en-venta-en-proyecto-3-dormitorios-dentro-de-urbanizacion-cumbaya/",
+      "destination": "/propiedades/departamento-en-venta-en-proyecto-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-penthouse-de-lujo-en-venta-en-puembo-3dorm-salatv-430-220",
+      "destination": "/propiedades/departamento-penthouse-de-lujo-en-venta-en-puembo-3-dormitorios-sala-de-tv",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/departamento-penthouse-de-lujo-en-venta-en-puembo-3dorm-salatv-430-220/",
+      "destination": "/propiedades/departamento-penthouse-de-lujo-en-venta-en-puembo-3-dormitorios-sala-de-tv",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/duplex-en-venta-en-tumbaco-2-dormitorios-126-m%c2%b2-jardin-privado-sector-auki-plaza",
+      "destination": "/propiedades/duplex-en-venta-en-tumbaco-2-dormitorios-126-m-jardin-privado-sector-auki-plaza",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/duplex-en-venta-en-tumbaco-2-dormitorios-126-m%c2%b2-jardin-privado-sector-auki-plaza/",
+      "destination": "/propiedades/duplex-en-venta-en-tumbaco-2-dormitorios-126-m-jardin-privado-sector-auki-plaza",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/duplex-en-venta-en-tumbaco-2-dormitorios-126-m²-jardin-privado-sector-auki-plaza",
+      "destination": "/propiedades/duplex-en-venta-en-tumbaco-2-dormitorios-126-m-jardin-privado-sector-auki-plaza",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/duplex-en-venta-en-tumbaco-2-dormitorios-126-m²-jardin-privado-sector-auki-plaza/",
+      "destination": "/propiedades/duplex-en-venta-en-tumbaco-2-dormitorios-126-m-jardin-privado-sector-auki-plaza",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/suite-de-lujo-en-venta-en-puembo-144-61128",
+      "destination": "/propiedades/suite-de-lujo-en-venta-en-puembo-2",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/suite-de-lujo-en-venta-en-puembo-144-61128/",
+      "destination": "/propiedades/suite-de-lujo-en-venta-en-puembo-2",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/suite-de-lujo-en-venta-en-puembo-147-70790",
+      "destination": "/propiedades/suite-de-lujo-en-venta-en-puembo",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/suite-de-lujo-en-venta-en-puembo-147-70790/",
+      "destination": "/propiedades/suite-de-lujo-en-venta-en-puembo",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/terreno-comercial-en-zona-estrategica-de-alta-circulacion-ruta-viva-no-negociable",
+      "destination": "/propiedades/terreno-comercial-en-zona-estrategica-de-alta-circulacion-ruta-viva-no-negociable",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/terreno-comercial-en-zona-estrategica-de-alta-circulacion-ruta-viva-no-negociable/",
+      "destination": "/propiedades/terreno-comercial-en-zona-estrategica-de-alta-circulacion-ruta-viva-no-negociable",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-espectacular-terreno-dentro-urbanizacion-en-desarrollo-en-puembo",
+      "destination": "/propiedades/vendo-espectacular-terreno-dentro-urbanizacion-en-desarrollo-en-puembo",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-espectacular-terreno-dentro-urbanizacion-en-desarrollo-en-puembo/",
+      "destination": "/propiedades/vendo-espectacular-terreno-dentro-urbanizacion-en-desarrollo-en-puembo",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-espectacular-terreno-en-urbanizacion-la-vina-alta",
+      "destination": "/propiedades/vendo-espectacular-terreno-en-urbanizacion-la-vina-alta",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-espectacular-terreno-en-urbanizacion-la-vina-alta/",
+      "destination": "/propiedades/vendo-espectacular-terreno-en-urbanizacion-la-vina-alta",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-hermoso-terreno-con-estrategica-ubicacion-sector-cumbaya",
+      "destination": "/propiedades/vendo-hermoso-terreno-con-estrategica-ubicacion-pachosalas-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-hermoso-terreno-con-estrategica-ubicacion-sector-cumbaya/",
+      "destination": "/propiedades/vendo-hermoso-terreno-con-estrategica-ubicacion-pachosalas-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-hermoso-terreno-en-estrategica-ubicacion-cumbay",
+      "destination": "/propiedades/vendo-hermoso-terreno-en-estrategica-ubicacion-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-hermoso-terreno-en-estrategica-ubicacion-cumbay/",
+      "destination": "/propiedades/vendo-hermoso-terreno-en-estrategica-ubicacion-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-hermoso-terreno-en-urbanizacion-kentia-cumbaya",
+      "destination": "/propiedades/vendo-hermoso-terreno-en-urbanizacion-de-lujo-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-hermoso-terreno-en-urbanizacion-kentia-cumbaya/",
+      "destination": "/propiedades/vendo-hermoso-terreno-en-urbanizacion-de-lujo-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-hermoso-terreno-en-urbanizacion-la-quinta-cumbaya",
+      "destination": "/propiedades/venta-de-hermoso-terreno-en-exclusiva-urbanizacion-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-hermoso-terreno-en-urbanizacion-la-quinta-cumbaya/",
+      "destination": "/propiedades/venta-de-hermoso-terreno-en-exclusiva-urbanizacion-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-terreno-en-hermosa-urbanizacion-de-lujo-en-cumbaya-espectacular-vista",
+      "destination": "/propiedades/venta-de-terreno-en-hermosa-urbanizacion-de-lujo-en-cumbaya-espectacular-vista",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-terreno-en-hermosa-urbanizacion-de-lujo-en-cumbaya-espectacular-vista/",
+      "destination": "/propiedades/venta-de-terreno-en-hermosa-urbanizacion-de-lujo-en-cumbaya-espectacular-vista",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-terreno-listos-para-construir-en-puembo",
+      "destination": "/propiedades/vendo-terreno-listos-para-construir-en-puembo",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-terreno-listos-para-construir-en-puembo/",
+      "destination": "/propiedades/vendo-terreno-listos-para-construir-en-puembo",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-un-hermoso-terreno-en-urbanizacion-kentia-cumbaya",
+      "destination": "/propiedades/vendo-un-hermoso-terreno-en-urbanizacion-kentia-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/vendo-un-hermoso-terreno-en-urbanizacion-kentia-cumbaya/",
+      "destination": "/propiedades/vendo-un-hermoso-terreno-en-urbanizacion-kentia-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/%f0%9f%8c%b1-nuevo-proyecto-en-desarrollo-en-el-corazon-de-cumbaya",
+      "destination": "/proyectos/nuevo-proyecto-en-desarrollo-en-el-corazon-de-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/%f0%9f%8c%b1-nuevo-proyecto-en-desarrollo-en-el-corazon-de-cumbaya/",
+      "destination": "/proyectos/nuevo-proyecto-en-desarrollo-en-el-corazon-de-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/🌱-nuevo-proyecto-en-desarrollo-en-el-corazon-de-cumbaya",
+      "destination": "/proyectos/nuevo-proyecto-en-desarrollo-en-el-corazon-de-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/🌱-nuevo-proyecto-en-desarrollo-en-el-corazon-de-cumbaya/",
+      "destination": "/proyectos/nuevo-proyecto-en-desarrollo-en-el-corazon-de-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/casas-en-venta-sector-pacho-salas-tumbaco",
+      "destination": "/proyectos/casas-en-venta-sector-pacho-salas-tumbaco",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/casas-en-venta-sector-pacho-salas-tumbaco/",
+      "destination": "/proyectos/casas-en-venta-sector-pacho-salas-tumbaco",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/casas-independientes-de-lujo-exclusivas-en-urbanizacion-en-cumbaya",
+      "destination": "/proyectos/casas-independientes-de-lujo-exclusivas-en-urbanizacion-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/casas-independientes-de-lujo-exclusivas-en-urbanizacion-en-cumbaya/",
+      "destination": "/proyectos/casas-independientes-de-lujo-exclusivas-en-urbanizacion-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/departamentos-en-venta-en-cumbaya-estudios-suites-y-2-dormitorios-desde-usd-69307",
+      "destination": "/proyectos/departamentos-en-venta-en-cumbaya-estudios-suites-y-2-dormitorios",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/departamentos-en-venta-en-cumbaya-estudios-suites-y-2-dormitorios-desde-usd-69307/",
+      "destination": "/proyectos/departamentos-en-venta-en-cumbaya-estudios-suites-y-2-dormitorios",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/departamentos-y-suites-en-venta-en-ciudad-san-patricio-cumbaya-desde-119-016-con-triple-seguridad",
+      "destination": "/proyectos/departamentos-y-suites-en-venta-en-ciudad-san-patricio-cumbaya-con-triple-seguridad",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/departamentos-y-suites-en-venta-en-ciudad-san-patricio-cumbaya-desde-119-016-con-triple-seguridad/",
+      "destination": "/proyectos/departamentos-y-suites-en-venta-en-ciudad-san-patricio-cumbaya-con-triple-seguridad",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/depto-2-dormitorios-en-venta-en-cumbaya-con-balcon-2-parqueaderos-y-bodega",
+      "destination": "/proyectos/depto-2-dormitorios-en-venta-en-cumbaya-con-balcon-2-parqueaderos-y-bodega",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/depto-2-dormitorios-en-venta-en-cumbaya-con-balcon-2-parqueaderos-y-bodega/",
+      "destination": "/proyectos/depto-2-dormitorios-en-venta-en-cumbaya-con-balcon-2-parqueaderos-y-bodega",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/eclat-proyecto-inmobiliario-ideal-para-invertir-en-cumbaya-✨",
+      "destination": "/proyectos/eclat-estudios-y-suites-ideal-para-invertir-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/eclat-proyecto-inmobiliario-ideal-para-invertir-en-cumbaya-✨/",
+      "destination": "/proyectos/eclat-estudios-y-suites-ideal-para-invertir-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/eclat-proyecto-inmobiliario-ideal-para-invertir-en-cumbaya-%e2%9c%a8",
+      "destination": "/proyectos/eclat-estudios-y-suites-ideal-para-invertir-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/eclat-proyecto-inmobiliario-ideal-para-invertir-en-cumbaya-%e2%9c%a8/",
+      "destination": "/proyectos/eclat-estudios-y-suites-ideal-para-invertir-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/nuevo-proyecto-en-el-corazon-de-cumbaya-suites-y-dptos-de-2-dorm",
+      "destination": "/proyectos/proyecto-nuevo-en-cumbaya-suites-y-departamentos-en-venta",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/nuevo-proyecto-en-el-corazon-de-cumbaya-suites-y-dptos-de-2-dorm/",
+      "destination": "/proyectos/proyecto-nuevo-en-cumbaya-suites-y-departamentos-en-venta",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/proyecto-de-departamentos-estilo-resort-living-por-el-sector-pachosalas",
+      "destination": "/proyectos/departamentos-en-venta-cerca-de-la-ruta-viva-vive-entre-naturaleza-y-confort",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/proyecto-de-departamentos-estilo-resort-living-por-el-sector-pachosalas/",
+      "destination": "/proyectos/departamentos-en-venta-cerca-de-la-ruta-viva-vive-entre-naturaleza-y-confort",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/proyecto-en-tumbaco",
+      "destination": "/proyectos/proyecto-en-tumbaco-venta-de-departamentos",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/proyecto-en-tumbaco/",
+      "destination": "/proyectos/proyecto-en-tumbaco-venta-de-departamentos",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/venta-de-suites-y-departamentos-de-2-y-3-dormitorios-en-cumbaya-sector-intervalles-entrega-febrero-2025",
+      "destination": "/proyectos/venta-de-departamentos-de-2-dormitorios-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/venta-de-suites-y-departamentos-de-2-y-3-dormitorios-en-cumbaya-sector-intervalles-entrega-febrero-2025/",
+      "destination": "/proyectos/venta-de-departamentos-de-2-dormitorios-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/inicio",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/inicio/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/casas",
+      "destination": "/propiedades?type=casa",
+      "permanent": true
+    },
+    {
+      "source": "/casas/",
+      "destination": "/propiedades?type=casa",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos",
+      "destination": "/propiedades?type=departamento",
+      "permanent": true
+    },
+    {
+      "source": "/departamentos/",
+      "destination": "/propiedades?type=departamento",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos",
+      "destination": "/propiedades?type=terreno",
+      "permanent": true
+    },
+    {
+      "source": "/terrenos/",
+      "destination": "/propiedades?type=terreno",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i",
+      "destination": "/proyectos",
+      "permanent": true
+    },
+    {
+      "source": "/proyect-g3i/",
+      "destination": "/proyectos",
+      "permanent": true
+    },
+    {
+      "source": "/posicin-propiedades",
+      "destination": "/propiedades",
+      "permanent": true
+    },
+    {
+      "source": "/posicin-propiedades/",
+      "destination": "/propiedades",
+      "permanent": true
+    },
+    {
+      "source": "/posicion-proyectos",
+      "destination": "/proyectos",
+      "permanent": true
+    },
+    {
+      "source": "/posicion-proyectos/",
+      "destination": "/proyectos",
+      "permanent": true
+    },
+    {
+      "source": "/todas-las-propiedades",
+      "destination": "/propiedades",
+      "permanent": true
+    },
+    {
+      "source": "/todas-las-propiedades/",
+      "destination": "/propiedades",
+      "permanent": true
+    },
+    {
+      "source": "/quiero-vender-mi-propiedad",
+      "destination": "/contacto?interes=vender",
+      "permanent": true
+    },
+    {
+      "source": "/quiero-vender-mi-propiedad/",
+      "destination": "/contacto?interes=vender",
+      "permanent": true
+    },
+    {
+      "source": "/vender-mi-propiedad",
+      "destination": "/contacto?interes=vender",
+      "permanent": true
+    },
+    {
+      "source": "/vender-mi-propiedad/",
+      "destination": "/contacto?interes=vender",
+      "permanent": true
+    },
+    {
+      "source": "/contactanos",
+      "destination": "/contacto",
+      "permanent": true
+    },
+    {
+      "source": "/contactanos/",
+      "destination": "/contacto",
+      "permanent": true
+    },
+    {
+      "source": "/9-razones-para-vivir-en-cumbaya-2",
+      "destination": "/blog/9-razones-para-vivir-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/9-razones-para-vivir-en-cumbaya-2/",
+      "destination": "/blog/9-razones-para-vivir-en-cumbaya",
+      "permanent": true
+    },
+    {
+      "source": "/sectores_tax/:path*",
+      "destination": "/propiedades",
+      "permanent": true
+    },
+    {
+      "source": "/tipo-de-propiedad/:path*",
+      "destination": "/propiedades",
+      "permanent": true
+    },
+    {
+      "source": "/vendedores_g3i/:path*",
+      "destination": "/conocenos",
+      "permanent": true
+    },
+    {
+      "source": "/testimonios/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/category/:path*",
+      "destination": "/blog",
+      "permanent": true
     }
   ]
 }
