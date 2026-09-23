@@ -8,8 +8,10 @@ withDefaults(
     linkTo?: string
     level?: 'h1' | 'h2'
     center?: boolean
+    // Línea ember bajo el título, como en todas las secciones del diseño aprobado.
+    rule?: boolean
   }>(),
-  { level: 'h2' },
+  { level: 'h2', rule: true },
 )
 </script>
 
@@ -17,19 +19,25 @@ withDefaults(
   <header class="heading" :class="{ 'heading--center': center }">
     <div class="heading__copy">
       <p v-if="eyebrow" class="heading__eyebrow">{{ eyebrow }}</p>
-      <component :is="level" class="heading__title" :class="`heading__title--${level}`">{{ title }}</component>
+      <component
+        :is="level"
+        class="heading__title"
+        :class="[`heading__title--${level}`, { 'heading__title--rule': rule }]"
+      >
+        {{ title }}
+      </component>
       <p v-if="text" class="heading__text">{{ text }}</p>
     </div>
-    <RouterLink v-if="linkTo && linkLabel" :to="linkTo" class="heading__link">
-      {{ linkLabel }} <i class="fa-solid fa-arrow-right"></i>
+    <RouterLink v-if="linkTo && linkLabel" :to="linkTo" class="heading__link link-caps">
+      {{ linkLabel }} <span aria-hidden="true">→</span>
     </RouterLink>
   </header>
 </template>
 
 <style scoped lang="scss">
 .heading {
-  @include flex(column, flex-start, space-between, 1rem);
-  margin-bottom: $space-lg;
+  @include flex(column, flex-start, space-between, 1.5rem);
+  margin-bottom: clamp(2.25rem, 5vw, 3.5rem);
 
   @include from('md') {
     flex-direction: row;
@@ -43,6 +51,10 @@ withDefaults(
     .heading__copy {
       margin-inline: auto;
     }
+
+    .heading__title--rule::after {
+      margin-inline: auto;
+    }
   }
 
   &__copy {
@@ -51,50 +63,33 @@ withDefaults(
 
   &__eyebrow {
     @include eyebrow;
-    @include flex(row, center, flex-start, 0.6rem);
-    margin-bottom: 0.7rem;
-
-    &::before {
-      content: '';
-      width: 1.4rem;
-      height: 1px;
-      background: $brand-orange;
-    }
+    margin-bottom: 0.9rem;
   }
 
   &__title {
-    @include display($display-sm, 600);
+    @include display($display-md);
     color: $ink;
 
     &--h1 {
-      @include display($display-md, 600);
+      @include display(clamp(2.5rem, 1.8rem + 3vw, 4rem));
+    }
+
+    &--rule {
+      @include title-rule;
     }
   }
 
   &__text {
-    margin-top: 0.7rem;
+    margin-top: 1.25rem;
+    font-weight: 300;
+    font-size: $text-lg;
+    line-height: 1.65;
     color: $ink-soft;
     max-width: 58ch;
   }
 
   &__link {
     flex-shrink: 0;
-    font-size: $text-sm;
-    font-weight: 600;
-    color: $ink;
-    border-bottom: 1px solid $line;
-    padding-bottom: 0.2rem;
-    @include transition;
-
-    i {
-      font-size: 0.75em;
-      margin-left: 0.3rem;
-      color: $brand-blue;
-    }
-
-    &:hover {
-      border-color: $ink;
-    }
   }
 }
 </style>
