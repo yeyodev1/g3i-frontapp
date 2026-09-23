@@ -147,6 +147,8 @@ export const adminCopy = {
   },
 
   help: {
+    locality: 'Barrio, urbanización o proyecto. Sale junto al sector en las tarjetas: «Cumbayá · Kentia».',
+    badge: 'Opcional. Texto corto que se muestra sobre la foto principal.',
     code: 'Tu código interno. Si lo dejas vacío se genera uno automáticamente.',
     summary: 'Una o dos frases que aparecen en la tarjeta del listado (máximo 220 caracteres).',
     description: 'Cuenta todo sobre el inmueble. Deja una línea en blanco para separar párrafos.',
