@@ -27,11 +27,20 @@ export function useProjectUnit() {
     project.value && unit.value ? `${project.value.code} / ${unit.value.name}` : '',
   )
 
+  // Fotos propias de la unidad; si aún no tiene, se muestra la portada del proyecto.
+  const photos = computed<Image[]>(() => {
+    const u = unit.value
+    if (!u) return []
+    if (u.images.length) return u.images
+    const cover = project.value?.cover
+    return cover ? [{ url: cover, publicId: '', alt: projectTitle.value }] : []
+  })
+
   // El plano va primero: es lo que la clienta quiere que se vea.
   const images = computed<Image[]>(() => {
     const u = unit.value
     if (!u) return []
-    return u.floorPlan ? [u.floorPlan, ...u.images] : [...u.images]
+    return u.floorPlan ? [u.floorPlan, ...photos.value] : [...photos.value]
   })
 
   watch(
@@ -53,5 +62,5 @@ export function useProjectUnit() {
     image: images.value[0]?.url || project.value?.cover,
   }))
 
-  return { slug, detail, project, unit, projectTitle, listingTitle, refCode, images, whatsappHref }
+  return { slug, detail, project, unit, projectTitle, listingTitle, refCode, images, photos, whatsappHref }
 }
