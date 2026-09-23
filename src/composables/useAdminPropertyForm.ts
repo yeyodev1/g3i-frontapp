@@ -19,6 +19,8 @@ export function emptyProperty(): PropertyForm {
     sector: '',
     city: 'Quito',
     address: '',
+    locality: '',
+    badge: '',
     location: { lat: null, lng: null, exact: false, radiusMeters: 400 },
     price: 0,
     hoa: { enabled: false, amount: 0 },
