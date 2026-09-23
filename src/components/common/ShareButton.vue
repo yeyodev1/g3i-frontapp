@@ -22,7 +22,13 @@ const { share, copyLink, whatsappShareUrl, menuOpen } = useShare()
     </button>
     <Transition name="fade">
       <div v-if="menuOpen" class="share__menu" role="menu">
-        <a :href="whatsappShareUrl(props.title)" target="_blank" rel="noopener" role="menuitem" @click="menuOpen = false">
+        <a
+          :href="whatsappShareUrl(props.title)"
+          target="_blank"
+          rel="noopener"
+          role="menuitem"
+          @click="menuOpen = false"
+        >
           <i class="fa-brands fa-whatsapp"></i> {{ copy.common.shareWhatsapp }}
         </a>
         <button type="button" role="menuitem" @click="copyLink">
@@ -39,26 +45,26 @@ const { share, copyLink, whatsappShareUrl, menuOpen } = useShare()
 
   &__btn {
     @include flex(row, center, center, 0.5rem);
-    height: 2.6rem;
-    padding-inline: 1rem;
+    height: 2.75rem;
+    padding-inline: 1.1rem;
     border: 1px solid $line;
-    border-radius: $radius-pill;
-    font-size: $text-sm;
-    font-weight: 600;
-    color: $ink;
+    border-radius: $radius-sm;
+    @include caps(0.72rem, 0.18em);
+    color: $navy-900;
     background: $surface;
     @include transition;
 
     i {
-      color: $brand-blue;
+      color: $ember-500;
+      font-size: 0.85rem;
     }
 
     &:hover {
-      border-color: $ink;
+      border-color: $navy-900;
     }
 
     &--compact {
-      width: 2.6rem;
+      width: 2.75rem;
       padding: 0;
     }
   }
@@ -70,7 +76,7 @@ const { share, copyLink, whatsappShareUrl, menuOpen } = useShare()
     z-index: 20;
     min-width: 13rem;
     @include card;
-    box-shadow: $shadow-md;
+    box-shadow: $shadow-lg;
     padding: 0.4rem;
     @include flex(column, stretch, flex-start, 0.1rem);
 
@@ -78,13 +84,13 @@ const { share, copyLink, whatsappShareUrl, menuOpen } = useShare()
     button {
       @include flex(row, center, flex-start, 0.6rem);
       padding: 0.6rem 0.75rem;
-      border-radius: 8px;
+      border-radius: $radius-sm;
       font-size: $text-sm;
       text-align: left;
       color: $ink;
 
       &:hover {
-        background: $sand;
+        background: $gray-100;
       }
     }
   }
