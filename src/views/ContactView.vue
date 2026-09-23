@@ -1,168 +1,174 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import LeadForm from '@/components/forms/LeadForm.vue'
+import { useRoute, useRouter } from 'vue-router'
+import SellForm from '@/components/forms/SellForm.vue'
 import { useCatalogStore } from '@/stores/catalog'
 import { useSeo } from '@/composables/useSeo'
-import { copy } from '@/config/copy.public'
+import { copyPages } from '@/config/copy.pages'
+import type { LeadKind } from '@/types'
 
+const c = copyPages.contact
+const route = useRoute()
+const router = useRouter()
 const catalog = useCatalogStore()
-const contact = computed(() => catalog.contact)
 
-// Solo se pintan los canales que existen: sin correo, no hay fila de correo.
+// ?interes=vender|comprar|trabajar|consulta elige la pestaña (vender es la de siempre).
+const kind = computed<LeadKind>(
+  () => (c.interests.find((i) => i.query === route.query.interes)?.key ?? 'sell') as LeadKind,
+)
+function syncQuery(next: LeadKind) {
+  const query = c.interests.find((i) => i.key === next)?.query
+  router.replace({ query: { ...route.query, interes: query } })
+}
+
+// «593995806119» → «099 580 6119».
+function localPhone(intl: string) {
+  const d = intl.replace(/\D/g, '').replace(/^593/, '0')
+  return d.length === 10 ? `${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}` : d
+}
+const handle = (url: string) => url.replace(/\/+$/, '').split('/').pop() ?? ''
+
+// Sin teléfono (pedido de la clienta): solo WhatsApp, correo y redes, y solo los que existan.
 const channels = computed(() => {
-  const c = contact.value
+  const ct = catalog.contact
   return [
-    c.whatsapp && { icon: 'fa-brands fa-whatsapp', label: copy.contact.whatsapp, value: c.phone || c.whatsapp, href: `https://wa.me/${c.whatsapp}` },
-    c.phone && { icon: 'fa-solid fa-phone', label: copy.contact.phone, value: c.phone, href: `tel:${c.phone}` },
-    c.email && { icon: 'fa-regular fa-envelope', label: copy.contact.email, value: c.email, href: `mailto:${c.email}` },
-    c.address && { icon: 'fa-solid fa-location-dot', label: copy.contact.address, value: c.address, href: '' },
-  ].filter(Boolean) as { icon: string; label: string; value: string; href: string }[]
+    ct.whatsapp && { icon: 'fa-brands fa-whatsapp', text: `${localPhone(ct.whatsapp)} · ${c.whatsappSuffix}`, href: `https://wa.me/${ct.whatsapp}` },
+    ct.email && { icon: 'fa-regular fa-envelope', text: ct.email, href: `mailto:${ct.email}` },
+    ct.instagram && { icon: 'fa-brands fa-instagram', text: `@${handle(ct.instagram)}`, href: ct.instagram },
+    ct.facebook && { icon: 'fa-brands fa-facebook-f', text: handle(ct.facebook), href: ct.facebook },
+  ].filter(Boolean) as { icon: string; text: string; href: string }[]
 })
+const photo = computed(() => catalog.site?.settings.about?.image?.url)
 
-useSeo({ title: copy.contact.eyebrow, description: copy.contact.description })
+useSeo({ title: c.eyebrow, description: c.description })
 onMounted(() => catalog.ensureSite())
 </script>
 
 <template>
   <div class="contact">
-    <div class="contact__inner">
-      <section class="contact__info">
-        <p class="contact__eyebrow">{{ copy.contact.eyebrow }}</p>
-        <h1 class="contact__title">{{ copy.contact.title }}</h1>
-        <p class="contact__text">{{ copy.contact.text }}</p>
+    <section class="contact__intro">
+      <p class="contact__eyebrow">{{ c.eyebrow }}</p>
+      <h1 class="contact__title">
+        {{ c.title }} <em>{{ c.titleEm }}</em>
+      </h1>
+      <p v-for="p in c.paragraphs" :key="p" class="contact__text">{{ p }}</p>
+      <p class="contact__welcome">{{ c.welcome }}</p>
 
-        <ul class="contact__channels">
-          <li v-for="ch in channels" :key="ch.label">
-            <span class="contact__icon"><i :class="ch.icon" aria-hidden="true"></i></span>
-            <div>
-              <small>{{ ch.label }}</small>
-              <a v-if="ch.href" :href="ch.href" :target="ch.href.startsWith('http') ? '_blank' : undefined" rel="noopener">{{ ch.value }}</a>
-              <span v-else>{{ ch.value }}</span>
-            </div>
-          </li>
-        </ul>
+      <ul class="contact__channels" :aria-label="c.channelsLabel">
+        <li v-for="ch in channels" :key="ch.href">
+          <a :href="ch.href" :target="ch.href.startsWith('http') ? '_blank' : undefined" rel="noopener">
+            <i :class="ch.icon" aria-hidden="true"></i>
+            <span>{{ ch.text }}</span>
+          </a>
+        </li>
+      </ul>
+    </section>
 
-        <div v-if="contact.instagram || contact.facebook" class="contact__social">
-          <small>{{ copy.contact.social }}</small>
-          <div>
-            <a v-if="contact.instagram" :href="contact.instagram" target="_blank" rel="noopener" aria-label="Instagram">
-              <i class="fa-brands fa-instagram"></i>
-            </a>
-            <a v-if="contact.facebook" :href="contact.facebook" target="_blank" rel="noopener" aria-label="Facebook">
-              <i class="fa-brands fa-facebook-f"></i>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <LeadForm class="contact__form" kind="general" :title="copy.contact.formTitle" text="" />
+    <div class="contact__side">
+      <figure v-if="photo" class="contact__photo">
+        <img :src="photo" :alt="c.photoAlt" />
+      </figure>
+      <div class="contact__card">
+        <SellForm :initial-kind="kind" :title="c.formTitle" @kind="syncQuery" />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .contact {
-  &__inner {
-    @include container;
-    @include flex(column, stretch, flex-start, 2.5rem);
-    padding-block: clamp(2.5rem, 6vw, 5rem) $space-section;
+  @include container;
+  @include flex(column, stretch, flex-start, 3rem);
+  padding-block: clamp(2.5rem, 7vw, 6rem) $space-section;
 
-    @include from('lg') {
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 4rem;
-    }
+  @include from('lg') {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 96px;
   }
 
-  &__info,
-  &__form {
+  &__intro,
+  &__side {
     flex: 1 1 0;
     min-width: 0;
   }
 
   &__eyebrow {
     @include eyebrow;
-    @include flex(row, center, flex-start, 0.6rem);
-    margin-bottom: 0.9rem;
-
-    &::before {
-      content: '';
-      width: 1.4rem;
-      height: 1px;
-      background: $brand-orange;
-    }
   }
 
   &__title {
-    @include display($display-md, 600);
+    @include display(clamp(2.5rem, 1.6rem + 3.6vw, 4rem));
+    line-height: 1.04;
+    margin-top: 0.9rem;
+    color: $ink;
+    @include title-rule;
+
+    em {
+      font-style: italic;
+    }
   }
 
   &__text {
-    margin-top: 1rem;
-    color: $ink-soft;
-    font-size: $text-lg;
-    max-width: 44ch;
+    margin-top: 1.5rem;
+    font-size: 1.0625rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: $ink-body;
+
+    & + & {
+      margin-top: 1rem;
+    }
+  }
+
+  &__welcome {
+    margin-top: 1.5rem;
+    font: italic 400 1.5rem/1.2 $font-display;
+    color: $blue-600;
   }
 
   &__channels {
     list-style: none;
-    margin-top: 2rem;
-    border-top: 1px solid $line;
-
-    li {
-      @include flex(row, center, flex-start, 1rem);
-      padding-block: 1rem;
-      border-bottom: 1px solid $line;
-    }
-
-    small {
-      display: block;
-      font-size: $text-xs;
-      color: $ink-muted;
-    }
-
-    a,
-    span {
-      font-weight: 600;
-      color: $ink;
-      word-break: break-word;
-    }
-  }
-
-  &__icon {
-    @include flex(row, center, center);
-    flex-shrink: 0;
-    width: 2.6rem;
-    height: 2.6rem;
-    border-radius: 50%;
-    background: $sand;
-    color: $brand-blue;
-  }
-
-  &__social {
-    margin-top: 1.5rem;
-
-    small {
-      font-size: $text-xs;
-      color: $ink-muted;
-    }
-
-    div {
-      @include flex(row, center, flex-start, 0.5rem);
-      margin-top: 0.5rem;
-    }
+    margin-top: 2.25rem;
+    @include flex(column, flex-start, flex-start, 1rem);
 
     a {
-      @include flex(row, center, center);
-      width: 2.6rem;
-      height: 2.6rem;
-      border-radius: 50%;
-      border: 1px solid $line;
-      color: $ink;
+      @include flex(row, center, flex-start, 0.9rem);
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: $ink-body;
+      @include transition(color);
 
       &:hover {
-        border-color: $ink;
+        color: $ember-600;
       }
+    }
+
+    i {
+      width: 18px;
+      text-align: center;
+      color: $ember-500;
+      font-size: 1.05rem;
+    }
+  }
+
+  &__side {
+    @include flex(column, stretch, flex-start, 1.5rem);
+  }
+
+  &__photo img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+  }
+
+  &__card {
+    border: 1px solid $line;
+    background: $surface;
+    padding: 1.75rem 1.25rem;
+
+    @include from('md') {
+      padding: 44px;
     }
   }
 }
