@@ -26,14 +26,13 @@ withDefaults(defineProps<{ count?: number; basis?: string }>(), { count: 6, basi
   &__media,
   &__line {
     border-radius: $radius-sm;
-    background: linear-gradient(90deg, $sand 0%, darken($sand, 3%) 50%, $sand 100%);
+    background: linear-gradient(90deg, $gray-100 0%, $gray-200 50%, $gray-100 100%);
     background-size: 200% 100%;
     animation: shimmer 1.4s ease-in-out infinite;
   }
 
   &__media {
     aspect-ratio: 4 / 3;
-    border-radius: 14px;
   }
 
   &__line {
