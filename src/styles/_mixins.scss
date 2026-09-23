@@ -27,7 +27,7 @@ $breakpoints: (
 }
 
 // Contenedor central. Layout con flexbox, no con CSS Grid.
-@mixin container($max: 1160px) {
+@mixin container($max: 1200px) {
   width: 100%;
   max-width: $max;
   margin-inline: auto;
@@ -63,7 +63,7 @@ $breakpoints: (
 @mixin card {
   background: $surface;
   border: 1px solid $line;
-  border-radius: 14px;
+  border-radius: 2px;
 }
 
 @mixin transition($props: all) {
