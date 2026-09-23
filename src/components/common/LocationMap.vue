@@ -34,7 +34,7 @@ watch(
 .location {
   &__map {
     height: 300px;
-    border-radius: $radius-md;
+    border-radius: $radius-sm;
     overflow: hidden;
     border: 1px solid $line;
     z-index: 0;
@@ -49,15 +49,16 @@ watch(
     flex-wrap: wrap;
     margin-top: 0.7rem;
     font-size: $text-sm;
-    color: $ink-soft;
+    font-weight: 300;
+    color: $ink-body;
 
     i {
-      color: $brand-orange;
+      color: $ember-500;
     }
   }
 
   &__approx {
-    color: $brand-blue;
+    color: $ink-muted;
   }
 }
 </style>
