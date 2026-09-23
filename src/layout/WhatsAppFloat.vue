@@ -7,8 +7,15 @@ const { href } = useWhatsAppContext()
 </script>
 
 <template>
-  <a :href="href" class="wa-float" target="_blank" rel="noopener" :aria-label="copy.whatsappFloat" :title="copy.whatsappFloat">
-    <i class="fa-brands fa-whatsapp"></i>
+  <a
+    :href="href"
+    class="wa-float"
+    target="_blank"
+    rel="noopener"
+    :aria-label="copy.whatsappFloat"
+    :title="copy.whatsappFloat"
+  >
+    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
   </a>
 </template>
 
@@ -25,11 +32,14 @@ const { href } = useWhatsAppContext()
   background: #25d366;
   color: #fff;
   font-size: 1.75rem;
-  box-shadow: 0 8px 24px rgba($ink, 0.22);
+  box-shadow:
+    0 12px 28px -8px rgba($navy-950, 0.45),
+    0 2px 6px rgba($navy-950, 0.18);
   @include transition(transform);
+  @include focus-ring($navy-900);
 
   &:hover {
-    transform: scale(1.06);
+    transform: translateY(-2px);
   }
 
   @include from('md') {
