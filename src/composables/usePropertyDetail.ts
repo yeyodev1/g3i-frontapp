@@ -37,9 +37,12 @@ export function usePropertyDetail(slug: () => string) {
   watch(slug, fetchAll, { immediate: true })
 
   const title = computed(() => sentenceCase(property.value?.title ?? ''))
-  const place = computed(() =>
-    property.value ? `${catalog.sectorLabel(property.value.sector)} · ${copy.common.city}` : '',
-  )
+  // «Tumbaco · Auki Plaza»: sector y subzona; sin subzona, la ciudad.
+  const place = computed(() => {
+    const p = property.value
+    if (!p) return ''
+    return [catalog.sectorLabel(p.sector), p.locality || copy.common.city].join(' · ')
+  })
   const specs = computed(() =>
     property.value ? detailSpecs(property.value, catalog.conditionLabel(property.value.condition)) : [],
   )
