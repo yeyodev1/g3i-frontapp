@@ -12,15 +12,13 @@ export const site = {
   url: 'https://g3i.ec',
   logo: '/logo-g3i.png',
   city: 'Quito',
-  // Pendiente: la clienta envía el correo institucional.
-  email: '',
+  email: 'ventas@g3i.ec',
   phone: '0995806119',
   // Solo dígitos con código de país
   whatsapp: '593995806119',
-  // Pendiente: la clienta envía los enlaces.
   social: {
-    instagram: '',
-    facebook: '',
+    instagram: 'https://www.instagram.com/inmobiliaria.g3i/',
+    facebook: 'https://www.facebook.com/Grupo3Inversiones/',
   },
   nav: [
     { label: 'Inicio', to: '/' },
