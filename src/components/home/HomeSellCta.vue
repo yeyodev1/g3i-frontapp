@@ -1,49 +1,60 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useCatalogStore } from '@/stores/catalog'
 import { site } from '@/config/site'
-import { copy } from '@/config/copy.public'
 import { copyHome } from '@/config/copy.home'
 
-const catalog = useCatalogStore()
-const text = computed(() => catalog.site?.settings.sellCta.text || copy.home.sellText)
+const t = copyHome.sellCta
 </script>
 
 <template>
-  <!-- Discreto a propósito: una línea, sin bloque de color. -->
-  <aside class="sell">
-    <p class="sell__inner">
-      <i class="fa-regular fa-handshake" aria-hidden="true"></i>
-      <span>{{ text }}</span>
-      <RouterLink :to="site.sellLink.to" class="sell__link">{{ copyHome.sellLink }}</RouterLink>
-    </p>
-  </aside>
+  <section class="sell">
+    <div class="sell__inner">
+      <div class="sell__copy">
+        <p class="sell__eyebrow">{{ t.eyebrow }}</p>
+        <h2 class="sell__title">{{ t.title }}</h2>
+      </div>
+      <RouterLink :to="site.sellLink.to" class="btn btn--primary btn--lg sell__btn">{{
+        t.button
+      }}</RouterLink>
+    </div>
+  </section>
 </template>
 
 <style scoped lang="scss">
 .sell {
-  border-top: 1px solid $line;
+  background: $navy-900;
+  color: $on-inverse;
+  padding-block: clamp(4rem, 9vw, 6rem);
 
   &__inner {
     @include container;
-    @include flex(row, center, center, 0.4rem 0.7rem);
-    flex-wrap: wrap;
-    text-align: center;
-    padding-block: 2rem;
-    font-size: $text-sm;
-    color: $ink-soft;
+    @include flex(column, flex-start, space-between, 2rem);
 
-    i {
-      color: $brand-orange;
+    @include from('lg') {
+      flex-direction: row;
+      align-items: center;
+      gap: 3rem;
     }
   }
 
-  &__link {
-    color: $ink;
-    font-weight: 600;
-    text-decoration: underline;
-    text-decoration-color: $brand-blue;
-    text-underline-offset: 4px;
+  &__eyebrow {
+    @include eyebrow;
+    color: $ember-300;
+  }
+
+  &__title {
+    @include display(clamp(2.2rem, 1.7rem + 2vw, 3rem));
+    color: $on-inverse;
+    margin-top: 0.9rem;
+    max-width: 620px;
+  }
+
+  &__btn {
+    flex-shrink: 0;
+
+    @include until('sm') {
+      width: 100%;
+      padding-inline: 1rem;
+    }
   }
 }
 </style>
