@@ -1,83 +1,155 @@
-// Estilos de los pines (divIcon) y popups de Leaflet. Se importan desde
-// useLeafletMap.ts una sola vez; el HTML lo genera Leaflet fuera de los SFC.
+// Estilos del HTML que genera Leaflet (divIcon, popups, etiquetas), fuera del scope de
+// cualquier SFC. Se importan una sola vez desde useLeafletMap.ts.
 
-.leaflet-tile-pane {
-  filter: grayscale(1) contrast(0.92) brightness(1.06);
+.leaflet-container {
+  font-family: $font-principal;
+  background: #e9ecef;
 }
 
-.map-pin-wrap {
+.leaflet-control-zoom a {
+  border-radius: 0 !important;
+  color: $navy-900;
+}
+
+.leaflet-control-attribution {
+  font-size: 0.65rem;
+}
+
+// ─── Pines de precio (píldora navy; ember al pasar o al seleccionar) ────
+.map-pin-wrap,
+.valley-pin-wrap,
+.valley-label-wrap {
   background: none;
   border: none;
 }
 
-.map-pin {
+@mixin price-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: $radius-pill;
+  background: $navy-900;
+  color: $surface;
+  font: 500 12px/1 $font-principal;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border: 1.5px solid $surface;
+  box-shadow: 0 6px 18px -4px rgba($navy-900, 0.55);
+  cursor: pointer;
+  transition:
+    transform 0.25s $ease,
+    background 0.25s $ease,
+    color 0.25s $ease;
+}
+
+.map-pin,
+.valley-pin {
+  @include price-pill;
   position: absolute;
   left: 0;
   top: 0;
-  transform: translate(-50%, calc(-100% - 6px));
-  display: inline-block;
-  white-space: nowrap;
-  font-family: $font-principal;
-  font-size: 0.74rem;
-  font-weight: 700;
-  line-height: 1;
-  padding: 0.42rem 0.6rem;
-  border-radius: $radius-pill;
-  background: $surface;
-  color: $ink;
-  border: 1px solid rgba($ink, 0.18);
-  box-shadow: 0 2px 8px rgba($ink, 0.18);
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -5px;
-    width: 8px;
-    height: 8px;
-    background: inherit;
-    border-right: 1px solid rgba($ink, 0.18);
-    border-bottom: 1px solid rgba($ink, 0.18);
-    transform: translateX(-50%) rotate(45deg);
-  }
-
-  &--project {
-    border-color: rgba($brand-blue, 0.5);
-    box-shadow:
-      0 2px 8px rgba($ink, 0.18),
-      inset 0 -2px 0 $brand-blue;
-  }
+  transform: translate(-50%, -50%);
 
   &:hover,
-  &--active {
-    background: $ink;
+  &--active,
+  &.is-on {
+    background: $ember-500;
     color: $surface;
+    transform: translate(-50%, -50%) scale(1.08);
     z-index: 2;
   }
 }
 
-.map-dot {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: $ink;
-  border: 3px solid $surface;
-  box-shadow:
-    0 0 0 2px $brand-blue,
-    0 4px 10px rgba($ink, 0.3);
+// Proyectos: contorno ember sobre blanco, para distinguirlos de las propiedades.
+.map-pin--project,
+.valley-pin--project {
+  background: $surface;
+  color: $navy-900;
+  border: 2px solid $ember-500;
 }
 
+// Grupo de pines encimados: círculo navy con el número; al clic acerca el mapa.
+.valley-cluster {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $navy-900;
+  color: $surface;
+  font: 600 14px/1 $font-principal;
+  border: 2px solid $surface;
+  box-shadow:
+    0 0 0 6px rgba($navy-900, 0.22),
+    0 8px 18px -4px rgba($navy-900, 0.5);
+  cursor: pointer;
+  transition:
+    transform 0.25s $ease,
+    background 0.25s $ease;
+
+  &:hover {
+    background: $ember-500;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+// Satélite: etiquetas blancas con sombra para que se lean sobre la foto.
+.is-sat .valley-label {
+  color: $surface;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.85),
+    0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+// Un solo inmueble (ficha): punto navy con halo ember.
+.map-dot {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: $navy-900;
+  border: 3px solid $surface;
+  box-shadow:
+    0 0 0 3px rgba($ember-500, 0.55),
+    0 6px 14px rgba($navy-900, 0.35);
+}
+
+// ─── Etiquetas de zona ──────────────────────────────────────────────────
+.valley-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  font: 400 22px/1 $font-display;
+  letter-spacing: 0.02em;
+  color: $navy-900;
+  white-space: nowrap;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 3px #fff,
+    0 0 1px #fff;
+  pointer-events: none;
+
+  &--point {
+    font-size: 15px;
+    font-style: italic;
+  }
+}
+
+// ─── Popups ─────────────────────────────────────────────────────────────
 .leaflet-popup-content-wrapper {
   border-radius: $radius-sm;
   padding: 0;
   overflow: hidden;
-  box-shadow: $shadow-md;
+  box-shadow: 0 20px 50px -12px rgba($navy-900, 0.45);
 }
 
 .leaflet-popup-content {
@@ -85,9 +157,101 @@
   width: auto !important;
 }
 
+.leaflet-container a.leaflet-popup-close-button {
+  color: $surface;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.valley-pop {
+  width: 260px;
+  color: $ink;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    background: $sand;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 16px 16px;
+  }
+
+  &__label {
+    @include caps(10px, 0.22em);
+    color: $ink-muted;
+  }
+
+  &__title {
+    font: 400 18px/1.2 $font-display;
+    margin-top: 6px;
+    color: $ink;
+  }
+
+  &__price {
+    font: 500 20px/1 $font-display;
+    margin-top: 10px;
+    color: $navy-900;
+  }
+
+  &__cta {
+    margin-top: 14px;
+    height: 36px;
+    padding: 0 16px;
+    background: $navy-900;
+    color: $surface;
+    @include caps(11px, 0.18em);
+    transition: background 0.25s $ease;
+
+    &:hover {
+      background: $ember-500;
+    }
+  }
+}
+
+// Lista de inmuebles en el mismo punto.
+.valley-pop--list .valley-pop__body {
+  gap: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.valley-pop__row {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 0;
+  border-bottom: 1px solid $line;
+  text-align: left;
+
+  &:hover .valley-pop__row-title {
+    color: $ember-600;
+  }
+}
+
+.valley-pop__row-title {
+  font-size: 13px;
+  line-height: 1.3;
+  color: $ink;
+}
+
+.valley-pop__row-price {
+  font: 500 16px/1 $font-display;
+  color: $navy-900;
+}
+
+// Popup compacto de los otros mapas (portada, panel de propiedades).
 .map-popup {
   display: flex;
   flex-direction: column;
+  width: 240px;
   color: $ink;
   font-family: $font-principal;
 
@@ -101,27 +265,25 @@
   &__body {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
-    padding: 0.7rem 0.85rem 0.85rem;
-    font-size: 0.8rem;
+    gap: 0.2rem;
+    padding: 12px 14px 14px;
+    font-size: 0.78rem;
     color: $ink-soft;
 
     strong {
-      font-family: $font-display;
-      font-size: 0.92rem;
+      font: 400 17px/1.2 $font-display;
       color: $ink;
-      line-height: 1.25;
     }
 
     b {
-      color: $ink;
-      font-size: 0.9rem;
-      margin-top: 0.2rem;
+      font: 500 18px/1 $font-display;
+      color: $navy-900;
+      margin-top: 0.3rem;
     }
 
     small {
-      color: $brand-blue;
-      font-size: 0.72rem;
+      color: $ink-muted;
+      font-size: 0.7rem;
     }
   }
 }
