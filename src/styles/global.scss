@@ -18,6 +18,12 @@
   --text-soft: #{$ink-soft};
   --accent: #{$accent};
   --border: #{$line};
+  // Alto real del header (medido): lo usan las barras sticky y los saltos a secciones.
+  --header-h: 73px;
+
+  @include from('lg') {
+    --header-h: 93px;
+  }
 }
 
 html {
