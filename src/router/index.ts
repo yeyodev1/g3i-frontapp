@@ -47,12 +47,8 @@ const publicRoutes: Array<RouteRecordRaw> = [
     meta: { title: 'Mapa del valle' },
   },
   { path: '/mapa', redirect: (to) => ({ path: '/mapa-del-valle', query: to.query }) },
-  {
-    path: '/vender-mi-propiedad',
-    name: 'Sell',
-    component: () => import('@/views/SellView.vue'),
-    meta: { title: 'Vender mi propiedad' },
-  },
+  // Vender mi propiedad ahora es una opción del formulario de Contáctanos.
+  { path: '/vender-mi-propiedad', name: 'Sell', redirect: { path: '/contacto', query: { interes: 'vender' } } },
   {
     path: '/blog',
     name: 'Blog',
@@ -81,7 +77,7 @@ const publicRoutes: Array<RouteRecordRaw> = [
     path: '/contacto',
     name: 'Contact',
     component: () => import('@/views/ContactView.vue'),
-    meta: { title: 'Contacto' },
+    meta: { title: 'Contáctanos' },
   },
 ]
 
