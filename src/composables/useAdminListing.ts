@@ -9,7 +9,7 @@ import type { AdminListQuery } from '@/types/admin'
  */
 export function useAdminListing<T>(fetcher: (query: AdminListQuery) => Promise<Paginated<T>>) {
   const toast = useToastStore()
-  const query = reactive<AdminListQuery>({ q: '', status: '', type: '', kind: '', page: 1, limit: 20 })
+  const query = reactive<AdminListQuery>({ q: '', sort: '', status: '', type: '', kind: '', page: 1, limit: 20 })
   const items = ref([]) as Ref<T[]>
   const total = ref(0)
   const pages = ref(1)
@@ -44,7 +44,7 @@ export function useAdminListing<T>(fetcher: (query: AdminListQuery) => Promise<P
   )
 
   watch(
-    () => [query.status, query.type, query.kind],
+    () => [query.status, query.type, query.kind, query.sort],
     () => {
       query.page = 1
       load()
