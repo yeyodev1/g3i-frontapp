@@ -1,48 +1,36 @@
 // Estilos de TheMobileMenu.vue (separados para respetar el límite de 300 líneas).
-$bg: #121314;
-$fg: #f4f4f2;
-$fg-soft: rgba($fg, 0.56);
-$rule: rgba($fg, 0.1);
+// Claro y coherente con el escritorio (pedido de la clienta): papel blanco,
+// textos navy, títulos Cormorant ligeros, detalles ember y logo a color.
+$fg: $navy-900;
+$fg-soft: $ink-soft;
+$rule: $gray-200;
 
 .menu {
   position: fixed;
   inset: 0;
   height: 100dvh;
   z-index: 1000;
-  background: $bg;
+  background: $paper;
   color: $fg;
   @include flex(column, stretch, flex-start);
-
-  // Destello tenue con los colores del logo, solo en la esquina.
-  &::before {
-    content: '';
-    position: absolute;
-    inset: auto -30% -20% auto;
-    width: 80vw;
-    height: 80vw;
-    background: radial-gradient(circle, rgba($brand-blue, 0.22), transparent 65%);
-    pointer-events: none;
-  }
 
   @include from('lg') {
     display: none;
   }
 
   &__top {
-    @include container(1280px);
+    @include container;
     @include flex(row, center, space-between, 1rem);
-    height: 64px;
+    height: 72px;
     flex-shrink: 0;
     border-bottom: 1px solid $rule;
   }
 
   &__logo {
-    background: $fg;
-    border-radius: 10px;
-    padding: 0.3rem 0.55rem;
+    @include focus-ring($fg);
 
     img {
-      height: 28px;
+      height: 44px;
       width: auto;
     }
   }
@@ -50,54 +38,42 @@ $rule: rgba($fg, 0.1);
   &__close {
     width: 2.75rem;
     height: 2.75rem;
-    border-radius: 50%;
-    border: 1px solid rgba($fg, 0.25);
+    margin-right: -0.5rem;
     color: $fg;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     @include flex(row, center, center);
-    @include transition(transform);
-
-    &:active {
-      transform: scale(0.94);
-    }
+    @include focus-ring($fg);
   }
 
   &__body {
     position: relative;
     flex: 1;
     overflow-y: auto;
-    padding: 1.4rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    padding: 1.75rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
     @include flex(column, stretch, flex-start, 1.25rem);
+
+    @include from('md') {
+      padding-inline: 2rem;
+    }
   }
 
   &__eyebrow {
-    @include flex(row, center, flex-start, 0.6rem);
-    font-size: $text-xs;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: $fg-soft;
-
-    &::before {
-      content: '';
-      width: 1.6rem;
-      height: 2px;
-      border-radius: 2px;
-      background: $brand-orange;
-    }
+    @include eyebrow;
   }
 
   &__nav {
     @include flex(column, stretch, flex-start);
+    border-top: 1px solid $rule;
   }
 
   &__link {
     position: relative;
-    @include flex(column, flex-start, center, 0.1rem);
-    padding: 0.75rem 2.5rem 0.75rem 0;
+    @include flex(column, flex-start, center, 0.15rem);
+    padding: 0.8rem 2.5rem 0.8rem 0;
     border-bottom: 1px solid $rule;
-    color: rgba($fg, 0.72);
+    color: $ink;
     @include transition(color);
+    @include focus-ring($fg);
 
     &.is-active,
     &:hover {
@@ -106,46 +82,49 @@ $rule: rgba($fg, 0.1);
 
     &.is-active .menu__label::after {
       opacity: 1;
-      transform: scale(1);
+      transform: scaleX(1);
     }
   }
 
   &__label {
     position: relative;
     font-family: $font-display;
-    font-size: clamp(1.7rem, 1.2rem + 3vw, 2.3rem);
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    font-size: clamp(1.8rem, 1.3rem + 3vw, 2.4rem);
+    font-weight: 300;
+    letter-spacing: -0.01em;
     line-height: 1.1;
 
-    // Punto naranja que marca la sección actual.
+    // Línea ember que marca la sección actual.
     &::after {
       content: '';
       display: inline-block;
-      width: 0.4rem;
-      height: 0.4rem;
-      margin-left: 0.45rem;
+      width: 1.4rem;
+      height: 1px;
+      margin-left: 0.6rem;
       vertical-align: middle;
-      border-radius: 50%;
-      background: $brand-orange;
+      background: $ember-500;
       opacity: 0;
-      transform: scale(0.4);
-      transition: opacity 0.3s ease, transform 0.3s $ease;
+      transform: scaleX(0.3);
+      transform-origin: left;
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s $ease;
     }
   }
 
   &__count {
     font-family: $font-principal;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0;
-    color: $fg-soft;
-    margin-left: 0.2rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: $ember-600;
+    margin-left: 0.25rem;
     vertical-align: top;
   }
 
   &__hint {
     font-size: $text-sm;
+    font-weight: 300;
     color: $fg-soft;
   }
 
@@ -154,7 +133,7 @@ $rule: rgba($fg, 0.1);
     right: 0.25rem;
     top: 50%;
     translate: 0 -50%;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: $fg-soft;
     @include transition(transform);
   }
@@ -162,37 +141,59 @@ $rule: rgba($fg, 0.1);
   &__link:hover &__arrow,
   &__link.is-active &__arrow {
     transform: translateX(4px);
-    color: $brand-orange;
+    color: $ember-500;
   }
 
   &__foot {
     margin-top: auto;
     padding-top: 0.5rem;
-    @include flex(column, stretch, flex-start, 1rem);
+    @include flex(column, stretch, flex-start, 0.9rem);
   }
 
   &__wa {
     @include flex(row, center, center, 0.6rem);
-    padding: 1rem 1.25rem;
-    border-radius: $radius-pill;
-    background: $fg;
-    color: $bg;
-    font-weight: 600;
-    font-size: $text-base;
+    min-height: 52px;
+    padding: 0 1.25rem;
+    border: 1px solid $navy-900;
+    border-radius: $radius-sm;
+    color: $navy-900;
+    @include caps(0.75rem, 0.18em);
+    @include transition(background);
+    @include focus-ring($fg);
 
     i {
-      font-size: 1.25rem;
-      color: #1faa53;
+      font-size: 1.2rem;
+      color: #25d366;
+    }
+
+    &:hover {
+      background: $gray-50;
     }
   }
 
+  // Vender no lleva protagonismo: un enlace discreto al pie.
+  &__sell {
+    order: 4;
+    align-self: flex-start;
+    font-size: $text-sm;
+    font-weight: 300;
+    color: $ink-soft;
+    text-decoration: underline;
+    text-decoration-color: $ember-500;
+    text-underline-offset: 4px;
+    @include focus-ring($fg);
+  }
+
   &__contact {
+    order: 3;
     @include flex(row, center, space-between, 1rem);
     flex-wrap: wrap;
+    padding-top: 0.4rem;
   }
 
   &__email {
     font-size: $text-sm;
+    font-weight: 300;
     color: $fg-soft;
     user-select: all;
   }
@@ -203,25 +204,17 @@ $rule: rgba($fg, 0.1);
     a {
       width: 2.5rem;
       height: 2.5rem;
-      border-radius: 50%;
-      border: 1px solid rgba($fg, 0.2);
+      border: 1px solid $gray-300;
+      border-radius: $radius-sm;
       @include flex(row, center, center);
       color: $fg;
       @include transition(background);
+      @include focus-ring($fg);
 
       &:hover {
-        background: rgba($fg, 0.1);
+        border-color: $navy-900;
       }
     }
-  }
-
-  &__sell {
-    align-self: flex-start;
-    font-size: $text-xs;
-    color: $fg-soft;
-    text-decoration: underline;
-    text-decoration-color: rgba($brand-orange, 0.6);
-    text-underline-offset: 4px;
   }
 }
 
