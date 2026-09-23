@@ -4,7 +4,7 @@ import { onBeforeUnmount, ref, watch, type Ref } from 'vue'
  * Marca la sección visible para la navegación sticky. Se re-observa cuando
  * cambian los ids (secciones que aparecen al llegar los datos).
  */
-export function useSectionSpy(ids: Ref<string[]>, offset = 140) {
+export function useSectionSpy(ids: Ref<string[]>, offset = 160) {
   const active = ref('')
   let observer: IntersectionObserver | null = null
 
@@ -25,11 +25,11 @@ export function useSectionSpy(ids: Ref<string[]>, offset = 140) {
     }
   }
 
+  // El desfase lo pone el scroll-margin-top de cada sección (header + barra sticky).
   function scrollTo(id: string) {
     const el = document.getElementById(id)
     if (!el) return
-    const top = el.getBoundingClientRect().top + window.scrollY - offset + 20
-    window.scrollTo({ top, behavior: 'smooth' })
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     active.value = id
   }
 
