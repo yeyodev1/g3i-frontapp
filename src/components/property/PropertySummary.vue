@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Property } from '@/types'
 import PropertyPriceBlock from './PropertyPriceBlock.vue'
-import ShareButton from '@/components/common/ShareButton.vue'
 import WhatsAppButton from '@/components/common/WhatsAppButton.vue'
 import { useCatalogStore } from '@/stores/catalog'
 import { copyProperties } from '@/config/copy.properties'
@@ -12,15 +11,13 @@ const catalog = useCatalogStore()
 
 <template>
   <header class="summary">
-    <div class="summary__top">
-      <p class="summary__type">
-        {{ catalog.typeLabel(property.type) }} {{ copyProperties.inSale }}
-        <span v-if="property.condition">· {{ catalog.conditionLabel(property.condition) }}</span>
-      </p>
-      <ShareButton :title="title" :text="property.summary" compact />
-    </div>
+    <p class="summary__place">{{ place }}</p>
     <h1 class="summary__title">{{ title }}</h1>
-    <p class="summary__place"><i class="fa-solid fa-location-dot"></i> {{ place }}</p>
+    <p class="summary__type">
+      {{ catalog.typeLabel(property.type) }} {{ copyProperties.inSale }}
+      <template v-if="property.condition">· {{ catalog.conditionLabel(property.condition) }}</template>
+    </p>
+    <!-- En móvil el precio y WhatsApp van junto al título; en desktop viven en la columna fija. -->
     <div class="summary__mobile">
       <PropertyPriceBlock :property="property" />
       <WhatsAppButton :href="whatsappHref" block />
@@ -30,37 +27,33 @@ const catalog = useCatalogStore()
 
 <style scoped lang="scss">
 .summary {
-  @include flex(column, stretch, flex-start, 0.5rem);
+  @include flex(column, stretch, flex-start);
 
-  &__top {
-    @include flex(row, center, space-between, 1rem);
-  }
-
-  &__type {
+  &__place {
     @include eyebrow;
   }
 
   &__title {
-    @include display($display-sm, 600);
-    max-width: 30ch;
+    margin-top: 0.875rem;
+    font-family: $font-display;
+    font-size: clamp(2.1rem, 1.5rem + 2.2vw, 3.25rem);
+    font-weight: 300;
+    line-height: 1.08;
+    color: $ink;
+    text-wrap: pretty;
+    max-width: 22ch;
   }
 
-  &__place {
-    font-size: $text-base;
+  &__type {
+    margin-top: 0.875rem;
+    font-size: $text-sm;
+    font-weight: 300;
     color: $ink-soft;
-
-    i {
-      color: $brand-orange;
-      font-size: 0.85em;
-      margin-right: 0.25rem;
-    }
   }
 
   &__mobile {
-    @include flex(column, stretch, flex-start, 1rem);
-    margin-top: 0.8rem;
-    padding-top: 1rem;
-    border-top: 1px solid $line;
+    @include flex(column, stretch, flex-start, 1.25rem);
+    margin-top: 1.5rem;
 
     @include from('lg') {
       display: none;
