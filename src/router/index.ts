@@ -44,11 +44,15 @@ const publicRoutes: Array<RouteRecordRaw> = [
     path: '/mapa-del-valle',
     name: 'Map',
     component: () => import('@/views/MapView.vue'),
-    meta: { title: 'Mapa del valle' },
+    meta: { title: 'Busca en mapa' },
   },
   { path: '/mapa', redirect: (to) => ({ path: '/mapa-del-valle', query: to.query }) },
   // Vender mi propiedad ahora es una opción del formulario de Contáctanos.
-  { path: '/vender-mi-propiedad', name: 'Sell', redirect: { path: '/contacto', query: { interes: 'vender' } } },
+  {
+    path: '/vender-mi-propiedad',
+    name: 'Sell',
+    redirect: { path: '/contacto', query: { interes: 'vender' } },
+  },
   {
     path: '/blog',
     name: 'Blog',

@@ -105,6 +105,8 @@ export interface Property {
   serviceBathroom: boolean
   frontMeters: number | null
   depthMeters: number | null
+  /** Solo terrenos: uso del suelo (lista editable en Configuración). */
+  landUse: string
   buildableFloors: number | null
   amenities: string[]
   images: Image[]
@@ -141,6 +143,7 @@ export interface PropertyCard {
   builtM2: number | null
   totalM2: number | null
   frontMeters: number | null
+  landUse: string
   isFeatured: boolean
 }
 
@@ -151,6 +154,9 @@ export interface PropertyFilters {
   minPrice?: string | number
   maxPrice?: string | number
   bedrooms?: string | number
+  landUse?: string
+  minM2?: string | number
+  maxM2?: string | number
   q?: string
   featured?: boolean
   page?: number
@@ -261,6 +267,7 @@ export interface MapPin {
   bedrooms: number | null
   builtM2: number | null
   totalM2: number | null
+  landUse: string
 }
 
 // ─── Contenido ──────────────────────────────────────────────────────────
@@ -324,11 +331,19 @@ export interface PopularSearch {
   query: Record<string, string>
 }
 
+/** Cifra de la banda de Inicio. icon es una clave de STAT_ICONS (config/copy.home.ts). */
+export interface HomeStat {
+  icon: string
+  label: string
+  value: string
+}
+
 export interface Settings {
   hero: { title: string; subtitle: string; image: Image | null; ctaLabel: string; ctaLink: string }
   popularSearches: PopularSearch[]
   about: { title: string; text: string; image: Image | null }
-  stats: { label: string; value: string }[]
+  stats: HomeStat[]
+  landUses: string[]
   contact: {
     whatsapp: string
     phone: string
@@ -345,19 +360,13 @@ export interface SiteData {
   advisors: Advisor[]
   testimonials: Testimonial[]
   partners: Partner[]
-  counts: { properties: number; projects: number; sectors: number }
+  counts: { properties: number; projects: number; sectors: number; byType?: Record<string, number> }
 }
 
 // ─── Leads ──────────────────────────────────────────────────────────────
 
 export type LeadKind =
-  | 'property'
-  | 'project'
-  | 'unit'
-  | 'sell'
-  | 'general'
-  | 'work-with-us'
-  | 'interested'
+  'property' | 'project' | 'unit' | 'sell' | 'general' | 'work-with-us' | 'interested'
 
 export interface LeadInput {
   kind: LeadKind

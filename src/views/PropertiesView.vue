@@ -16,7 +16,8 @@ import { copy } from '@/config/copy.public'
 import { copyProperties } from '@/config/copy.properties'
 
 const catalog = useCatalogStore()
-const { filters, page, activeCount, update, setPage, clear, isMap, list, map, pins } = usePropertyListing()
+const { filters, page, activeCount, update, setPage, clear, isMap, list, map, pins } =
+  usePropertyListing()
 
 onMounted(() => catalog.ensureBasics())
 
@@ -27,38 +28,69 @@ const total = computed(() => (isMap.value ? pins.value.length : (result.value?.t
 const seoTitle = computed(() => {
   const { type, sector } = filters.value
   if (!type && !sector) return site.listing.propertiesTitle
-  const what = type ? `${catalog.typeLabel(type)} ${copyProperties.inSale}` : site.listing.propertiesTitle
+  const what = type
+    ? `${catalog.typeLabel(type)} ${copyProperties.inSale}`
+    : site.listing.propertiesTitle
   return sector ? `${what} ${copyProperties.in} ${catalog.sectorLabel(sector)}` : what
 })
-useSeo(() => ({ title: seoTitle.value, description: `${site.listing.propertiesText} ${site.tagline}.` }))
+useSeo(() => ({
+  title: seoTitle.value,
+  description: `${site.listing.propertiesText} ${site.tagline}.`,
+}))
 
 // Sin filtros la portada dice «Todas las propiedades», como el sistema de diseño.
-const heroTitle = computed(() => (filters.value.type || filters.value.sector ? seoTitle.value : copyProperties.heroTitle))
+const heroTitle = computed(() =>
+  filters.value.type || filters.value.sector ? seoTitle.value : copyProperties.heroTitle,
+)
 const type = computed({
   get: () => filters.value.type,
-  set: (value: string) => update({ type: value }),
+  // Terreno usa metraje y uso del suelo; el resto, dormitorios. Al cambiar se limpia lo que no aplica.
+  set: (value: string) =>
+    update(
+      value === 'terreno'
+        ? { type: value, bedrooms: '' }
+        : { type: value, landUse: '', minM2: '', maxM2: '' },
+    ),
 })
 </script>
 
 <template>
   <div class="properties">
-    <PageHero :eyebrow="copyProperties.heroEyebrow" :title="heroTitle" :text="site.listing.propertiesText" />
+    <PageHero
+      :eyebrow="copyProperties.heroEyebrow"
+      :title="heroTitle"
+      :text="site.listing.propertiesText"
+    />
 
     <div class="properties__body">
       <aside class="properties__aside">
-        <PropertyFilters :filters="filters" :active-count="activeCount" @update="update" @clear="clear" />
+        <PropertyFilters
+          :filters="filters"
+          :active-count="activeCount"
+          @update="update"
+          @clear="clear"
+        />
       </aside>
 
       <div class="properties__main">
         <div class="properties__toolbar">
           <PropertyTypeChips v-model="type" />
           <p class="properties__total" aria-live="polite">
-            <template v-if="!list.loading.value && !map.loading.value">{{ copyProperties.count(total) }}</template>
+            <template v-if="!list.loading.value && !map.loading.value">{{
+              copyProperties.count(total)
+            }}</template>
           </p>
         </div>
 
         <template v-if="isMap">
-          <StateMessage v-if="map.error.value" icon="fa-solid fa-triangle-exclamation" :title="copy.common.error" :text="map.error.value" retry @retry="map.load()" />
+          <StateMessage
+            v-if="map.error.value"
+            icon="fa-solid fa-triangle-exclamation"
+            :title="copy.common.error"
+            :text="map.error.value"
+            retry
+            @retry="map.load()"
+          />
           <PropertyMapPanel v-else :pins="pins" :loading="map.loading.value" />
         </template>
 
@@ -72,12 +104,23 @@ const type = computed({
             retry
             @retry="list.load()"
           />
-          <StateMessage v-else-if="result && !result.items.length" icon="fa-solid fa-magnifying-glass" :text="site.listing.empty">
-            <button v-if="activeCount" type="button" class="btn btn--ghost" @click="clear">{{ site.listing.clearFilters }}</button>
+          <StateMessage
+            v-else-if="result && !result.items.length"
+            icon="fa-solid fa-magnifying-glass"
+            :text="site.listing.empty"
+          >
+            <button v-if="activeCount" type="button" class="btn btn--ghost" @click="clear">
+              {{ site.listing.clearFilters }}
+            </button>
           </StateMessage>
           <template v-else-if="result">
             <div class="properties__grid" :class="{ 'is-loading': list.loading.value }">
-              <PropertyCard v-for="(item, i) in result.items" :key="item._id" :property="item" :eager="i < 2" />
+              <PropertyCard
+                v-for="(item, i) in result.items"
+                :key="item._id"
+                :property="item"
+                :eager="i < 2"
+              />
             </div>
             <PaginationNav :page="page" :pages="result.pages" @go="setPage" />
           </template>

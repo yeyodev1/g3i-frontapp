@@ -10,7 +10,15 @@ import { copyPages } from '@/config/copy.pages'
 import type { LeadKind } from '@/types'
 
 // Formulario de «Contáctanos»: vender, comprar, trabajar con nosotros u otra consulta.
-const props = withDefaults(defineProps<{ initialKind?: LeadKind; title?: string }>(), { initialKind: 'sell', title: '' })
+// compact: versión apretada para que en Contáctanos se vea entera sin hacer scroll.
+const props = withDefaults(
+  defineProps<{ initialKind?: LeadKind; title?: string; compact?: boolean }>(),
+  {
+    initialKind: 'sell',
+    title: '',
+    compact: false,
+  },
+)
 const emit = defineEmits<{ kind: [kind: LeadKind] }>()
 
 const c = copyPages.contact
@@ -18,7 +26,10 @@ const catalog = useCatalogStore()
 const { form, sending, sent, error, submit, reset } = useLeadForm(props.initialKind)
 
 // Catálogo completo (no solo los activos): quien vende puede estar en un sector sin publicaciones.
-const sectorOptions = computed(() => [...catalog.allSectors, { key: 'otro', label: copy.form.otherSector }])
+const sectorOptions = computed(() => [
+  ...catalog.allSectors,
+  { key: 'otro', label: copy.form.otherSector },
+])
 const isSell = computed(() => form.kind === 'sell')
 
 function choose(kind: string) {
@@ -35,13 +46,15 @@ onMounted(() => catalog.ensureCatalogs())
 </script>
 
 <template>
-  <div class="sell-form">
+  <div class="sell-form" :class="{ 'sell-form--compact': compact }">
     <Transition name="fade" mode="out-in">
       <div v-if="sent" class="sell-form__done" role="status">
         <span class="sell-form__done-icon"><i class="fa-solid fa-check"></i></span>
         <h2>{{ copy.form.successTitle }}</h2>
         <p>{{ site.sell.success }}</p>
-        <button type="button" class="link-caps" @click="reset()">{{ copy.form.sendAnother }}</button>
+        <button type="button" class="link-caps" @click="reset()">
+          {{ copy.form.sendAnother }}
+        </button>
       </div>
 
       <form v-else class="sell-form__form" novalidate @submit.prevent="submit()">
@@ -72,8 +85,21 @@ onMounted(() => catalog.ensureCatalogs())
 
         <FieldInput v-model="form.name" :label="copy.form.name" autocomplete="name" required />
         <div class="sell-form__row">
-          <FieldInput v-model="form.email" :label="copy.form.email" type="email" inputmode="email" autocomplete="email" />
-          <FieldInput v-model="form.phone" :label="copy.form.phone" type="tel" inputmode="tel" autocomplete="tel" required />
+          <FieldInput
+            v-model="form.email"
+            :label="copy.form.email"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+          />
+          <FieldInput
+            v-model="form.phone"
+            :label="copy.form.phone"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            required
+          />
         </div>
 
         <Transition name="rise">
@@ -98,13 +124,28 @@ onMounted(() => catalog.ensureCatalogs())
           </div>
         </Transition>
 
-        <FieldInput v-model="form.message" :label="copy.form.messageOptional" multiline :rows="3" />
+        <FieldInput
+          v-model="form.message"
+          :label="copy.form.messageOptional"
+          multiline
+          :rows="compact ? 2 : 3"
+        />
 
         <div class="sell-form__hp" aria-hidden="true">
-          <label>Website <input v-model="form.website" type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+          <label
+            >Website
+            <input
+              v-model="form.website"
+              type="text"
+              name="website"
+              tabindex="-1"
+              autocomplete="off"
+          /></label>
         </div>
 
-        <p v-if="error" class="sell-form__error" role="alert"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+        <p v-if="error" class="sell-form__error" role="alert">
+          <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+        </p>
         <div class="sell-form__actions">
           <button type="submit" class="btn btn--dark btn--lg sell-form__submit" :disabled="sending">
             <i v-if="sending" class="fa-solid fa-circle-notch fa-spin"></i>

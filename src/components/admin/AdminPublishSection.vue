@@ -7,9 +7,10 @@ import AdminSection from './AdminSection.vue'
 import AdminField from './AdminField.vue'
 import AdminSwitch from './AdminSwitch.vue'
 import AdminChoiceChips from './AdminChoiceChips.vue'
+import AdminNumber from './AdminNumber.vue'
 
 const props = defineProps<{
-  form: { status: string; isFeatured: boolean; slug?: string; _id?: string }
+  form: { status: string; isFeatured: boolean; featuredOrder: number; slug?: string; _id?: string }
   kind: 'property' | 'project'
   step: number
   /** Estado guardado: la vista previa depende de lo guardado, no de lo editado. */
@@ -27,6 +28,16 @@ const options = computed(() =>
   })),
 )
 
+// Posición entre las destacadas: 999 (sin número) se muestra vacío y va al final.
+const order = computed({
+  get: () =>
+    props.form.featuredOrder > 0 && props.form.featuredOrder < 999
+      ? props.form.featuredOrder
+      : null,
+  set: (value: number | null) =>
+    (props.form.featuredOrder = value && value > 0 ? Math.floor(value) : 999),
+})
+
 const isDraft = computed(() => props.savedStatus !== 'published')
 
 function preview() {
@@ -38,12 +49,36 @@ function preview() {
 </script>
 
 <template>
-  <AdminSection id="publicacion" :step="step" title="Publicación" text="Decide si el público la ve y si aparece destacada.">
+  <AdminSection
+    id="publicacion"
+    :step="step"
+    title="Publicación"
+    text="Decide si el público la ve y si aparece destacada."
+  >
     <AdminField label="Estado">
       <AdminChoiceChips v-model="form.status" :options="options" />
     </AdminField>
 
-    <AdminSwitch v-model="form.isFeatured" label="Destacar en la página de inicio" :help="adminCopy.help.featured" />
+    <AdminSwitch
+      v-model="form.isFeatured"
+      label="Destacar en la página de inicio"
+      :help="adminCopy.help.featured"
+    />
+    <AdminField
+      v-if="form.isFeatured"
+      label="Posición en Inicio"
+      for-id="pub-order"
+      :help="adminCopy.help.featuredOrder"
+    >
+      <AdminNumber
+        id="pub-order"
+        v-model="order"
+        :min="1"
+        :step="1"
+        placeholder="Ej. 1"
+        class="order"
+      />
+    </AdminField>
 
     <div class="preview">
       <button type="button" class="btn btn--ghost" @click="preview">
@@ -57,6 +92,10 @@ function preview() {
 </template>
 
 <style scoped lang="scss">
+.order {
+  max-width: 10rem;
+}
+
 .preview {
   @include flex(column, flex-start, flex-start, 0.5rem);
 

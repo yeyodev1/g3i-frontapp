@@ -21,7 +21,8 @@ const sections = [
   { id: 'conocenos', label: 'Conócenos' },
   { id: 'contacto', label: 'Contacto' },
   { id: 'vender', label: 'Vender' },
-  { id: 'cifras', label: 'Cifras' },
+  { id: 'cifras', label: 'Cifras de Inicio' },
+  { id: 'terrenos', label: 'Usos de terreno' },
 ]
 
 onMounted(() => {
@@ -34,9 +35,14 @@ useAdminUnsaved(dirty)
 
 <template>
   <div class="settings">
-    <AdminPageHeader title="Ajustes del sitio" subtitle="Textos, imagen de portada y datos de contacto." />
+    <AdminPageHeader
+      title="Ajustes del sitio"
+      subtitle="Textos, imagen de portada y datos de contacto."
+    />
 
-    <p v-if="loading" class="settings__loading"><i class="fa-solid fa-spinner fa-spin"></i> Cargando…</p>
+    <p v-if="loading" class="settings__loading">
+      <i class="fa-solid fa-spinner fa-spin"></i> Cargando…
+    </p>
 
     <form v-else class="settings__form" novalidate @submit.prevent="save">
       <AdminFormNav :sections="sections" />

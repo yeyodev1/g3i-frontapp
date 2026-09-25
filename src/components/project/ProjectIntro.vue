@@ -16,9 +16,18 @@ const f = copyProjects.fact
 const cover = computed(() => props.project.images[0])
 const facts = computed(() => {
   const p = props.project
-  const out = [{ label: f.sector, value: [catalog.sectorLabel(p.sector), p.locality].filter(Boolean).join(' · ') }]
-  out.push({ label: f.from, value: p.priceFrom ? formatPrice(p.priceFrom) : copy.common.priceOnRequest })
-  if (p.propertyTypes.length) out.push({ label: f.sells, value: p.propertyTypes.map((k) => catalog.typeLabel(k)).join(', ') })
+  const out = [
+    {
+      label: f.sector,
+      value: [catalog.sectorLabel(p.sector), p.locality].filter(Boolean).join(' · '),
+    },
+  ]
+  out.push({
+    label: f.from,
+    value: p.priceFrom ? formatPrice(p.priceFrom) : copy.common.priceOnRequest,
+  })
+  if (p.propertyTypes.length)
+    out.push({ label: f.sells, value: p.propertyTypes.map((k) => catalog.typeLabel(k)).join(', ') })
   if (p.deliveryDate) out.push({ label: f.delivery, value: p.deliveryDate })
   return out
 })
@@ -26,7 +35,13 @@ const facts = computed(() => {
 
 <template>
   <header class="intro" :class="{ 'intro--plain': !cover }">
-    <img v-if="cover" :src="cover.url" :alt="cover.alt || title" class="intro__img" fetchpriority="high" />
+    <img
+      v-if="cover"
+      :src="cover.url"
+      :alt="cover.alt || title"
+      class="intro__img"
+      fetchpriority="high"
+    />
     <div class="intro__scrim" aria-hidden="true"></div>
 
     <div class="intro__content">
@@ -59,7 +74,8 @@ const facts = computed(() => {
   color: $on-inverse;
 
   @include from('lg') {
-    min-height: min(820px, calc(100svh - 93px));
+    // Más baja que la pantalla: al abrir ya se asoma la barra de secciones.
+    min-height: min(640px, calc(100svh - 93px - 4rem));
   }
 
   &__img {
@@ -75,7 +91,12 @@ const facts = computed(() => {
     inset: 0;
     // Doble degradado: abajo para los datos y a la izquierda para el titular, sea cual sea la foto.
     background:
-      linear-gradient(180deg, rgba($navy-950, 0.45) 0%, rgba($navy-950, 0.1) 28%, rgba($navy-950, 0.92) 100%),
+      linear-gradient(
+        180deg,
+        rgba($navy-950, 0.45) 0%,
+        rgba($navy-950, 0.1) 28%,
+        rgba($navy-950, 0.92) 100%
+      ),
       linear-gradient(90deg, rgba($navy-950, 0.55) 0%, rgba($navy-950, 0) 70%);
   }
 
@@ -115,7 +136,7 @@ const facts = computed(() => {
   }
 
   &__title {
-    @include display(clamp(2.3rem, 1.4rem + 3.6vw, 4.75rem), 300);
+    @include display(clamp(2.2rem, 1.4rem + 2.6vw, 3.75rem), 300);
     line-height: 1;
     letter-spacing: -0.015em;
     max-width: 20ch;
@@ -133,8 +154,8 @@ const facts = computed(() => {
 
     @include from('lg') {
       flex-wrap: nowrap;
-      margin-top: 2.75rem;
-      padding-top: 1.75rem;
+      margin-top: 2rem;
+      padding-top: 1.4rem;
     }
   }
 

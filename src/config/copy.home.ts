@@ -19,6 +19,28 @@ export const copyHome = {
     ],
   },
 
+  // Banda de cifras bajo el buscador. Las claves coinciden con STAT_ICONS del backend.
+  stats: {
+    label: 'G3i en cifras',
+    icons: [
+      { key: 'casa', label: 'Casa', icon: 'fa-solid fa-house' },
+      { key: 'departamento', label: 'Edificio', icon: 'fa-solid fa-building' },
+      { key: 'terreno', label: 'Árbol / terreno', icon: 'fa-solid fa-tree' },
+      { key: 'propiedades', label: 'Casas', icon: 'fa-solid fa-house-chimney' },
+      { key: 'proyectos', label: 'Proyectos', icon: 'fa-solid fa-city' },
+      { key: 'llave', label: 'Llave', icon: 'fa-solid fa-key' },
+      { key: 'premio', label: 'Trayectoria', icon: 'fa-solid fa-award' },
+      { key: 'clientes', label: 'Clientes', icon: 'fa-solid fa-handshake' },
+    ],
+    // Respaldo con los conteos reales cuando el panel no define cifras.
+    fallback: [
+      { type: 'casa', icon: 'casa', label: 'Casas' },
+      { type: 'departamento', icon: 'departamento', label: 'Departamentos' },
+      { type: 'terreno', icon: 'terreno', label: 'Terrenos' },
+    ],
+    total: 'Propiedades',
+  },
+
   featured: {
     eyebrow: 'Propiedades',
     title: 'Las más buscadas',
@@ -27,7 +49,7 @@ export const copyHome = {
 
   projects: {
     eyebrow: 'Invierte en un proyecto',
-    title: 'Proyectos en planos, en construcción y por estrenar',
+    title: 'Descubre los mejores proyectos',
     link: 'Ver todos',
     stagesLabel: 'Etapas de proyecto',
   },
@@ -52,12 +74,12 @@ export const copyHome = {
       {
         icon: 'fa-solid fa-house',
         title: 'Compradores',
-        text: 'Encontramos el inmueble que se ajusta a su proyecto de vida.',
+        text: 'Encontramos el inmueble que se ajusta a tu proyecto de vida.',
       },
       {
         icon: 'fa-solid fa-key',
         title: 'Vendedores',
-        text: 'Comercializamos su propiedad optimizando tiempo y recursos.',
+        text: 'Comercializamos tu propiedad optimizando tiempo y recursos.',
       },
       {
         icon: 'fa-solid fa-chart-line',
@@ -90,7 +112,7 @@ export const copyHome = {
 
   sellCta: {
     eyebrow: 'Bienvenido al mundo de G3i',
-    title: '¿Desea vender su propiedad en el valle?',
+    title: '¿Quieres vender tu propiedad en el valle?',
     button: 'Quiero vender mi propiedad',
   },
 
@@ -106,7 +128,7 @@ export const copyHome = {
     ],
     companyLinks: [
       { label: 'Proyectos', to: '/proyectos' },
-      { label: 'Mapa del valle', to: '/mapa-del-valle' },
+      { label: 'Busca en mapa', to: '/mapa-del-valle' },
       { label: 'Blog', to: '/blog' },
       { label: 'Conócenos', to: '/conocenos' },
       { label: 'Preguntas frecuentes', to: '/preguntas-frecuentes' },

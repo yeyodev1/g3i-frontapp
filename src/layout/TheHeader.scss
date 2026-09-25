@@ -42,6 +42,18 @@ $header-h-lg: 92px;
     }
   }
 
+  &--scrolled:not(&--overlay) &__inner {
+    @include from('lg') {
+      height: 64px;
+    }
+  }
+
+  &--scrolled:not(&--overlay) &__logo img {
+    @include from('lg') {
+      height: 42px;
+    }
+  }
+
   &--overlay.header--scrolled &__inner {
     @include from('lg') {
       height: 76px;
@@ -55,6 +67,7 @@ $header-h-lg: 92px;
     img {
       height: 44px;
       width: auto;
+      transition: height 0.35s ease;
 
       @include from('lg') {
         height: 56px;

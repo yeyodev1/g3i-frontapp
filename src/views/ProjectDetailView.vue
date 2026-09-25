@@ -22,8 +22,12 @@ const { slug, detail, related, project, units, title, whatsappHref } = useProjec
 const nav = ref<InstanceType<typeof ProjectSectionNav> | null>(null)
 
 const paragraphs = computed(() => toParagraphs(project.value?.description ?? ''))
-const hasLocation = computed(() => project.value?.location.lat != null && project.value?.location.lng != null)
-const hasAmenities = computed(() => Boolean(project.value?.amenities.length || project.value?.highlights.length))
+const hasLocation = computed(
+  () => project.value?.location.lat != null && project.value?.location.lng != null,
+)
+const hasAmenities = computed(() =>
+  Boolean(project.value?.amenities.length || project.value?.highlights.length),
+)
 
 // La navegación solo ofrece las secciones que realmente se pintan.
 const sections = computed(() =>
@@ -53,7 +57,13 @@ const sections = computed(() =>
     </div>
 
     <div v-else-if="detail.error.value" class="pdetail__state">
-      <StateMessage icon="fa-solid fa-triangle-exclamation" :title="copy.common.error" :text="detail.error.value" retry @retry="detail.load()" />
+      <StateMessage
+        icon="fa-solid fa-triangle-exclamation"
+        :title="copy.common.error"
+        :text="detail.error.value"
+        retry
+        @retry="detail.load()"
+      />
     </div>
 
     <template v-else-if="project">
@@ -67,7 +77,11 @@ const sections = computed(() =>
       />
 
       <section id="galeria" class="pdetail__section">
-        <ProjectBlockHead :eyebrow="copyProjects.galleryEyebrow" :title="copyProjects.galleryTitle" class="pdetail__head" />
+        <ProjectBlockHead
+          :eyebrow="copyProjects.galleryEyebrow"
+          :title="copyProjects.galleryTitle"
+          class="pdetail__head"
+        />
         <ProjectMosaic :images="project.images" :title="title" />
       </section>
 
@@ -106,11 +120,17 @@ const sections = computed(() =>
         <div class="pdetail__related-head">
           <p class="pdetail__eyebrow">{{ copyProjects.similarEyebrow }}</p>
           <RouterLink to="/proyectos" class="link-caps">
-            {{ copy.common.seeAllProjects }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            {{ copy.common.seeAllProjects }}
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </RouterLink>
         </div>
         <div class="pdetail__cards">
-          <ProjectCard v-for="p in related.data.value.slice(0, 3)" :key="p._id" :project="p" overlay />
+          <ProjectCard
+            v-for="p in related.data.value.slice(0, 3)"
+            :key="p._id"
+            :project="p"
+            overlay
+          />
         </div>
       </section>
     </template>
@@ -130,11 +150,11 @@ const sections = computed(() =>
     @include container;
     padding-top: 4.5rem;
     // Descuenta parte del padding para que el salto desde la barra no deje un hueco enorme.
-    scroll-margin-top: calc(var(--header-h, 73px) + 60px - 2.5rem);
+    scroll-margin-top: calc(var(--header-h, 73px) + 46px - 2.5rem);
 
     @include from('lg') {
-      padding-top: 7.5rem;
-      scroll-margin-top: calc(var(--header-h, 93px) + 60px - 4.5rem);
+      padding-top: 5rem;
+      scroll-margin-top: calc(var(--header-h, 65px) + 46px - 3rem);
     }
   }
 
@@ -143,20 +163,16 @@ const sections = computed(() =>
     padding-top: 3.5rem;
 
     @include from('lg') {
-      padding-top: 5.5rem;
+      padding-top: 3.5rem;
     }
   }
 
   &__band {
     margin-top: 4.5rem;
-    scroll-margin-top: calc(var(--header-h, 73px) + 60px);
+    scroll-margin-top: calc(var(--header-h, 73px) + 46px);
 
     @include from('lg') {
-      scroll-margin-top: calc(var(--header-h, 93px) + 60px);
-    }
-
-    @include from('lg') {
-      margin-top: 7.5rem;
+      margin-top: 5rem;
     }
   }
 
@@ -164,7 +180,7 @@ const sections = computed(() =>
     margin-bottom: 2rem;
 
     @include from('lg') {
-      margin-bottom: 3rem;
+      margin-bottom: 2.25rem;
     }
   }
 

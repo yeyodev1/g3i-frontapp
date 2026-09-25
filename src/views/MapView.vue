@@ -21,7 +21,14 @@ const selected = ref<string | null>(null)
 const d = useValleyMapData()
 const { kind, type, stage, price, active, zones, list } = d
 
-const { ready, base, setPins, setActive: focusZone, select, setBase } = useValleyMap(el, {
+const {
+  ready,
+  base,
+  setPins,
+  setActive: focusZone,
+  select,
+  setBase,
+} = useValleyMap(el, {
   onZoneClick: d.setActive,
   onNavigate: (path) => router.push(path),
   onSelect: (id) => (selected.value = id),
@@ -43,7 +50,7 @@ watch(
 )
 
 const zoneOptions = computed(() => zones.value.map((z) => ({ key: z.key, label: z.name })))
-const listLabel = computed(() => c.listLabel(active.value ? d.zoneName(active.value) : c.allZones))
+const listLabel = computed(() => c.listLabel(active.value ? d.zoneName(active.value) : undefined))
 const emptyText = computed(() => (active.value ? c.empty(d.zoneName(active.value)) : c.emptyAll))
 
 function show(id: string) {

@@ -32,10 +32,22 @@ const handle = (url: string) => url.replace(/\/+$/, '').split('/').pop() ?? ''
 const channels = computed(() => {
   const ct = catalog.contact
   return [
-    ct.whatsapp && { icon: 'fa-brands fa-whatsapp', text: `${localPhone(ct.whatsapp)} · ${c.whatsappSuffix}`, href: `https://wa.me/${ct.whatsapp}` },
+    ct.whatsapp && {
+      icon: 'fa-brands fa-whatsapp',
+      text: `${localPhone(ct.whatsapp)} · ${c.whatsappSuffix}`,
+      href: `https://wa.me/${ct.whatsapp}`,
+    },
     ct.email && { icon: 'fa-regular fa-envelope', text: ct.email, href: `mailto:${ct.email}` },
-    ct.instagram && { icon: 'fa-brands fa-instagram', text: `@${handle(ct.instagram)}`, href: ct.instagram },
-    ct.facebook && { icon: 'fa-brands fa-facebook-f', text: handle(ct.facebook), href: ct.facebook },
+    ct.instagram && {
+      icon: 'fa-brands fa-instagram',
+      text: `@${handle(ct.instagram)}`,
+      href: ct.instagram,
+    },
+    ct.facebook && {
+      icon: 'fa-brands fa-facebook-f',
+      text: handle(ct.facebook),
+      href: ct.facebook,
+    },
   ].filter(Boolean) as { icon: string; text: string; href: string }[]
 })
 const photo = computed(() => catalog.site?.settings.about?.image?.url)
@@ -46,6 +58,11 @@ onMounted(() => catalog.ensureSite())
 
 <template>
   <div class="contact">
+    <!-- El formulario va primero y entero a la vista (pedido de la clienta, 24/9). -->
+    <div class="contact__card">
+      <SellForm :initial-kind="kind" :title="c.formTitle" compact @kind="syncQuery" />
+    </div>
+
     <section class="contact__intro">
       <p class="contact__eyebrow">{{ c.eyebrow }}</p>
       <h1 class="contact__title">
@@ -56,22 +73,21 @@ onMounted(() => catalog.ensureSite())
 
       <ul class="contact__channels" :aria-label="c.channelsLabel">
         <li v-for="ch in channels" :key="ch.href">
-          <a :href="ch.href" :target="ch.href.startsWith('http') ? '_blank' : undefined" rel="noopener">
+          <a
+            :href="ch.href"
+            :target="ch.href.startsWith('http') ? '_blank' : undefined"
+            rel="noopener"
+          >
             <i :class="ch.icon" aria-hidden="true"></i>
             <span>{{ ch.text }}</span>
           </a>
         </li>
       </ul>
-    </section>
 
-    <div class="contact__side">
       <figure v-if="photo" class="contact__photo">
-        <img :src="photo" :alt="c.photoAlt" />
+        <img :src="photo" :alt="c.photoAlt" loading="lazy" />
       </figure>
-      <div class="contact__card">
-        <SellForm :initial-kind="kind" :title="c.formTitle" @kind="syncQuery" />
-      </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -79,18 +95,25 @@ onMounted(() => catalog.ensureSite())
 .contact {
   @include container;
   @include flex(column, stretch, flex-start, 3rem);
-  padding-block: clamp(2.5rem, 7vw, 6rem) $space-section;
+  padding-block: clamp(1.25rem, 2vw, 1.75rem) $space-section;
 
   @include from('lg') {
     flex-direction: row;
     align-items: flex-start;
-    gap: 96px;
+    gap: 72px;
   }
 
   &__intro,
-  &__side {
+  &__card {
     flex: 1 1 0;
     min-width: 0;
+  }
+
+  // En escritorio el texto baja a acompañar al formulario.
+  &__intro {
+    @include from('lg') {
+      padding-top: 1rem;
+    }
   }
 
   &__eyebrow {
@@ -152,23 +175,23 @@ onMounted(() => catalog.ensureSite())
     }
   }
 
-  &__side {
-    @include flex(column, stretch, flex-start, 1.5rem);
-  }
+  &__photo {
+    margin-top: 2.25rem;
 
-  &__photo img {
-    width: 100%;
-    height: 240px;
-    object-fit: cover;
+    img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
   }
 
   &__card {
     border: 1px solid $line;
     background: $surface;
-    padding: 1.75rem 1.25rem;
+    padding: 1.5rem 1.25rem;
 
     @include from('md') {
-      padding: 44px;
+      padding: 1.4rem 2.25rem 1.5rem;
     }
   }
 }

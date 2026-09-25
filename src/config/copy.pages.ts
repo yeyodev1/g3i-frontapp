@@ -4,7 +4,7 @@
  */
 export const copyPages = {
   valley: {
-    eyebrow: 'Mapa del valle',
+    eyebrow: 'Busca en mapa',
     title: 'Propiedades por sector',
     text: 'Las zonas del valle con sus límites parroquiales. Elige una para ver lo que tenemos disponible en ella.',
     description:
@@ -47,9 +47,11 @@ export const copyPages = {
     cluster: (n: number) => `${n} inmuebles aquí: acercar`,
     results: (n: number) => (n === 1 ? '1 inmueble' : `${n} inmuebles`),
     empty: (zone: string) =>
-      `Pronto nuevas propiedades en ${zone}. Escríbanos para conocer oportunidades fuera del portafolio publicado.`,
+      `Pronto nuevas propiedades en ${zone}. Escríbenos para conocer oportunidades fuera del portafolio publicado.`,
     emptyAll: 'No hay inmuebles con estos filtros. Prueba con otro tipo.',
-    listLabel: (zone: string) => `Inmuebles en ${zone}`,
+    // Pedido de la clienta (24/9): «Nuestras propiedades» en vez de «Inmuebles en todo el valle».
+    listLabel: (zone?: string) =>
+      zone ? `Nuestras propiedades en ${zone}` : 'Nuestras propiedades',
     projectTag: 'Proyecto',
     from: 'Desde',
     seeProperty: 'Ver propiedad',
@@ -71,10 +73,11 @@ export const copyPages = {
     ],
     teamEyebrow: 'Nuestro equipo',
     teamTitle: 'Asesores inmobiliarios G3i',
-    teamText: 'Personas que conocen el valle y le acompañan en cada paso de la compra o venta de su propiedad.',
+    teamText:
+      'Personas que conocen el valle y te acompañan en cada paso de la compra o venta de tu propiedad.',
     ctaEyebrow: 'Hablemos',
-    ctaTitle: '¿Busca una propiedad o desea vender la suya?',
-    ctaButton: 'Contáctenos',
+    ctaTitle: '¿Buscas una propiedad o quieres vender la tuya?',
+    ctaButton: 'Contáctanos',
   },
 
   advisor: {
@@ -91,17 +94,33 @@ export const copyPages = {
       'Brindamos una asesoría completa a vendedores, compradores e inversionistas. Nuestro objetivo es excelencia y profesionalidad para optimizar tiempo y recursos en la comercialización de inmuebles en el valle de Cumbayá.',
     ],
     welcome: 'Bienvenido al mundo de G3i',
-    description: 'Contacte a G3i Inmobiliaria: venda su propiedad, compre en el valle o trabaje con nosotros.',
-    formTitle: 'Deje sus datos',
-    interestLabel: '¿En qué le podemos ayudar?',
+    description:
+      'Contacta a G3i Inmobiliaria: vende tu propiedad, compra en el valle o trabaja con nosotros.',
+    formTitle: 'Deja tus datos',
+    interestLabel: '¿En qué te podemos ayudar?',
     // ?interes=vender|comprar|trabajar|consulta preselecciona la pestaña.
     interests: [
-      { key: 'sell', query: 'vender', label: 'Vender mi propiedad', icon: 'fa-solid fa-house-circle-check' },
-      { key: 'interested', query: 'comprar', label: 'Estoy interesado en comprar', icon: 'fa-solid fa-key' },
-      { key: 'work-with-us', query: 'trabajar', label: 'Trabajar con nosotros', icon: 'fa-solid fa-user-tie' },
+      {
+        key: 'sell',
+        query: 'vender',
+        label: 'Vender mi propiedad',
+        icon: 'fa-solid fa-house-circle-check',
+      },
+      {
+        key: 'interested',
+        query: 'comprar',
+        label: 'Estoy interesado en comprar',
+        icon: 'fa-solid fa-key',
+      },
+      {
+        key: 'work-with-us',
+        query: 'trabajar',
+        label: 'Trabajar con nosotros',
+        icon: 'fa-solid fa-user-tie',
+      },
       { key: 'general', query: 'consulta', label: 'Otra consulta', icon: 'fa-regular fa-comment' },
     ],
-    sellHint: 'Cuéntenos dónde está y qué tipo de propiedad es: le contactamos para valorarla.',
+    sellHint: 'Cuéntanos dónde está y qué tipo de propiedad es: te contactamos para valorarla.',
     whatsappSuffix: 'WhatsApp',
     photoAlt: 'Interior de una propiedad en el valle',
     channelsLabel: 'Canales de contacto',
@@ -112,17 +131,18 @@ export const copyPages = {
     title: 'Guías para comprar',
     titleEm: 'e invertir en el valle',
     text: 'Consejos, trámites y novedades para comprar, vender e invertir en Cumbayá, Tumbaco y el valle de Quito.',
-    faqEyebrow: '¿Tiene dudas?',
+    faqEyebrow: '¿Tienes dudas?',
     faqTitle: 'Preguntas y respuestas',
-    faqText: 'Lo que más nos preguntan al comprar o vender una propiedad en el valle, respondido por nuestro equipo.',
+    faqText:
+      'Lo que más nos preguntan al comprar o vender una propiedad en el valle, respondido por nuestro equipo.',
     faqLink: 'Ver preguntas frecuentes',
     postsTitle: 'Últimos artículos',
   },
 
   post: {
     eyebrow: 'Blog G3i',
-    ctaEyebrow: '¿Busca propiedad en el valle?',
-    ctaTitle: 'Conozca nuestro portafolio',
+    ctaEyebrow: '¿Buscas propiedad en el valle?',
+    ctaTitle: 'Conoce nuestro portafolio',
     ctaButton: 'Ver propiedades',
   },
 
@@ -130,8 +150,8 @@ export const copyPages = {
     eyebrow: 'Ayuda',
     title: 'Preguntas',
     titleEm: 'frecuentes',
-    moreEyebrow: '¿No encontró su respuesta?',
-    moreTitle: 'Escríbanos y le respondemos',
+    moreEyebrow: '¿No encontraste tu respuesta?',
+    moreTitle: 'Escríbenos y te respondemos',
     whatsapp: 'Escribir por WhatsApp',
     contact: 'Contáctanos',
   },

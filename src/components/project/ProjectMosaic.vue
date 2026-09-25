@@ -19,7 +19,12 @@ const rest = computed(() => props.images.slice(5))
     <p v-if="!lead" class="mosaic__empty">{{ copyProjects.noImages }}</p>
     <template v-else>
       <div class="mosaic__top">
-        <button type="button" class="mosaic__item mosaic__item--lead" :aria-label="`${copyProjects.galleryOpen} 1`" @click="gallery.show(0)">
+        <button
+          type="button"
+          class="mosaic__item mosaic__item--lead"
+          :aria-label="`${copyProjects.galleryOpen} 1`"
+          @click="gallery.show(0)"
+        >
           <img :src="lead.url" :alt="lead.alt || title" />
         </button>
         <div v-if="quad.length" class="mosaic__quad">
@@ -89,7 +94,7 @@ $gap: 8px;
     }
 
     @include from('lg') {
-      height: calc(440px + #{$gap});
+      height: calc(380px + #{$gap});
     }
   }
 
@@ -109,7 +114,7 @@ $gap: 8px;
     }
 
     @include from('lg') {
-      height: 220px;
+      height: 190px;
     }
 
     img {
@@ -133,7 +138,7 @@ $gap: 8px;
       }
 
       @include from('lg') {
-        height: calc(440px + #{$gap});
+        height: calc(380px + #{$gap});
       }
     }
   }

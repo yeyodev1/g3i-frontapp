@@ -15,6 +15,7 @@ const { share, copyLink, whatsappShareUrl, menuOpen } = useShare()
       :class="{ 'share__btn--compact': compact }"
       :aria-expanded="menuOpen"
       :aria-label="site.detail.shareCta"
+      :data-tip="compact ? site.detail.shareCta : undefined"
       @click="share(props.title, props.text)"
     >
       <i class="fa-solid fa-arrow-up-from-bracket"></i>
@@ -64,8 +65,40 @@ const { share, copyLink, whatsappShareUrl, menuOpen } = useShare()
     }
 
     &--compact {
+      position: relative;
       width: 2.75rem;
       padding: 0;
+
+      // Solo ícono: al pasar el cursor aparece «Compartir» (pedido de la clienta).
+      &::after {
+        content: attr(data-tip);
+        position: absolute;
+        top: calc(100% + 0.45rem);
+        left: 50%;
+        z-index: 21;
+        padding: 0.35rem 0.6rem;
+        background: $navy-900;
+        color: $on-inverse;
+        @include caps(0.625rem, 0.16em);
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transform: translate(-50%, -4px);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      &:hover::after,
+      &:focus-visible::after {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      // Con el menú abierto el tooltip estorbaría.
+      &[aria-expanded='true']::after {
+        opacity: 0;
+      }
     }
   }
 

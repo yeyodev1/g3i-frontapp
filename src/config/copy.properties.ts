@@ -18,6 +18,12 @@ export const copyProperties = {
   priceFrom: 'Desde',
   priceTo: 'Hasta',
   showMap: 'Mostrar mapa',
+  // Filtros de terreno
+  landUse: 'Uso del terreno',
+  anyLandUse: 'Cualquier uso',
+  area: 'Metraje (m²)',
+  areaMin: 'Metros mínimos',
+  areaMax: 'Metros máximos',
   // Orden: sin `sort` en la URL el API usa «popular» (destacadas primero, luego las más visitadas).
   sortDefault: 'Más buscadas',
   sortOptions: [
@@ -37,7 +43,7 @@ export const copyProperties = {
 
   // Ficha
   salePrice: 'Precio de venta',
-  contactTitle: 'Contacte con un asesor inmobiliario G3i',
+  contactTitle: 'Contacta con un asesor inmobiliario G3i',
   schedule: 'Agendar visita',
   related: 'Otras propiedades',
   seeAll: 'Ver todas',

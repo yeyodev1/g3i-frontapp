@@ -111,15 +111,18 @@ export const adminCopy = {
     unsavedCancel: 'Seguir editando',
     unsavedBar: 'Tienes cambios sin guardar',
     preview: 'Vista previa',
-    previewDraft: 'Esta publicación está en borrador: el público todavía no la ve. La vista previa solo funcionará cuando esté publicada.',
+    previewDraft:
+      'Esta publicación está en borrador: el público todavía no la ve. La vista previa solo funcionará cuando esté publicada.',
     previewNeedsSave: 'Guarda primero para poder ver la vista previa.',
     loadError: 'No pudimos cargar la información. Intenta de nuevo.',
   },
 
   delete: {
     title: '¿Eliminar definitivamente?',
-    property: 'Se borrará la propiedad con todas sus fotos, videos y planos. Esto no se puede deshacer. Si solo quieres quitarla del sitio, usa "Ocultar".',
-    project: 'Se borrará el proyecto con sus unidades, renders y brochure. Esto no se puede deshacer. Si solo quieres quitarlo del sitio, usa "Ocultar".',
+    property:
+      'Se borrará la propiedad con todas sus fotos, videos y planos. Esto no se puede deshacer. Si solo quieres quitarla del sitio, usa "Ocultar".',
+    project:
+      'Se borrará el proyecto con sus unidades, renders y brochure. Esto no se puede deshacer. Si solo quieres quitarlo del sitio, usa "Ocultar".',
     generic: 'Esto no se puede deshacer.',
     confirm: 'Sí, eliminar',
     done: 'Eliminado',
@@ -128,13 +131,15 @@ export const adminCopy = {
   upload: {
     drop: 'Arrastra aquí tus fotos o toca para elegirlas',
     dropHint: 'Puedes elegir varias a la vez. JPG, PNG o WEBP de hasta 10 MB.',
-    unavailable: 'Por ahora no se pueden subir archivos: falta configurar el servicio de imágenes (Cloudinary). Avísale a soporte técnico; lo demás del formulario sí se puede guardar.',
+    unavailable:
+      'Por ahora no se pueden subir archivos: falta configurar el servicio de imágenes (Cloudinary). Avísale a soporte técnico; lo demás del formulario sí se puede guardar.',
     tooBig: 'es demasiado pesado',
     failed: 'No se pudo subir',
     main: 'Principal',
     makeMain: 'Marcar como foto principal',
     maxReached: 'Llegaste al máximo de fotos permitidas',
-    minRecommended: 'Te recomendamos subir al menos 5 fotos: las publicaciones con más fotos reciben más consultas.',
+    minRecommended:
+      'Te recomendamos subir al menos 5 fotos: las publicaciones con más fotos reciben más consultas.',
   },
 
   empty: {
@@ -156,29 +161,39 @@ export const adminCopy = {
   },
 
   help: {
-    locality: 'Barrio, urbanización o proyecto. Sale junto al sector en las tarjetas: «Cumbayá · Kentia».',
+    landUse:
+      'Sale como filtro en el buscador de terrenos. La lista se edita en Ajustes del sitio → Usos de terreno.',
+    locality:
+      'Barrio, urbanización o proyecto. Sale junto al sector en las tarjetas: «Cumbayá · Kentia».',
     badge: 'Opcional. Texto corto que se muestra sobre la foto principal.',
     code: 'Tu código interno. Si lo dejas vacío se genera uno automáticamente.',
     summary: 'Una o dos frases que aparecen en la tarjeta del listado (máximo 220 caracteres).',
     description: 'Cuenta todo sobre el inmueble. Deja una línea en blanco para separar párrafos.',
     sector: 'El sector donde aparecerá en los filtros del sitio.',
-    address: 'Una referencia, por ejemplo "A dos cuadras del Paseo San Francisco". No hace falta la dirección exacta.',
+    address:
+      'Una referencia, por ejemplo "A dos cuadras del Paseo San Francisco". No hace falta la dirección exacta.',
     map: 'Toca el mapa para poner el pin. Puedes arrastrarlo para ajustarlo.',
     exact: 'Si lo apagas, el público verá un círculo aproximado en lugar del punto exacto.',
     radius: 'Tamaño del círculo que verá el público.',
-    photos: 'La primera foto es la principal: es la que se ve en el listado. Mínimo recomendado 5, máximo 25.',
+    photos:
+      'La primera foto es la principal: es la que se ve en el listado. Mínimo recomendado 5, máximo 25.',
     videos: 'Videos cortos (hasta 100 MB) o un enlace de YouTube.',
     floorPlans: 'Sube los planos como imagen (JPG o PNG).',
     ageYears: 'Déjalo vacío si es nueva.',
     amenities: 'Marca todo lo que tiene. Solo se mostrará lo que marques.',
     price: 'Precio de venta en dólares, sin puntos ni comas.',
     hoa: 'Valor mensual de la alícuota en dólares.',
-    featured: 'Aparece en la sección de destacadas de la página de inicio.',
+    featured:
+      'Aparece primero en «Las más buscadas» (propiedades) o en los proyectos de Inicio. Después se completan solas con las más visitadas.',
+    featuredOrder: '1 = la primera. Sin número va después de las numeradas.',
     developer: 'Opcional. Nombre de la constructora o promotora.',
     deliveryDate: 'Escríbelo como quieras que se lea, por ejemplo "Febrero 2027".',
-    totalUnits: 'Solo el número total del proyecto. Cada unidad (precio, plano, vendida o no) se carga más abajo, en «Unidades disponibles».',
-    priceFrom: 'Si el proyecto tiene unidades disponibles, este valor se calcula solo con la más barata.',
-    highlights: 'Beneficios cortos que se muestran como lista, por ejemplo "Ubicación estratégica".',
+    totalUnits:
+      'Solo el número total del proyecto. Cada unidad (precio, plano, vendida o no) se carga más abajo, en «Unidades disponibles».',
+    priceFrom:
+      'Si el proyecto tiene unidades disponibles, este valor se calcula solo con la más barata.',
+    highlights:
+      'Beneficios cortos que se muestran como lista, por ejemplo "Ubicación estratégica".',
     brochure: 'Un PDF de hasta 20 MB que el público puede descargar.',
     renders: 'Renders o fotos del proyecto. La primera es la principal.',
   },

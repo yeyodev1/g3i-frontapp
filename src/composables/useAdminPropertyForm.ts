@@ -38,6 +38,7 @@ export function emptyProperty(): PropertyForm {
     frontMeters: null,
     depthMeters: null,
     buildableFloors: null,
+    landUse: '',
     amenities: [],
     images: [],
     videos: [],
@@ -83,6 +84,7 @@ function beforeSave(form: PropertyForm): PropertyForm {
     form.frontMeters = null
     form.depthMeters = null
     form.buildableFloors = null
+    form.landUse = ''
   }
   if (!form.hoa.enabled) form.hoa.amount = 0
   form.code = form.code.trim().toUpperCase()

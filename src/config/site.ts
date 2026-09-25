@@ -28,7 +28,7 @@ export const site = {
     { label: 'Inicio', to: '/' },
     { label: 'Propiedades', to: '/propiedades' },
     { label: 'Proyectos', to: '/proyectos' },
-    { label: 'Mapa del valle', to: '/mapa-del-valle' },
+    { label: 'Busca en mapa', to: '/mapa-del-valle' },
     { label: 'Blog', to: '/blog' },
     { label: 'Conócenos', to: '/conocenos' },
     { label: 'Contáctanos', to: '/contacto' },
@@ -67,7 +67,7 @@ export const site = {
 
   listing: {
     propertiesTitle: 'Propiedades en venta',
-    propertiesText: 'Reventas y unidades individuales seleccionadas por nuestro equipo.',
+    propertiesText: 'Casas, departamentos y terrenos seleccionados por nuestro equipo.',
     projectsTitle: 'Proyectos inmobiliarios',
     projectsText: 'Desarrollos completos con inventario actualizado de unidades disponibles.',
     empty: 'No encontramos resultados con esos filtros. Prueba ampliando la búsqueda.',

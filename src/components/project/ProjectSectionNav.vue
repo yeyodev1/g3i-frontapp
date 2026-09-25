@@ -22,7 +22,10 @@ watch(active, async (id) => {
   const link = track.value?.querySelector<HTMLElement>(`[data-id="${id}"]`)
   const box = track.value
   if (!link || !box) return
-  box.scrollTo({ left: link.offsetLeft - box.clientWidth / 2 + link.clientWidth / 2, behavior: 'smooth' })
+  box.scrollTo({
+    left: link.offsetLeft - box.clientWidth / 2 + link.clientWidth / 2,
+    behavior: 'smooth',
+  })
 })
 
 defineExpose({ scrollTo })
@@ -66,6 +69,7 @@ defineExpose({ scrollTo })
     top: var(--header-h, 93px);
   }
   z-index: 50;
+  transition: top 0.35s ease;
   background: rgba($paper, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid $line;
@@ -91,7 +95,7 @@ defineExpose({ scrollTo })
       white-space: nowrap;
       text-overflow: ellipsis;
       font-family: $font-display;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       color: $ink;
     }
   }
@@ -116,7 +120,7 @@ defineExpose({ scrollTo })
   &__link {
     flex-shrink: 0;
     position: relative;
-    padding: 1.3rem 0.75rem;
+    padding: 0.95rem 0.75rem;
     @include caps(0.6875rem, 0.2em);
     color: $ink;
     white-space: nowrap;
@@ -157,8 +161,14 @@ defineExpose({ scrollTo })
   }
 
   &__wa {
-    min-height: 44px;
-    padding-inline: 1.3rem;
+    min-height: 36px;
+    padding-block: 0.4rem;
+    padding-inline: 1.1rem;
+  }
+
+  &__actions :deep(.share__btn) {
+    width: 36px;
+    height: 36px;
   }
 }
 </style>

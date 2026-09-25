@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HomeHero from '@/components/home/HomeHero.vue'
+import HomeStats from '@/components/home/HomeStats.vue'
 import HomeAbout from '@/components/home/HomeAbout.vue'
 import HomeServices from '@/components/home/HomeServices.vue'
 import PartnersStrip from '@/components/home/PartnersStrip.vue'
@@ -28,6 +29,7 @@ const {
   loadingProjects,
   propertiesError,
   loadProperties,
+  stats,
 } = useHomeData()
 
 useSeo(() => ({
@@ -46,33 +48,8 @@ useSeo(() => ({
       :popular="settings?.popularSearches ?? []"
     />
 
-    <section class="block block--first" data-reveal>
-      <div class="block__inner">
-        <SectionHeading
-          :eyebrow="copyHome.featured.eyebrow"
-          :title="copyHome.featured.title"
-          :link-label="copyHome.featured.link"
-          link-to="/propiedades"
-        />
-        <SkeletonCards v-if="loadingProperties" :count="3" basis="300px" />
-        <StateMessage
-          v-else-if="propertiesError"
-          icon="fa-solid fa-triangle-exclamation"
-          :text="copyHome.propertiesError"
-          retry
-          @retry="loadProperties"
-        />
-        <div v-else-if="properties.length" class="cards">
-          <PropertyCard v-for="p in properties" :key="p._id" :property="p" />
-        </div>
-        <StateMessage
-          v-else
-          :text="site.listing.empty"
-          link-to="/contacto"
-          :link-label="copy.nav.contact"
-        />
-      </div>
-    </section>
+    <!-- Cifras bajo el buscador: el panel las define; si no, conteos reales por tipo. -->
+    <HomeStats :stats="stats" />
 
     <section v-if="loadingProjects || projects.length" class="block block--sand" data-reveal>
       <div class="block__inner">
@@ -100,6 +77,35 @@ useSeo(() => ({
       </div>
     </section>
 
+    <!-- Pedido de la clienta (24/9): primero proyectos y después «Las más buscadas». -->
+    <section class="block" data-reveal>
+      <div class="block__inner">
+        <SectionHeading
+          :eyebrow="copyHome.featured.eyebrow"
+          :title="copyHome.featured.title"
+          :link-label="copyHome.featured.link"
+          link-to="/propiedades"
+        />
+        <SkeletonCards v-if="loadingProperties" :count="3" basis="300px" />
+        <StateMessage
+          v-else-if="propertiesError"
+          icon="fa-solid fa-triangle-exclamation"
+          :text="copyHome.propertiesError"
+          retry
+          @retry="loadProperties"
+        />
+        <div v-else-if="properties.length" class="cards">
+          <PropertyCard v-for="p in properties" :key="p._id" :property="p" />
+        </div>
+        <StateMessage
+          v-else
+          :text="site.listing.empty"
+          link-to="/contacto"
+          :link-label="copy.nav.contact"
+        />
+      </div>
+    </section>
+
     <HomeAbout
       :title="settings?.about.title"
       :text="settings?.about.text"
@@ -122,15 +128,9 @@ useSeo(() => ({
 .block {
   padding-block: $space-section;
 
-  // El buscador monta sobre esta sección: un poco menos de aire arriba.
-  &--first {
-    padding-top: clamp(3.5rem, 8vw, 6rem);
-  }
-
   &--sand {
     background: $gray-50;
     border-block: 1px solid $gray-200;
-    margin-bottom: $space-section;
   }
 
   &__inner {

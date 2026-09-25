@@ -28,7 +28,10 @@ const statusToast: Record<string, string> = {
 }
 
 /** Acciones rápidas de los listados de propiedades y proyectos. */
-export function useAdminListingActions<T extends Listable>(kind: 'property' | 'project', hooks: Hooks<T>) {
+export function useAdminListingActions<T extends Listable>(
+  kind: 'property' | 'project',
+  hooks: Hooks<T>,
+) {
   const router = useRouter()
   const toast = useToastStore()
   const { confirm } = useAdminConfirm()
@@ -61,8 +64,8 @@ export function useAdminListingActions<T extends Listable>(kind: 'property' | 'p
     try {
       const updated =
         kind === 'property'
-          ? await adminService.setPropertyFeatured(item._id, next, item.featuredOrder ?? 0)
-          : await adminService.setProjectFeatured(item._id, next, item.featuredOrder ?? 0)
+          ? await adminService.setPropertyFeatured(item._id, next, item.featuredOrder ?? 999)
+          : await adminService.setProjectFeatured(item._id, next, item.featuredOrder ?? 999)
       hooks.replace({ ...item, ...(updated as object), isFeatured: next } as T)
       toast.success(next ? 'Ahora aparece en destacadas.' : 'Se quitó de destacadas.')
     } catch (e) {

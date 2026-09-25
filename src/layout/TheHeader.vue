@@ -31,6 +31,8 @@ watch(
 
 function onScroll() {
   scrolled.value = window.scrollY > 24
+  // --header-h (global.scss) sigue al header compacto: de él cuelgan las barras sticky.
+  document.documentElement.classList.toggle('header-compact', scrolled.value && !props.overlay)
 }
 function onKey(e: KeyboardEvent) {
   if (e.key === 'Escape') mobileOpen.value = false
@@ -41,6 +43,7 @@ onMounted(() => {
   window.addEventListener('keydown', onKey)
 })
 onUnmounted(() => {
+  document.documentElement.classList.remove('header-compact')
   window.removeEventListener('scroll', onScroll)
   window.removeEventListener('keydown', onKey)
 })

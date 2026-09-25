@@ -9,6 +9,7 @@ export function emptySettings(): Settings {
     popularSearches: [],
     about: { title: '', text: '', image: null },
     stats: [],
+    landUses: [],
     contact: { whatsapp: '', phone: '', email: '', instagram: '', facebook: '', address: '' },
     sellCta: { title: '', text: '' },
   }
@@ -21,9 +22,17 @@ function normalize(data: Partial<Settings> | null | undefined): Settings {
   return JSON.parse(
     JSON.stringify({
       hero: { ...base.hero, ...d.hero },
-      popularSearches: (d.popularSearches ?? []).map((p) => ({ label: p.label, query: { ...p.query } })),
+      popularSearches: (d.popularSearches ?? []).map((p) => ({
+        label: p.label,
+        query: { ...p.query },
+      })),
       about: { ...base.about, ...d.about },
-      stats: d.stats ?? [],
+      stats: (d.stats ?? []).map((s) => ({
+        icon: s.icon || 'propiedades',
+        label: s.label,
+        value: s.value,
+      })),
+      landUses: d.landUses ?? [],
       contact: { ...base.contact, ...d.contact },
       sellCta: { ...base.sellCta, ...d.sellCta },
     }),
@@ -64,6 +73,7 @@ export function useAdminSettings() {
         query: Object.fromEntries(Object.entries(p.query).filter(([, v]) => v)),
       }))
     payload.stats = payload.stats.filter((s) => s.label.trim() && s.value.trim())
+    payload.landUses = payload.landUses.map((u) => u.trim()).filter(Boolean)
     payload.contact.whatsapp = payload.contact.whatsapp.replace(/\D/g, '')
 
     saving.value = true

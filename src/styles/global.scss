@@ -26,6 +26,14 @@
   }
 }
 
+// Al bajar, el header de las páginas internas se achica (lo pidió la clienta:
+// en la ficha de proyecto las barras fijas le quitaban media pantalla).
+html.header-compact {
+  @include from('lg') {
+    --header-h: 65px;
+  }
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;

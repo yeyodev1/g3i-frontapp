@@ -3,7 +3,8 @@ import { propertyService } from '@/services/property.service'
 import { projectService } from '@/services/project.service'
 import { postService } from '@/services/post.service'
 import { useCatalogStore } from '@/stores/catalog'
-import type { PostCard, ProjectCard, PropertyCard } from '@/types'
+import { copyHome } from '@/config/copy.home'
+import type { HomeStat, PostCard, ProjectCard, PropertyCard } from '@/types'
 
 /**
  * Datos de la home. Cada bloque carga por su cuenta: si el blog falla, las
@@ -61,6 +62,21 @@ export function useHomeData() {
     () => settings.value?.hero.image?.url || properties.value[0]?.cover || '',
   )
 
+  // Cifras de Inicio: las del panel; si no hay, conteos reales por tipo + el total.
+  const stats = computed<HomeStat[]>(() => {
+    const custom = settings.value?.stats ?? []
+    if (custom.length) return custom
+    const counts = catalog.site?.counts
+    if (!counts?.properties) return []
+    const t = copyHome.stats
+    return [
+      ...t.fallback
+        .filter((f) => counts.byType?.[f.type])
+        .map((f) => ({ icon: f.icon, label: f.label, value: `+${counts.byType?.[f.type]}` })),
+      { icon: 'propiedades', label: t.total, value: `+${counts.properties}` },
+    ]
+  })
+
   onMounted(() => {
     catalog.ensureSite()
     catalog.ensureBasics()
@@ -80,5 +96,6 @@ export function useHomeData() {
     loadingProjects,
     propertiesError,
     loadProperties,
+    stats,
   }
 }

@@ -17,7 +17,7 @@ defineProps<{ eyebrow: string; title?: string; light?: boolean; rule?: boolean }
   }
 
   &__title {
-    @include display(clamp(2rem, 1.5rem + 2vw, 3.5rem), 300);
+    @include display(clamp(1.9rem, 1.5rem + 1.4vw, 2.75rem), 300);
     line-height: 1.04;
     color: $ink;
     margin-top: 0.9rem;

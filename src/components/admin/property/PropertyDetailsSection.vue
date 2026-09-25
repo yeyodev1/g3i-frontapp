@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import { useAdminCatalogStore } from '@/stores/adminCatalog'
+import { useCatalogStore } from '@/stores/catalog'
 import { adminCopy } from '@/config/copy.admin'
 import type { PropertyForm } from '@/types/admin'
 import AdminSection from '../AdminSection.vue'
@@ -10,6 +12,10 @@ import AdminSwitch from '../AdminSwitch.vue'
 defineProps<{ form: PropertyForm; isLand: boolean; step: number }>()
 
 const catalog = useAdminCatalogStore()
+// Usos de terreno: la lista se edita en Ajustes del sitio → Usos de terreno.
+const site = useCatalogStore()
+const landUses = computed(() => site.site?.settings.landUses ?? [])
+onMounted(() => site.ensureSite())
 </script>
 
 <template>
@@ -34,6 +40,18 @@ const catalog = useAdminCatalogStore()
           <AdminNumber id="d-bfloors" v-model="form.buildableFloors" :step="1" />
         </AdminField>
       </div>
+      <div class="row">
+        <AdminField label="Uso del terreno" for-id="d-use" :help="adminCopy.help.landUse">
+          <select id="d-use" v-model="form.landUse">
+            <option value="">Sin definir</option>
+            <option v-for="u in landUses" :key="u" :value="u">{{ u }}</option>
+            <!-- Si el uso guardado ya no está en la lista, se sigue mostrando. -->
+            <option v-if="form.landUse && !landUses.includes(form.landUse)" :value="form.landUse">
+              {{ form.landUse }}
+            </option>
+          </select>
+        </AdminField>
+      </div>
     </template>
 
     <template v-else>
@@ -52,7 +70,9 @@ const catalog = useAdminCatalogStore()
       <div class="row">
         <AdminField label="Estado del inmueble" for-id="d-cond">
           <select id="d-cond" v-model="form.condition">
-            <option v-for="c in catalog.conditions" :key="c.key" :value="c.key">{{ c.label }}</option>
+            <option v-for="c in catalog.conditions" :key="c.key" :value="c.key">
+              {{ c.label }}
+            </option>
           </select>
         </AdminField>
         <AdminField label="Años del inmueble" for-id="d-age" :help="adminCopy.help.ageYears">
