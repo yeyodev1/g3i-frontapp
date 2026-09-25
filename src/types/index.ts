@@ -414,6 +414,8 @@ export interface Dashboard {
   properties: Record<PropertyStatus, number>
   projects: Record<ProjectStatus, number>
   units: Record<UnitStatus, number>
+  /** Proyectos con al menos una unidad cargada. */
+  unitProjects: number
   leads: { new: number; total: number; last7d: number }
   recentLeads: Lead[]
 }

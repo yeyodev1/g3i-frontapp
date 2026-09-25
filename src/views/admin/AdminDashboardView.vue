@@ -34,9 +34,10 @@ const cards = computed(() => {
       icon: 'fa-solid fa-building',
     },
     {
-      label: 'Unidades disponibles',
+      // Unidades = departamentos, suites o casas dentro de los proyectos (no las propiedades sueltas).
+      label: 'Unidades de proyectos a la venta',
       value: d.units.available ?? 0,
-      note: `${d.units.reserved ?? 0} reservadas · ${d.units.sold ?? 0} vendidas`,
+      note: `Cargadas en ${d.unitProjects ?? 0} de ${d.projects.published ?? 0} proyectos · ${d.units.reserved ?? 0} reservadas · ${d.units.sold ?? 0} vendidas`,
       to: '/admin/proyectos',
       icon: 'fa-solid fa-table-list',
     },
