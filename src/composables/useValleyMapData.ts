@@ -3,7 +3,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { mapService, type MapFilters } from '@/services/map.service'
 import { useCatalogStore } from '@/stores/catalog'
 import { SECTORS_GEO, zoneOf } from '@/config/sectorsGeo'
-import { copyPages } from '@/config/copy.pages'
+import { usePriceRanges } from './usePriceRanges'
+import { inPriceRange } from '@/utils/priceRanges'
 import type { MapPin } from '@/types'
 
 export interface ValleyZone {
@@ -23,15 +24,20 @@ const FILTER_KEYS = ['ver', 'tipo', 'etapa', 'precio'] as const
  * parroquial. Los filtros viven en la query (?zona=tumbaco&tipo=casa) para compartir el enlace.
  */
 export function useValleyMapData() {
+  const priceRanges = usePriceRanges()
   const route = useRoute()
   const router = useRouter()
   const catalog = useCatalogStore()
 
-  const data = shallowRef<{ properties: MapPin[]; projects: MapPin[] }>({ properties: [], projects: [] })
+  const data = shallowRef<{ properties: MapPin[]; projects: MapPin[] }>({
+    properties: [],
+    projects: [],
+  })
   const loading = ref(true)
   const error = ref(false)
 
-  const q = (key: string) => (typeof route.query[key] === 'string' ? (route.query[key] as string) : '')
+  const q = (key: string) =>
+    typeof route.query[key] === 'string' ? (route.query[key] as string) : ''
   const kind = computed<Kind>(() => {
     const v = q('ver')
     return v === 'property' || v === 'project' ? v : 'all'
@@ -49,7 +55,9 @@ export function useValleyMapData() {
   }
 
   // Etapas: la lista de propiedades salvo en «Proyectos»; «a estrenar» ≈ «por estrenar».
-  const stageOptions = computed(() => (kind.value === 'project' ? catalog.projectStages : catalog.conditions))
+  const stageOptions = computed(() =>
+    kind.value === 'project' ? catalog.projectStages : catalog.conditions,
+  )
 
   const byKind = computed(() => {
     const { properties, projects } = data.value
@@ -59,10 +67,10 @@ export function useValleyMapData() {
   })
 
   const pins = computed(() => {
-    const range = copyPages.valley.priceRanges.find((r) => r.key === price.value)
+    const range = priceRanges.find(price.value)
     return byKind.value.filter((p) => {
       if (type.value && p.type !== type.value) return false
-      if (range && (!p.price || p.price < range.min || p.price >= range.max)) return false
+      if (range && !inPriceRange(p.price, range)) return false
       return true
     })
   })
@@ -88,7 +96,8 @@ export function useValleyMapData() {
     return catalog.propertyTypes.filter((t) => present.has(t.key))
   })
 
-  const zoneName = (key: string) => SECTORS_GEO.features.find((f) => f.properties.key === key)?.properties.name ?? ''
+  const zoneName = (key: string) =>
+    SECTORS_GEO.features.find((f) => f.properties.key === key)?.properties.name ?? ''
 
   async function load() {
     loading.value = true
@@ -130,7 +139,11 @@ export function useValleyMapData() {
     stageOptions,
     zoneName,
     setFilter: (key: string, value: string) =>
-      setQuery(key === 'ver' ? { ver: value === 'all' ? '' : value, tipo: '', etapa: '' } : { [key]: value }),
+      setQuery(
+        key === 'ver'
+          ? { ver: value === 'all' ? '' : value, tipo: '', etapa: '' }
+          : { [key]: value },
+      ),
     setActive: (key: string) => setQuery({ zona: key === active.value ? '' : key }),
     selectZone: (key: string) => setQuery({ zona: key }),
     clear: () => setQuery({ ver: '', tipo: '', etapa: '', precio: '', zona: '' }),

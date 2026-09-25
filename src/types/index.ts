@@ -338,12 +338,19 @@ export interface HomeStat {
   value: string
 }
 
+/** Rango del filtro de precio en USD. null = sin límite por ese lado. */
+export interface PriceRange {
+  min: number | null
+  max: number | null
+}
+
 export interface Settings {
   hero: { title: string; subtitle: string; image: Image | null; ctaLabel: string; ctaLink: string }
   popularSearches: PopularSearch[]
   about: { title: string; text: string; image: Image | null }
   stats: HomeStat[]
   landUses: string[]
+  priceRanges: PriceRange[]
   contact: {
     whatsapp: string
     phone: string
@@ -360,7 +367,13 @@ export interface SiteData {
   advisors: Advisor[]
   testimonials: Testimonial[]
   partners: Partner[]
-  counts: { properties: number; projects: number; sectors: number; byType?: Record<string, number> }
+  counts: {
+    properties: number
+    projects: number
+    sectors: number
+    byType?: Record<string, number>
+    prices?: number[]
+  }
 }
 
 // ─── Leads ──────────────────────────────────────────────────────────────

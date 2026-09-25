@@ -11,12 +11,6 @@ export const copyHome = {
     priceAll: 'Cualquier precio',
     button: 'Buscar',
     popular: 'Más buscadas',
-    // Rangos del ejemplo aprobado → minPrice / maxPrice del listado.
-    priceRanges: [
-      { key: 'hasta-150', label: 'Hasta $ 150.000', min: '', max: '150000' },
-      { key: '150-300', label: '$ 150.000 – $ 300.000', min: '150000', max: '300000' },
-      { key: 'desde-300', label: 'Más de $ 300.000', min: '300000', max: '' },
-    ],
   },
 
   // Banda de cifras bajo el buscador. Las claves coinciden con STAT_ICONS del backend.

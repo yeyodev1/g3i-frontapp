@@ -1,13 +1,42 @@
 <script setup lang="ts">
 import { useAdminCatalogStore } from '@/stores/adminCatalog'
-import type { Settings } from '@/types'
+import { priceRangeKey, priceRangeLabel } from '@/utils/priceRanges'
+import type { PopularSearch, Settings } from '@/types'
 import AdminSection from '../AdminSection.vue'
 
 const props = defineProps<{ form: Settings }>()
 const catalog = useAdminCatalogStore()
 
+// El precio del acceso rápido se elige entre los rangos de «Rangos de precio».
+function rangeOf(item: PopularSearch) {
+  return priceRangeKey({
+    min: Number(item.query.minPrice) || null,
+    max: Number(item.query.maxPrice) || null,
+  })
+}
+function setRange(item: PopularSearch, key: string) {
+  const range = props.form.priceRanges.find((r) => priceRangeKey(r) === key)
+  item.query.minPrice = range?.min ? String(range.min) : ''
+  item.query.maxPrice = range?.max ? String(range.max) : ''
+}
+
+// Si el texto queda vacío se arma con lo elegido: «Casa · Cumbayá».
+function autoLabel(item: PopularSearch) {
+  if (item.label.trim()) return
+  const q = item.query
+  item.label = [
+    catalog.propertyTypes.find((t) => t.key === q.type)?.label,
+    catalog.sectors.find((s) => s.key === q.sector)?.label,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+}
+
 function add() {
-  props.form.popularSearches.push({ label: '', query: { type: '', sector: '', condition: '' } })
+  props.form.popularSearches.push({
+    label: '',
+    query: { type: '', sector: '', condition: '', minPrice: '', maxPrice: '' },
+  })
 }
 
 function remove(index: number) {
@@ -25,13 +54,17 @@ function move(index: number, dir: -1 | 1) {
 <template>
   <AdminSection
     id="buscadas"
-    title="Más buscadas"
-    text='Accesos rápidos bajo el buscador de la portada. Ej. "Casas en Cumbayá": tipo Casa y sector Cumbayá.'
+    title="Más buscadas (botones bajo el buscador)"
+    text="Los botones que salen debajo del buscador de Inicio, en el orden de esta lista. Tú eliges cuáles van: agrega, quita, cambia el texto o súbelos con la flecha. Ej. «Casas en Cumbayá»: tipo Casa y sector Cumbayá."
   >
     <ul v-if="form.popularSearches.length" class="chips">
       <li v-for="(item, i) in form.popularSearches" :key="i" class="chip">
         <div class="chip__head">
-          <input v-model="item.label" placeholder="Texto del botón, ej. Casas en Cumbayá" aria-label="Texto del botón" />
+          <input
+            v-model="item.label"
+            placeholder="Texto del botón, ej. Casas en Cumbayá"
+            aria-label="Texto del botón"
+          />
           <button type="button" :disabled="i === 0" aria-label="Subir" @click="move(i, -1)">
             <i class="fa-solid fa-arrow-up"></i>
           </button>
@@ -40,22 +73,38 @@ function move(index: number, dir: -1 | 1) {
           </button>
         </div>
         <div class="chip__filters">
-          <select v-model="item.query.type" aria-label="Tipo">
+          <select v-model="item.query.type" aria-label="Tipo" @change="autoLabel(item)">
             <option value="">Cualquier tipo</option>
-            <option v-for="t in catalog.propertyTypes" :key="t.key" :value="t.key">{{ t.label }}</option>
+            <option v-for="t in catalog.propertyTypes" :key="t.key" :value="t.key">
+              {{ t.label }}
+            </option>
           </select>
-          <select v-model="item.query.sector" aria-label="Sector">
+          <select v-model="item.query.sector" aria-label="Sector" @change="autoLabel(item)">
             <option value="">Cualquier sector</option>
             <option v-for="s in catalog.sectors" :key="s.key" :value="s.key">{{ s.label }}</option>
           </select>
           <select v-model="item.query.condition" aria-label="Etapa">
             <option value="">Cualquier etapa</option>
-            <option v-for="c in catalog.conditions" :key="c.key" :value="c.key">{{ c.label }}</option>
+            <option v-for="c in catalog.conditions" :key="c.key" :value="c.key">
+              {{ c.label }}
+            </option>
+          </select>
+          <select
+            :value="rangeOf(item)"
+            aria-label="Precio"
+            @change="setRange(item, ($event.target as HTMLSelectElement).value)"
+          >
+            <option value="-">Cualquier precio</option>
+            <option v-for="r in form.priceRanges" :key="priceRangeKey(r)" :value="priceRangeKey(r)">
+              {{ priceRangeLabel(r) }}
+            </option>
           </select>
         </div>
       </li>
     </ul>
-    <button type="button" class="btn btn--ghost add" @click="add"><i class="fa-solid fa-plus"></i> Agregar búsqueda</button>
+    <button type="button" class="btn btn--ghost add" @click="add">
+      <i class="fa-solid fa-plus"></i> Agregar búsqueda
+    </button>
   </AdminSection>
 </template>
 

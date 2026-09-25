@@ -32,13 +32,6 @@ export const copyPages = {
     allStages: 'Todas las etapas',
     priceLabel: 'Precio',
     allPrices: 'Cualquier precio',
-    priceRanges: [
-      { key: 'hasta-100', label: 'Hasta $ 100.000', min: 0, max: 100_000 },
-      { key: '100-200', label: '$ 100.000 – $ 200.000', min: 100_000, max: 200_000 },
-      { key: '200-300', label: '$ 200.000 – $ 300.000', min: 200_000, max: 300_000 },
-      { key: '300-500', label: '$ 300.000 – $ 500.000', min: 300_000, max: 500_000 },
-      { key: 'desde-500', label: 'Más de $ 500.000', min: 500_000, max: Infinity },
-    ],
     layers: [
       { key: 'map', label: 'Mapa' },
       { key: 'sat', label: 'Satélite' },

@@ -12,7 +12,11 @@ defineProps<{ form: Settings }>()
     <AdminField label="Título" for-id="a-title">
       <input id="a-title" v-model="form.about.title" maxlength="120" />
     </AdminField>
-    <AdminField label="Texto" for-id="a-text" help="Deja una línea en blanco para separar párrafos.">
+    <AdminField
+      label="Texto"
+      for-id="a-text"
+      help="Deja una línea en blanco para separar párrafos."
+    >
       <textarea id="a-text" v-model="form.about.text" rows="8"></textarea>
     </AdminField>
     <AdminField label="Imagen">

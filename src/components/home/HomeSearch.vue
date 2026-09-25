@@ -3,6 +3,7 @@ import { computed, onMounted, ref, useId } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCatalogStore } from '@/stores/catalog'
 import { copyHome } from '@/config/copy.home'
+import { usePriceRanges } from '@/composables/usePriceRanges'
 import type { PopularSearch } from '@/types'
 
 defineProps<{ popular: PopularSearch[] }>()
@@ -11,6 +12,7 @@ const router = useRouter()
 const catalog = useCatalogStore()
 const t = copyHome.search
 const uid = useId()
+const priceRanges = usePriceRanges()
 
 const sector = ref('')
 const type = ref('')
@@ -37,7 +39,8 @@ const fields = computed(() => [
     label: t.price,
     placeholder: t.priceAll,
     model: price,
-    options: t.priceRanges.map((r) => ({ key: r.key, label: r.label })),
+    // Rangos de Ajustes del sitio; solo los que tienen propiedades publicadas.
+    options: priceRanges.options.value.map((r) => ({ key: r.key, label: r.label })),
   },
 ])
 
@@ -45,13 +48,16 @@ function search() {
   const query: Record<string, string> = {}
   if (sector.value) query.sector = sector.value
   if (type.value) query.type = type.value
-  const range = t.priceRanges.find((r) => r.key === price.value)
-  if (range?.min) query.minPrice = range.min
-  if (range?.max) query.maxPrice = range.max
+  const range = priceRanges.find(price.value)
+  if (range?.min) query.minPrice = String(range.min)
+  if (range?.max) query.maxPrice = String(range.max)
   router.push({ path: '/propiedades', query })
 }
 
-onMounted(() => catalog.ensureBasics())
+onMounted(() => {
+  catalog.ensureBasics()
+  catalog.ensureSite()
+})
 </script>
 
 <template>

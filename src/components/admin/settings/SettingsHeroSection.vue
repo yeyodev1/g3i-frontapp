@@ -8,8 +8,15 @@ defineProps<{ form: Settings }>()
 </script>
 
 <template>
-  <AdminSection id="portada" title="Portada del sitio" text="Lo primero que ve quien entra a la página de inicio.">
-    <AdminField label="Imagen principal" help="Horizontal y de buena calidad (mínimo 1920 px de ancho). Puedes cambiarla cuando quieras.">
+  <AdminSection
+    id="portada"
+    title="Portada del sitio"
+    text="Lo primero que ve quien entra a la página de inicio."
+  >
+    <AdminField
+      label="Imagen principal"
+      help="Horizontal y de buena calidad (mínimo 1920 px de ancho). Puedes cambiarla cuando quieras."
+    >
       <AdminImageField v-model="form.hero.image" folder="site" button-label="Subir imagen" />
     </AdminField>
     <AdminField label="Título" for-id="h-title">

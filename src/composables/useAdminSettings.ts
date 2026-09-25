@@ -1,6 +1,7 @@
 import { computed, ref, type Ref } from 'vue'
 import { adminService } from '@/services/admin.service'
 import { useToastStore } from '@/stores/toast'
+import { DEFAULT_PRICE_RANGES } from '@/utils/priceRanges'
 import type { ApiError, Settings } from '@/types'
 
 export function emptySettings(): Settings {
@@ -10,6 +11,7 @@ export function emptySettings(): Settings {
     about: { title: '', text: '', image: null },
     stats: [],
     landUses: [],
+    priceRanges: [],
     contact: { whatsapp: '', phone: '', email: '', instagram: '', facebook: '', address: '' },
     sellCta: { title: '', text: '' },
   }
@@ -33,6 +35,10 @@ function normalize(data: Partial<Settings> | null | undefined): Settings {
         value: s.value,
       })),
       landUses: d.landUses ?? [],
+      priceRanges: (d.priceRanges?.length ? d.priceRanges : DEFAULT_PRICE_RANGES).map((r) => ({
+        min: r.min || null,
+        max: r.max || null,
+      })),
       contact: { ...base.contact, ...d.contact },
       sellCta: { ...base.sellCta, ...d.sellCta },
     }),
@@ -74,6 +80,9 @@ export function useAdminSettings() {
       }))
     payload.stats = payload.stats.filter((s) => s.label.trim() && s.value.trim())
     payload.landUses = payload.landUses.map((u) => u.trim()).filter(Boolean)
+    payload.priceRanges = payload.priceRanges
+      .filter((r) => (r.min || r.max) && !(r.min && r.max && r.min >= r.max))
+      .sort((x, y) => (x.min ?? 0) - (y.min ?? 0))
     payload.contact.whatsapp = payload.contact.whatsapp.replace(/\D/g, '')
 
     saving.value = true

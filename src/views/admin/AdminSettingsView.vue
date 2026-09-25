@@ -10,6 +10,7 @@ import SettingsHeroSection from '@/components/admin/settings/SettingsHeroSection
 import SettingsPopularSection from '@/components/admin/settings/SettingsPopularSection.vue'
 import SettingsAboutSection from '@/components/admin/settings/SettingsAboutSection.vue'
 import SettingsContactSection from '@/components/admin/settings/SettingsContactSection.vue'
+import SettingsPriceRangesSection from '@/components/admin/settings/SettingsPriceRangesSection.vue'
 import SettingsSellStatsSection from '@/components/admin/settings/SettingsSellStatsSection.vue'
 
 const catalog = useAdminCatalogStore()
@@ -18,6 +19,7 @@ const { form, loading, saving, dirty, load, save } = useAdminSettings()
 const sections = [
   { id: 'portada', label: 'Portada' },
   { id: 'buscadas', label: 'Más buscadas' },
+  { id: 'precios', label: 'Rangos de precio' },
   { id: 'conocenos', label: 'Conócenos' },
   { id: 'contacto', label: 'Contacto' },
   { id: 'vender', label: 'Vender' },
@@ -48,6 +50,7 @@ useAdminUnsaved(dirty)
       <AdminFormNav :sections="sections" />
       <SettingsHeroSection :form="form" />
       <SettingsPopularSection :form="form" />
+      <SettingsPriceRangesSection :form="form" />
       <SettingsAboutSection :form="form" />
       <SettingsContactSection :form="form" />
       <SettingsSellStatsSection :form="form" />
