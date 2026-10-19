@@ -130,10 +130,13 @@ export const adminCopy = {
 
   upload: {
     drop: 'Arrastra aquí tus fotos o toca para elegirlas',
-    dropHint: 'Puedes elegir varias a la vez. JPG, PNG o WEBP de hasta 10 MB.',
+    dropHint: 'Puedes elegir varias a la vez. JPG, PNG o WEBP; las muy pesadas se comprimen solas.',
     unavailable:
       'Por ahora no se pueden subir archivos: falta configurar el servicio de imágenes (Cloudinary). Avísale a soporte técnico; lo demás del formulario sí se puede guardar.',
     tooBig: 'es demasiado pesado',
+    compressed: 'se comprimió para poder subirla',
+    compressFailed: 'no se pudo comprimir lo suficiente',
+    reduceHint: 'Reduce su peso y vuelve a intentarlo.',
     failed: 'No se pudo subir',
     main: 'Principal',
     makeMain: 'Marcar como foto principal',
