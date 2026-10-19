@@ -76,6 +76,13 @@ export interface AdminLead extends Omit<Lead, 'property' | 'project' | 'unit'> {
 }
 
 export type UploadKind = 'image' | 'video' | 'raw'
+
+/** Firma del backend para subir directo a Cloudinary (Vercel corta cuerpos > 4.5 MB). */
+export interface DirectUploadTicket {
+  uploadUrl: string
+  resourceType: UploadKind
+  fields: Record<string, string>
+}
 export type UploadFolder =
   | 'properties'
   | 'projects'

@@ -1,5 +1,7 @@
+import axios from 'axios'
 import APIBase from './httpBase'
 import type {
+  ApiError,
   Catalogs,
   Dashboard,
   Paginated,
@@ -12,6 +14,7 @@ import type {
 import type {
   AdminLead,
   AdminListQuery,
+  DirectUploadTicket,
   AdminProjectRow,
   AdminPropertyRow,
   ProjectForm,
@@ -24,6 +27,18 @@ import type {
 // Diez minutos: un video de 100 MB por una conexión móvil tarda. httpBase
 // reemplaza un timeout 0 por 15 s, así que se pasa un número explícito.
 const UPLOAD_TIMEOUT = 10 * 60 * 1000
+
+/** Cloudinary responde { error: { message } } en inglés; se adapta al ApiError de la casa. */
+function toUploadError(error: unknown): ApiError {
+  if (axios.isAxiosError(error) && error.response) {
+    const detail = (error.response.data as { error?: { message?: string } })?.error?.message
+    return { status: error.response.status, message: detail || 'Cloudinary rechazó el archivo' }
+  }
+  if (axios.isAxiosError(error) && error.code === 'ECONNABORTED') {
+    return { status: 408, message: 'La subida tardó demasiado, revisa tu conexión' }
+  }
+  return { status: 500, message: 'No se pudo conectar con Cloudinary' }
+}
 
 export function toQuery(params: object = {}): string {
   const search = new URLSearchParams()
@@ -188,26 +203,39 @@ class AdminService extends APIBase {
 
   // ─── Archivos ────────────────────────────────────────────────────────
 
+  /**
+   * El API solo firma la subida; el archivo va del navegador directo a
+   * Cloudinary. Pasarlo por el backend (Vercel) corta todo cuerpo > 4.5 MB
+   * con un 413 sin CORS que el navegador reporta como fallo de conexión.
+   */
   async upload(
     file: File,
     folder: UploadFolder,
     kind: UploadKind,
     onProgress?: (ratio: number) => void,
   ): Promise<UploadResult> {
+    const { data: ticket } = await this.post<DirectUploadTicket>('admin/uploads/signature', {
+      folder,
+      kind,
+    })
     const form = new FormData()
+    Object.entries(ticket.fields).forEach(([key, value]) => form.append(key, value))
     form.append('file', file)
-    const { data } = await this.post<UploadResult>(
-      `admin/uploads${toQuery({ folder, kind })}`,
-      form,
-      undefined,
-      {
-        timeout: UPLOAD_TIMEOUT,
-        onUploadProgress: (event) => {
-          if (onProgress && event.total) onProgress(event.loaded / event.total)
+    try {
+      const { data } = await axios.post<{ secure_url: string; public_id: string }>(
+        ticket.uploadUrl,
+        form,
+        {
+          timeout: UPLOAD_TIMEOUT,
+          onUploadProgress: (event) => {
+            if (onProgress && event.total) onProgress(event.loaded / event.total)
+          },
         },
-      },
-    )
-    return data
+      )
+      return { url: data.secure_url, publicId: data.public_id, resourceType: ticket.resourceType }
+    } catch (error) {
+      throw toUploadError(error)
+    }
   }
 }
 
